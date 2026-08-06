@@ -217,11 +217,12 @@
                     >
                     <span class="admin-field__hint">Doit se terminer par <strong>@mouchap.com</strong></span>
                     <span class="admin-field__error" id="affilie-login-error" hidden>Le login doit se terminer par @mouchap.com</span>
+                    <span class="admin-field__error" id="affilie-auth-error" hidden>Login ou mot de passe incorrect, ou compte non validé.</span>
                 </label>
 
                 <label class="admin-field">
                     <span class="admin-field__label">Mot de Passe</span>
-                    <input type="password" name="password" class="admin-field__input" autocomplete="current-password" required>
+                    <input type="password" name="password" id="affilie-password" class="admin-field__input" autocomplete="current-password" required>
                 </label>
 
                 <div class="affilie-actions">
@@ -261,6 +262,11 @@
                 <label class="admin-field">
                     <span class="admin-field__label">Nom Complet</span>
                     <input type="text" name="nom_complet" class="admin-field__input" required>
+                </label>
+
+                <label class="admin-field">
+                    <span class="admin-field__label">Titre</span>
+                    <input type="text" name="titre" class="admin-field__input" required>
                 </label>
 
                 <label class="admin-field">

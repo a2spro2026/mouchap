@@ -12,8 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const affilieRegisterForm = document.getElementById('affilie-register-form');
     const affilieLoginInput = document.getElementById('affilie-login');
     const affilieLoginError = document.getElementById('affilie-login-error');
+    const affilieAuthError = document.getElementById('affilie-auth-error');
+    const affiliePasswordInput = document.getElementById('affilie-password');
     const affilieIdInput = document.getElementById('affilie-id');
     const affilieSuccess = document.getElementById('affilie-success');
+    const AFFILIATION_KEY = 'mouchap_affiliation_requests';
+    const AFFILIES_KEY = 'mouchap_affilies';
+    const INBOX_KEY = 'mouchap_affilie_inbox';
+    const AFF_SESSION_KEY = 'mouchap_affilie_session';
 
     let lockedScrollY = 0;
 
@@ -88,7 +94,31 @@ document.addEventListener('DOMContentLoaded', () => {
         closeMobileNav();
         closeModal(adminModal);
         closeModal(affilieRegisterModal);
+        if (affilieAuthError) {
+            affilieAuthError.hidden = true;
+        }
         openModal(affilieLoginModal, '#affilie-login');
+    };
+
+    const nextAffilieId = () => {
+        const year = 2026;
+        let maxSeq = 0;
+
+        try {
+            const existing = JSON.parse(localStorage.getItem(AFFILIATION_KEY) || '[]');
+            if (Array.isArray(existing)) {
+                existing.forEach((item) => {
+                    const match = String(item?.id || '').match(/^(\d{4})\/(\d+)$/);
+                    if (match && Number(match[1]) === year) {
+                        maxSeq = Math.max(maxSeq, Number(match[2]));
+                    }
+                });
+            }
+        } catch {
+            // ignore
+        }
+
+        return `${year}/${String(maxSeq + 1).padStart(5, '0')}`;
     };
 
     const openAffilieRegister = (event) => {
@@ -96,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event?.stopPropagation();
         closeModal(affilieLoginModal);
         if (affilieIdInput) {
-            affilieIdInput.value = `AFF-${Date.now().toString().slice(-8)}`;
+            affilieIdInput.value = nextAffilieId();
         }
         if (affilieSuccess) {
             affilieSuccess.hidden = true;
@@ -176,9 +206,90 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isValidMouchapLogin = (value) => /.+@mouchap\.com$/i.test(value.trim());
 
+    const showAdminToast = (message) => {
+        let toast = document.getElementById('mouchap-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'mouchap-toast';
+            toast.className = 'mouchap-toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.classList.add('is-visible');
+        window.clearTimeout(toast._timer);
+        toast._timer = window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
+    };
+
+    const pushAffilieMessage = (affilie, body, title = "Confirmation d'affiliation") => {
+        try {
+            const inbox = JSON.parse(localStorage.getItem(INBOX_KEY) || '[]');
+            const list = Array.isArray(inbox) ? inbox : [];
+            list.unshift({
+                id: `msg-${Date.now()}`,
+                type: 'validation',
+                affilie_id: affilie.id,
+                login: affilie.login,
+                title,
+                body,
+                created_at: new Date().toISOString(),
+                read: false,
+            });
+            localStorage.setItem(INBOX_KEY, JSON.stringify(list));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const createAffilieFromRequest = (req) => {
+        const base =
+            String(req.nom_complet || 'affilie')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '.')
+                .replace(/^\.+|\.+$/g, '')
+                .slice(0, 24) || 'affilie';
+
+        const affilie = {
+            id: req.id,
+            date: req.updated_at || req.created_at || new Date().toISOString(),
+            nom_complet: req.nom_complet || '',
+            titre: req.titre || '',
+            contact: req.contact || '',
+            ville: req.ville || '',
+            banque: req.banque || '',
+            rib: req.rib || '',
+            type_paiement: 'Vir',
+            statue: 'actif',
+            login: `${base}@mouchap.com`,
+            password: `Mh${Math.random().toString(36).slice(2, 8)}`,
+        };
+
+        try {
+            const list = JSON.parse(localStorage.getItem(AFFILIES_KEY) || '[]');
+            const items = Array.isArray(list) ? list : [];
+            const existingIndex = items.findIndex((item) => item.id === req.id);
+            if (existingIndex >= 0) {
+                return items[existingIndex];
+            }
+            items.unshift(affilie);
+            localStorage.setItem(AFFILIES_KEY, JSON.stringify(items));
+        } catch (error) {
+            console.error(error);
+        }
+
+        return affilie;
+    };
+
     affilieLoginForm?.addEventListener('submit', (event) => {
         event.preventDefault();
-        const login = affilieLoginInput?.value || '';
+        const login = (affilieLoginInput?.value || '').trim();
+        const password = affiliePasswordInput?.value || '';
+
+        if (affilieAuthError) {
+            affilieAuthError.hidden = true;
+        }
+
         if (!isValidMouchapLogin(login)) {
             if (affilieLoginError) {
                 affilieLoginError.hidden = false;
@@ -189,16 +300,48 @@ document.addEventListener('DOMContentLoaded', () => {
         if (affilieLoginError) {
             affilieLoginError.hidden = true;
         }
+
+        let affilies = [];
+        try {
+            affilies = JSON.parse(localStorage.getItem(AFFILIES_KEY) || '[]');
+            if (!Array.isArray(affilies)) affilies = [];
+        } catch {
+            affilies = [];
+        }
+
+        const account = affilies.find(
+            (item) =>
+                String(item.login || '').toLowerCase() === login.toLowerCase() &&
+                String(item.password || '') === password &&
+                item.statue !== 'susp'
+        );
+
+        if (!account) {
+            if (affilieAuthError) {
+                affilieAuthError.hidden = false;
+            }
+            return;
+        }
+
+        sessionStorage.setItem(AFF_SESSION_KEY, JSON.stringify(account));
         affilieLoginForm.classList.add('is-success');
         window.setTimeout(() => {
-            affilieLoginForm.classList.remove('is-success');
-            closeModal(affilieLoginModal);
-        }, 700);
+            window.location.href = '/affilie';
+        }, 400);
     });
 
     affilieLoginInput?.addEventListener('input', () => {
         if (affilieLoginError) {
             affilieLoginError.hidden = true;
+        }
+        if (affilieAuthError) {
+            affilieAuthError.hidden = true;
+        }
+    });
+
+    affiliePasswordInput?.addEventListener('input', () => {
+        if (affilieAuthError) {
+            affilieAuthError.hidden = true;
         }
     });
 
@@ -227,8 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = new FormData(affilieRegisterForm);
         const request = {
-            id: formData.get('id') || `AFF-${Date.now().toString().slice(-8)}`,
+            id: formData.get('id') || nextAffilieId(),
             nom_complet: formData.get('nom_complet') || '',
+            titre: formData.get('titre') || '',
             cin: formData.get('cin') || '',
             contact: formData.get('contact') || '',
             ville: formData.get('ville') || '',
@@ -239,10 +383,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const key = 'mouchap_affiliation_requests';
-            const existing = JSON.parse(localStorage.getItem(key) || '[]');
+            const existing = JSON.parse(localStorage.getItem(AFFILIATION_KEY) || '[]');
             existing.unshift(request);
-            localStorage.setItem(key, JSON.stringify(existing));
+            localStorage.setItem(AFFILIATION_KEY, JSON.stringify(existing));
         } catch (error) {
             console.error(error);
         }
@@ -352,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <strong>${item.nom_complet || 'Sans nom'}</strong>
                         <span>${item.id || ''}</span>
                     </div>
-                    <p class="admin-notif__meta">${item.ville || '—'} · ${item.contact || '—'} · ${item.cin || '—'}</p>
+                    <p class="admin-notif__meta">${item.titre || '—'} · ${item.ville || '—'} · ${item.contact || '—'} · ${item.cin || '—'}</p>
                     <p class="admin-notif__meta">${item.banque || '—'} · RIB ${item.rib || '—'}</p>
                     <p class="admin-notif__date">${date}</p>
                     ${actions}
@@ -389,7 +532,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.id === id ? { ...item, status: action, updated_at: new Date().toISOString() } : item
             );
             writeRequests(items);
+
+            if (action === 'validated') {
+                const req = items.find((item) => item.id === id);
+                if (req) {
+                    const affilie = createAffilieFromRequest(req);
+                    const body =
+                        `Bonjour ${affilie.nom_complet || ''},\n\n` +
+                        `Votre demande d'affiliation (${affilie.id}) a été validée.\n` +
+                        `Vous pouvez vous connecter à l'espace affilié avec :\n` +
+                        `Login : ${affilie.login}\n` +
+                        `Mot de passe : ${affilie.password}\n\n` +
+                        `Bienvenue dans le réseau MOUCHAP.`;
+                    pushAffilieMessage(affilie, body);
+                    showAdminToast(
+                        `Message de confirmation envoyé à ${affilie.nom_complet || affilie.login}`
+                    );
+                }
+            }
+
             renderNotifications();
+            window.dispatchEvent(new CustomEvent('mouchap:affilies-updated'));
         });
 
         renderNotifications();

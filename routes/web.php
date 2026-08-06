@@ -9,3 +9,7 @@ Route::get('/', function () {
 Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
+
+Route::get('/affilie', function () {
+    return view('affilie.dashboard');
+})->name('affilie.dashboard');
