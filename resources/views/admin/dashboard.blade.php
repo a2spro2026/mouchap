@@ -76,9 +76,9 @@
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M20.6 8.5 12 3 3.4 8.5 12 14l8.6-5.5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3.4 15.5 12 21l8.6-5.5M3.4 12 12 17.5 20.6 12"/></svg></span>
                             <span>Fiche Produit</span>
                         </a>
-                        <a href="#mouvement-produit" class="admin-sublink">
+                        <a href="#mouvement-stock" class="admin-sublink" data-admin-view="mouvement-stock">
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4 4 4M17 8v12m0 0 4-4m-4 4-4-4"/></svg></span>
-                            <span>Mouvement Produit</span>
+                            <span>Mouvement Stock</span>
                         </a>
                     </div>
                 </div>
@@ -320,6 +320,66 @@
                         </div>
                     </div>
 
+                    <div class="product-filters" id="product-filters" aria-label="Filtres produits">
+                        <div class="product-filters__rail">
+                            <div class="product-filters__brand">
+                                <span class="product-filters__eyebrow">Recherche</span>
+                                <strong class="product-filters__title">Filtres produit</strong>
+                            </div>
+
+                            <label class="product-filter">
+                                <span class="product-filter__label">Réf</span>
+                                <input type="search" class="product-filter__input" id="product-filter-ref" data-product-filter="ref" placeholder="Réf…" autocomplete="off">
+                            </label>
+                            <label class="product-filter product-filter--wide">
+                                <span class="product-filter__label">Désignation</span>
+                                <input type="search" class="product-filter__input" id="product-filter-designation" data-product-filter="designation" placeholder="Désignation…" autocomplete="off">
+                            </label>
+                            <label class="product-filter">
+                                <span class="product-filter__label">Catégorie</span>
+                                <input type="search" class="product-filter__input" id="product-filter-categorie" data-product-filter="categorie" placeholder="Catégorie…" autocomplete="off">
+                            </label>
+                            <label class="product-filter">
+                                <span class="product-filter__label">Famille</span>
+                                <input type="search" class="product-filter__input" id="product-filter-famille" data-product-filter="famille" placeholder="Famille…" autocomplete="off">
+                            </label>
+                            <label class="product-filter">
+                                <span class="product-filter__label">Saison</span>
+                                <select class="product-filter__input" id="product-filter-saison" data-product-filter="saison">
+                                    <option value="">Toutes</option>
+                                    <option value="ete">Été</option>
+                                    <option value="printemps">Printemps</option>
+                                    <option value="automne">Automne</option>
+                                    <option value="hiver">Hiver</option>
+                                </select>
+                            </label>
+                            <label class="product-filter">
+                                <span class="product-filter__label">Statue</span>
+                                <select class="product-filter__input" id="product-filter-statue" data-product-filter="statue">
+                                    <option value="">Toutes</option>
+                                    <option value="dispo">Dispo</option>
+                                    <option value="faible">Faible</option>
+                                    <option value="rupture">Rupture</option>
+                                </select>
+                            </label>
+                            <label class="product-filter">
+                                <span class="product-filter__label">État</span>
+                                <select class="product-filter__input" id="product-filter-etat" data-product-filter="etat">
+                                    <option value="">Tous</option>
+                                    <option value="actif">Actif</option>
+                                    <option value="inactif">Inactif</option>
+                                </select>
+                            </label>
+
+                            <button type="button" class="product-filters__reset" id="product-filters-reset" title="Réinitialiser les filtres">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>
+                                </svg>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="admin-table-wrap admin-table-wrap--panel">
                         <div class="admin-table-scroll">
                             <table class="admin-table admin-table--products">
@@ -348,17 +408,102 @@
                 </div>
             </section>
 
-            {{-- Vue Fiche Affilié --}}
-            <section class="admin-view" id="admin-view-fiche-affilie" data-view="fiche-affilie" hidden aria-label="Fiche Affilié">
+            {{-- Vue Mouvement Stock --}}
+            <section class="admin-view" id="admin-view-mouvement-stock" data-view="mouvement-stock" hidden aria-label="Mouvement Stock">
                 <div class="admin-panel">
                     <div class="admin-panel__toolbar">
                         <div>
-                            <p class="admin-panel__eyebrow">Affiliés</p>
-                            <h2 class="admin-panel__title">Fiche Affilié</h2>
+                            <p class="admin-panel__eyebrow">Stock</p>
+                            <h2 class="admin-panel__title">Mouvement Stock</h2>
                         </div>
                         <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--primary" id="stock-print-btn">Imprimer</button>
+                            <button type="button" class="admin-btn admin-btn--ghost" id="stock-close-btn" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-table-wrap admin-table-wrap--panel">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--stock-move" id="stock-move-table">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Réf</th>
+                                        <th rowspan="2">Désignation</th>
+                                        <th rowspan="2">Stock Initial</th>
+                                        <th colspan="13" class="stock-move__sales-head">Ventes / mois / année <span id="stock-move-year"></span></th>
+                                        <th rowspan="2">Stock Actuel</th>
+                                    </tr>
+                                    <tr class="stock-move__months">
+                                        <th>Jan</th>
+                                        <th>Fév</th>
+                                        <th>Mar</th>
+                                        <th>Avr</th>
+                                        <th>Mai</th>
+                                        <th>Jun</th>
+                                        <th>Jul</th>
+                                        <th>Aoû</th>
+                                        <th>Sep</th>
+                                        <th>Oct</th>
+                                        <th>Nov</th>
+                                        <th>Déc</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stock-move-tbody">
+                                    {{-- rempli en JS --}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Vue Fiche Affilié --}}
+            <section class="admin-view" id="admin-view-fiche-affilie" data-view="fiche-affilie" hidden aria-label="Fiche Affilié">
+                <div class="admin-panel">
+                    <div class="affilies-hero">
+                        <img
+                            src="{{ asset('images/mouchap-affilies-banner.jpg') }}?v={{ @filemtime(public_path('images/mouchap-affilies-banner.jpg')) ?: time() }}"
+                            alt=""
+                            class="affilies-hero__media"
+                        >
+                        <div class="affilies-hero__veil" aria-hidden="true"></div>
+                        <div class="affilies-hero__actions">
                             <button type="button" class="admin-btn admin-btn--primary" id="affilie-add-btn">Ajouter</button>
-                            <button type="button" class="admin-btn admin-btn--ghost" id="affilie-close-btn" data-admin-view="commandes">Fermer</button>
+                            <button type="button" class="admin-btn admin-btn--ghost admin-btn--on-dark" id="affilie-close-btn" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+
+                    <div class="affilies-summary" id="affilies-summary" aria-live="polite">
+                        <div class="affilies-summary__main">
+                            <span class="affilies-summary__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <p class="affilies-summary__eyebrow">Réseau MOUCHAP</p>
+                                <p class="affilies-summary__label">
+                                    <span class="affilies-summary__count" id="affilies-count-total">0</span>
+                                    affiliés
+                                </p>
+                            </div>
+                        </div>
+                        <div class="affilies-summary__stats">
+                            <div class="affilies-summary__stat affilies-summary__stat--actif">
+                                <span class="affilies-summary__stat-value" id="affilies-count-actif">0</span>
+                                <span class="affilies-summary__stat-label">Actifs</span>
+                            </div>
+                            <div class="affilies-summary__stat affilies-summary__stat--susp">
+                                <span class="affilies-summary__stat-value" id="affilies-count-susp">0</span>
+                                <span class="affilies-summary__stat-label">Suspendus</span>
+                            </div>
+                            <div class="affilies-summary__stat affilies-summary__stat--villes">
+                                <span class="affilies-summary__stat-value" id="affilies-count-villes">0</span>
+                                <span class="affilies-summary__stat-label">Villes</span>
+                            </div>
                         </div>
                     </div>
 
@@ -647,17 +792,23 @@
 
                 <label class="admin-field">
                     <span class="admin-field__label">Login</span>
-                    <input
-                        type="email"
-                        name="login"
-                        id="affilie-fiche-login"
-                        class="admin-field__input"
-                        required
-                        placeholder="ex. nom@mouchap.com"
-                        pattern=".+@mouchap\.com$"
-                        title="Le login doit se terminer par @mouchap.com"
-                    >
-                    <span class="admin-field__hint">Doit se terminer par <strong>@mouchap.com</strong></span>
+                    <div class="login-suffix login-suffix--compact">
+                        <input
+                            type="text"
+                            name="login_user"
+                            id="affilie-fiche-login"
+                            class="admin-field__input login-suffix__input"
+                            required
+                            placeholder="ex. fadma.amjoud"
+                            pattern="[a-zA-Z0-9._-]{2,40}"
+                            title="Identifiant sans @mouchap.com"
+                            autocomplete="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                        >
+                        <span class="login-suffix__domain" aria-hidden="true">@mouchap.com</span>
+                    </div>
+                    <span class="admin-field__hint">Sans le suffixe — il est ajouté automatiquement</span>
                 </label>
 
                 <label class="admin-field">
@@ -920,6 +1071,31 @@
             toast._timer = window.setTimeout(() => toast.classList.remove('is-visible'), 4200);
         };
 
+        const updateNotifBadge = (pendingCount) => {
+            if (notifBadge) {
+                if (pendingCount > 0) {
+                    notifBadge.hidden = false;
+                    notifBadge.textContent = String(pendingCount);
+                } else {
+                    notifBadge.hidden = true;
+                    notifBadge.textContent = '0';
+                }
+            }
+            if (notifCount) {
+                notifCount.textContent = `${pendingCount} en attente`;
+            }
+        };
+
+        const removeNotifItem = (uid) => {
+            const row = notifList?.querySelector(`.admin-notif__item[data-id="${uid}"]`);
+            row?.remove();
+            const remaining = notifList?.querySelectorAll('.admin-notif__item').length || 0;
+            updateNotifBadge(remaining);
+            if (!remaining && notifList) {
+                notifList.innerHTML = '<p class="admin-notif__empty">Aucune nouvelle demande.</p>';
+            }
+        };
+
         const renderAffiliationNotifications = async () => {
             if (!notifList) return;
             let items = [];
@@ -931,41 +1107,20 @@
                 return;
             }
 
-            const visibleItems = items.filter(
-                (item) => item.status !== 'cancelled' && item.status !== 'suspended'
-            );
-            const pending = visibleItems.filter((item) => item.status === 'pending');
+            // L’icône ne garde que les demandes en attente
+            const pending = items.filter((item) => item.status === 'pending');
+            updateNotifBadge(pending.length);
 
-            if (notifBadge) {
-                if (pending.length > 0) {
-                    notifBadge.hidden = false;
-                    notifBadge.textContent = String(pending.length);
-                } else {
-                    notifBadge.hidden = true;
-                }
-            }
-            if (notifCount) {
-                notifCount.textContent = `${pending.length} en attente`;
-            }
-
-            if (!visibleItems.length) {
+            if (!pending.length) {
                 notifList.innerHTML = '<p class="admin-notif__empty">Aucune nouvelle demande.</p>';
                 return;
             }
 
-            notifList.innerHTML = visibleItems
+            notifList.innerHTML = pending
                 .map((item) => {
                     const date = item.created_at
                         ? new Date(item.created_at).toLocaleString('fr-FR')
                         : '';
-                    const actions =
-                        item.status === 'pending'
-                            ? `<div class="admin-notif__actions">
-                                <button type="button" class="notif-action notif-action--ok" data-req-uid="${item.uid}" data-req-action="validated">Valider</button>
-                                <button type="button" class="notif-action notif-action--ko" data-req-uid="${item.uid}" data-req-action="cancelled">Annuler</button>
-                                <button type="button" class="notif-action notif-action--warn" data-req-uid="${item.uid}" data-req-action="suspended">Suspendre</button>
-                               </div>`
-                            : `<p class="admin-notif__status admin-notif__status--${item.status}">${affiliationStatusLabel[item.status] || item.status}</p>`;
 
                     return `<article class="admin-notif__item" data-id="${item.uid}">
                         <div class="admin-notif__item-top">
@@ -975,7 +1130,11 @@
                         <p class="admin-notif__meta">${item.titre || '—'} · ${item.ville || '—'} · ${item.contact || '—'} · ${item.cin || '—'}</p>
                         <p class="admin-notif__meta">${item.banque || '—'} · RIB ${item.rib || '—'}</p>
                         <p class="admin-notif__date">${date}</p>
-                        ${actions}
+                        <div class="admin-notif__actions">
+                            <button type="button" class="notif-action notif-action--ok" data-req-uid="${item.uid}" data-req-action="validated">Valider</button>
+                            <button type="button" class="notif-action notif-action--ko" data-req-uid="${item.uid}" data-req-action="cancelled">Annuler</button>
+                            <button type="button" class="notif-action notif-action--warn" data-req-uid="${item.uid}" data-req-action="suspended">Suspendre</button>
+                        </div>
                     </article>`;
                 })
                 .join('');
@@ -998,19 +1157,26 @@
 
             notifList?.addEventListener('click', async (event) => {
                 const btn = event.target.closest('[data-req-action]');
-                if (!btn) return;
+                if (!btn || btn.disabled) return;
                 const uid = btn.getAttribute('data-req-uid');
                 const action = btn.getAttribute('data-req-action');
+                const row = btn.closest('.admin-notif__item');
+                row?.querySelectorAll('[data-req-action]').forEach((el) => {
+                    el.disabled = true;
+                });
+                // Retrait immédiat de l’icône / liste
+                removeNotifItem(uid);
                 try {
                     const result = await api(`/api/admin/affiliation-requests/${uid}/status`, {
                         method: 'PATCH',
                         body: { status: action },
                     });
                     if (result.message) showAdminToast(result.message);
-                    await renderAffiliationNotifications();
                     window.dispatchEvent(new CustomEvent('mouchap:affilies-updated'));
+                    await renderAffiliationNotifications();
                 } catch (error) {
                     alert(error.message || 'Action impossible.');
+                    await renderAffiliationNotifications();
                 }
             });
 
@@ -1192,6 +1358,10 @@
             if (viewId === 'fiche-produit') {
                 document.querySelector('.admin-topbar__title').textContent = 'Fiche Produit';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Stock';
+            } else if (viewId === 'mouvement-stock') {
+                document.querySelector('.admin-topbar__title').textContent = 'Mouvement Stock';
+                document.querySelector('.admin-topbar__eyebrow').textContent = 'Stock';
+                renderStockMove();
             } else if (viewId === 'fiche-affilie') {
                 document.querySelector('.admin-topbar__title').textContent = 'Fiche Affilié';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Affiliés';
@@ -1460,9 +1630,9 @@
         };
 
         const actionIcons = {
-            view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>',
-            edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
-            del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
+            view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>',
+            edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4.5l7 7"/><path d="M4 20l.8-4.2L15.5 5.1a1.8 1.8 0 0 1 2.5 0l.9.9a1.8 1.8 0 0 1 0 2.5L7.2 20.2 3 21z"/></svg>',
+            del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6.5 7l.8 12.2A1.5 1.5 0 0 0 8.8 20.5h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7"/><path d="M10 11v6M14 11v6"/></svg>',
         };
 
         const bindRowSelects = (root = productsTbody) => {
@@ -1511,10 +1681,17 @@
 
         const renderProducts = () => {
             if (!productsTbody) return;
-            const items = loadProducts();
+            const allItems = loadProducts();
+            const filters = getProductFilters();
+            const items = allItems.filter((item) => matchProductFilters(item, filters));
+
+            if (!allItems.length) {
+                productsTbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucun produit. Cliquez sur Ajouter.</td></tr>`;
+                return;
+            }
 
             if (!items.length) {
-                productsTbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucun produit. Cliquez sur Ajouter.</td></tr>`;
+                productsTbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucun produit ne correspond aux filtres.</td></tr>`;
                 return;
             }
 
@@ -1534,8 +1711,8 @@
                         <td>${media}</td>
                         <td>
                             <div class="admin-actions">
-                                <button type="button" class="admin-action-btn" data-product-action="view" title="Voir" aria-label="Voir">${actionIcons.view}</button>
-                                <button type="button" class="admin-action-btn" data-product-action="edit" title="Modifier" aria-label="Modifier">${actionIcons.edit}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--view" data-product-action="view" title="Voir" aria-label="Voir">${actionIcons.view}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--edit" data-product-action="edit" title="Modifier" aria-label="Modifier">${actionIcons.edit}</button>
                                 <button type="button" class="admin-action-btn admin-action-btn--danger" data-product-action="delete" title="Supprimer" aria-label="Supprimer">${actionIcons.del}</button>
                             </div>
                         </td>
@@ -1558,6 +1735,44 @@
 
             bindRowSelects();
         };
+
+        const getProductFilters = () => ({
+            ref: document.getElementById('product-filter-ref')?.value.trim().toLowerCase() || '',
+            designation: document.getElementById('product-filter-designation')?.value.trim().toLowerCase() || '',
+            categorie: document.getElementById('product-filter-categorie')?.value.trim().toLowerCase() || '',
+            famille: document.getElementById('product-filter-famille')?.value.trim().toLowerCase() || '',
+            saison: document.getElementById('product-filter-saison')?.value || '',
+            statue: document.getElementById('product-filter-statue')?.value || '',
+            etat: document.getElementById('product-filter-etat')?.value || '',
+        });
+
+        const matchProductFilters = (item, filters) => {
+            const includes = (value, needle) => !needle || String(value || '').toLowerCase().includes(needle);
+            return (
+                includes(item.ref, filters.ref) &&
+                includes(item.designation, filters.designation) &&
+                includes(item.categorie, filters.categorie) &&
+                includes(item.famille, filters.famille) &&
+                (!filters.saison || item.saison === filters.saison) &&
+                (!filters.statue || item.statue === filters.statue) &&
+                (!filters.etat || item.etat === filters.etat)
+            );
+        };
+
+        document.getElementById('product-filters')?.addEventListener('input', (event) => {
+            if (!event.target.matches('[data-product-filter]')) return;
+            renderProducts();
+        });
+        document.getElementById('product-filters')?.addEventListener('change', (event) => {
+            if (!event.target.matches('[data-product-filter]')) return;
+            renderProducts();
+        });
+        document.getElementById('product-filters-reset')?.addEventListener('click', () => {
+            document.querySelectorAll('[data-product-filter]').forEach((field) => {
+                field.value = '';
+            });
+            renderProducts();
+        });
 
         const openProductSheet = (mode = 'create', product = null) => {
             if (!productSheet || !productForm) return;
@@ -1744,6 +1959,160 @@
 
         refreshProductsFromServer();
 
+        /* ——— Mouvement Stock ——— */
+        const stockMoveTbody = document.getElementById('stock-move-tbody');
+        const STOCK_MONTH_LABELS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+
+        const emptyMonthSales = () => Array.from({ length: 12 }, () => 0);
+
+        const buildProductSalesMap = (orders, year) => {
+            const map = new Map();
+
+            (orders || []).forEach((order) => {
+                if (order.statue === 'annulee') return;
+                const qte = Number(order.qte) || 0;
+                if (!qte) return;
+
+                const date = order.date ? new Date(order.date) : null;
+                if (!date || Number.isNaN(date.getTime()) || date.getFullYear() !== year) return;
+
+                const monthIndex = date.getMonth();
+                const bump = (key) => {
+                    if (!key) return;
+                    const entry = map.get(key) || { months: emptyMonthSales(), year: 0 };
+                    entry.months[monthIndex] += qte;
+                    entry.year += qte;
+                    map.set(key, entry);
+                };
+
+                bump(String(order.product_id || '').trim());
+                bump(String(order.ref_prod || '').trim());
+            });
+
+            return map;
+        };
+
+        const getStockMoveRows = () => {
+            const year = new Date().getFullYear();
+            const products = loadProducts();
+            const salesMap = buildProductSalesMap(ordersCache, year);
+            const yearEl = document.getElementById('stock-move-year');
+            if (yearEl) yearEl.textContent = String(year);
+
+            return products.map((product) => {
+                const sales =
+                    salesMap.get(String(product.id)) ||
+                    salesMap.get(String(product.ref)) ||
+                    { months: emptyMonthSales(), year: 0 };
+                const months = Array.isArray(sales.months) ? sales.months : emptyMonthSales();
+                const venteAnnee = Number(sales.year) || months.reduce((sum, n) => sum + n, 0);
+                const stockActuel = Number(product.qte) || 0;
+                const stockInitial = stockActuel + venteAnnee;
+
+                return {
+                    ref: product.ref || '—',
+                    designation: product.designation || '—',
+                    stockInitial,
+                    months,
+                    venteAnnee,
+                    stockActuel,
+                    year,
+                };
+            });
+        };
+
+        const renderStockMove = async () => {
+            if (!stockMoveTbody) return;
+            await refreshProductsFromServer();
+            try {
+                await refreshOrdersFromServer();
+            } catch {
+                /* keep existing ordersCache */
+            }
+
+            const rows = getStockMoveRows();
+            if (!rows.length) {
+                stockMoveTbody.innerHTML = `<tr><td colspan="16" class="admin-table__empty">Aucun produit en stock.</td></tr>`;
+                return;
+            }
+
+            stockMoveTbody.innerHTML = rows
+                .map((row) => {
+                    const monthCells = row.months
+                        .map((qty, index) => {
+                            const value = Number(qty) || 0;
+                            const isCurrent = index === new Date().getMonth();
+                            return `<td class="stock-month${value ? ' is-filled' : ''}${isCurrent ? ' is-current' : ''}">${value || '—'}</td>`;
+                        })
+                        .join('');
+
+                    return `<tr>
+                        <td>${escapeHtml(row.ref)}</td>
+                        <td>${escapeHtml(row.designation)}</td>
+                        <td>${escapeHtml(String(row.stockInitial))}</td>
+                        ${monthCells}
+                        <td><span class="stock-sales">${escapeHtml(String(row.venteAnnee))}</span></td>
+                        <td><strong class="stock-actuel">${escapeHtml(String(row.stockActuel))}</strong></td>
+                    </tr>`;
+                })
+                .join('');
+        };
+
+        const printStockMove = () => {
+            const rows = getStockMoveRows();
+            const year = rows[0]?.year || new Date().getFullYear();
+            const win = window.open('', '_blank', 'noopener,noreferrer,width=1100,height=720');
+            if (!win) {
+                alert('Autorisez les pop-ups pour imprimer.');
+                return;
+            }
+
+            const monthHeads = STOCK_MONTH_LABELS.map((label) => `<th>${label}</th>`).join('');
+            const bodyRows = rows.length
+                ? rows
+                      .map((row) => {
+                          const months = row.months.map((qty) => `<td>${Number(qty) || 0}</td>`).join('');
+                          return `<tr>
+                            <td>${escapeHtml(row.ref)}</td>
+                            <td>${escapeHtml(row.designation)}</td>
+                            <td>${row.stockInitial}</td>
+                            ${months}
+                            <td>${row.venteAnnee}</td>
+                            <td>${row.stockActuel}</td>
+                        </tr>`;
+                      })
+                      .join('')
+                : `<tr><td colspan="16">Aucun produit</td></tr>`;
+
+            const printedAt = new Date().toLocaleString('fr-FR');
+            win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
+                <title>MOUCHAP — Mouvement Stock ${year}</title>
+                <style>
+                    body{font-family:Georgia,serif;color:#2a1520;padding:20px}
+                    h1{font-size:20px;margin:0 0 4px}
+                    p{margin:0 0 14px;color:#6b1e3a;font-size:12px}
+                    table{width:100%;border-collapse:collapse;font-size:11px}
+                    th,td{border:1px solid #d7b7c0;padding:6px 5px;text-align:center}
+                    th{background:#6b1e3a;color:#fff8f6;text-transform:uppercase;letter-spacing:.04em;font-size:10px}
+                    tr:nth-child(even) td{background:#fdf5f7}
+                    td:nth-child(2){text-align:left}
+                </style></head><body>
+                <h1>Mouvement Stock — ${year}</h1>
+                <p>MOUCHAP · Ventes par mois · Imprimé le ${escapeHtml(printedAt)}</p>
+                <table>
+                    <thead><tr>
+                        <th>Réf</th><th>Désignation</th><th>Stock Initial</th>
+                        ${monthHeads}<th>Total</th><th>Stock Actuel</th>
+                    </tr></thead>
+                    <tbody>${bodyRows}</tbody>
+                </table>
+                <script>window.onload=function(){window.print();}<\/script>
+                </body></html>`);
+            win.document.close();
+        };
+
+        document.getElementById('stock-print-btn')?.addEventListener('click', printStockMove);
+
         /* ——— Fiche Affilié ——— */
         const AFFILIATION_REQ_KEY = 'mouchap_affiliation_requests';
         const AFFILIES_KEY = 'mouchap_affilies';
@@ -1755,10 +2124,20 @@
         let affilieViewCurrentId = null;
 
         const affActionIcons = {
-            view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>',
-            edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
-            del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
-            pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path stroke-linecap="round" d="M14 2v6h6M9 13h6M9 17h6M9 9h1"/></svg>',
+            view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>',
+            edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4.5l7 7"/><path d="M4 20l.8-4.2L15.5 5.1a1.8 1.8 0 0 1 2.5 0l.9.9a1.8 1.8 0 0 1 0 2.5L7.2 20.2 3 21z"/></svg>',
+            del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6.5 7l.8 12.2A1.5 1.5 0 0 0 8.8 20.5h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7"/><path d="M10 11v6M14 11v6"/></svg>',
+            pdf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7.5L19 8v12.5a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><path d="M14.5 3.5V8H19"/><path d="M9 13h6M9 16.5h4"/></svg>',
+        };
+
+        const loginLocal = (value) => String(value || '')
+            .replace(/@mouchap\.com$/i, '')
+            .replace(/@.*$/, '')
+            .trim();
+
+        const loginFull = (value) => {
+            const local = loginLocal(value);
+            return local ? `${local}@mouchap.com` : '';
         };
 
         const paiementClassMap = {
@@ -1834,15 +2213,41 @@
                     const uid = select.closest('tr')?.dataset.uid;
                     try {
                         await api(`/api/admin/affilies/${uid}`, { method: 'PATCH', body: { statue: select.value } });
+                        affiliesCache = loadAffilies().map((item) =>
+                            item.uid === uid ? { ...item, statue: select.value } : item
+                        );
+                        updateAffiliesSummary(affiliesCache);
                     } catch (e) { alert(e.message || 'Erreur'); }
                 };
             });
+        };
+
+        const updateAffiliesSummary = (items = []) => {
+            const total = items.length;
+            const actifs = items.filter((item) => (item.statue || 'actif') === 'actif').length;
+            const susp = items.filter((item) => item.statue === 'susp').length;
+            const villes = new Set(
+                items
+                    .map((item) => String(item.ville || '').trim().toLowerCase())
+                    .filter(Boolean)
+            ).size;
+
+            const set = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = String(value);
+            };
+
+            set('affilies-count-total', total);
+            set('affilies-count-actif', actifs);
+            set('affilies-count-susp', susp);
+            set('affilies-count-villes', villes);
         };
 
         const renderAffilies = async () => {
             await renderKpis();
             if (!affiliesTbody) return;
             const items = await syncAffiliesFromValidated();
+            updateAffiliesSummary(items);
 
             if (!items.length) {
                 affiliesTbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucun affilié validé. Validez une demande ou cliquez sur Ajouter.</td></tr>`;
@@ -1876,14 +2281,14 @@
                                 <option value="susp" ${statue === 'susp' ? 'selected' : ''}>Susp</option>
                             </select>
                         </td>
-                        <td>${escapeHtml(item.login || '')}</td>
+                        <td class="admin-table__login">${escapeHtml(loginLocal(item.login))}</td>
                         <td>${escapeHtml(item.password || '')}</td>
                         <td>
                             <div class="admin-actions">
-                                <button type="button" class="admin-action-btn" data-affilie-action="view" title="Voir" aria-label="Voir">${affActionIcons.view}</button>
-                                <button type="button" class="admin-action-btn" data-affilie-action="edit" title="Modifier" aria-label="Modifier">${affActionIcons.edit}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--view" data-affilie-action="view" title="Voir" aria-label="Voir">${affActionIcons.view}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--edit" data-affilie-action="edit" title="Modifier" aria-label="Modifier">${affActionIcons.edit}</button>
                                 <button type="button" class="admin-action-btn admin-action-btn--danger" data-affilie-action="delete" title="Supprimer" aria-label="Supprimer">${affActionIcons.del}</button>
-                                <button type="button" class="admin-action-btn" data-affilie-action="pdf" title="PDF" aria-label="PDF">${affActionIcons.pdf}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--pdf" data-affilie-action="pdf" title="PDF" aria-label="PDF">${affActionIcons.pdf}</button>
                             </div>
                         </td>
                     </tr>`;
@@ -1939,7 +2344,7 @@
                 </div>
                 <div class="affilie-view__item">
                     <dt>Login</dt>
-                    <dd>${escapeHtml(item.login || '—')}</dd>
+                    <dd>${escapeHtml(loginLocal(item.login) || '—')}</dd>
                 </div>
                 <div class="affilie-view__item">
                     <dt>Mot de Passe</dt>
@@ -1998,7 +2403,7 @@
                     <div class="full"><dt>Rib</dt><dd>${escapeHtml(affilie.rib || '—')}</dd></div>
                     <div><dt>Type Paiement</dt><dd>${escapeHtml(affilie.type_paiement || '—')}</dd></div>
                     <div><dt>Statue</dt><dd>${statueLabel(affilie.statue)}</dd></div>
-                    <div><dt>Login</dt><dd>${escapeHtml(affilie.login || '—')}</dd></div>
+                    <div><dt>Login</dt><dd>${escapeHtml(loginLocal(affilie.login) || '—')}</dd></div>
                     <div><dt>Mot de Passe</dt><dd>${escapeHtml(affilie.password || '—')}</dd></div>
                 </dl>
                 <script>window.onload=function(){window.print();}<\/script>
@@ -2023,7 +2428,7 @@
             document.getElementById('affilie-fiche-rib').value = affilie?.rib || '';
             document.getElementById('affilie-fiche-paiement').value = affilie?.type_paiement || 'Vir';
             document.getElementById('affilie-fiche-statue').value = affilie?.statue || 'actif';
-            document.getElementById('affilie-fiche-login').value = affilie?.login || '';
+            document.getElementById('affilie-fiche-login').value = loginLocal(affilie?.login || '');
             document.getElementById('affilie-fiche-password').value = affilie?.password || randomPassword();
 
             affilieSheet.hidden = false;
@@ -2098,7 +2503,7 @@
                 rib: document.getElementById('affilie-fiche-rib').value.trim(),
                 type_paiement: document.getElementById('affilie-fiche-paiement').value,
                 statue: document.getElementById('affilie-fiche-statue').value,
-                login: document.getElementById('affilie-fiche-login').value.trim(),
+                login: loginFull(document.getElementById('affilie-fiche-login').value),
                 password: document.getElementById('affilie-fiche-password').value.trim(),
             };
 
@@ -2162,8 +2567,8 @@
                         <td>${escapeHtml(item.ice)}</td>
                         <td>
                             <div class="admin-actions">
-                                <button type="button" class="admin-action-btn" data-fournisseur-action="view" title="Voir" aria-label="Voir">${affActionIcons.view}</button>
-                                <button type="button" class="admin-action-btn" data-fournisseur-action="edit" title="Modifier" aria-label="Modifier">${affActionIcons.edit}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--view" data-fournisseur-action="view" title="Voir" aria-label="Voir">${affActionIcons.view}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--edit" data-fournisseur-action="edit" title="Modifier" aria-label="Modifier">${affActionIcons.edit}</button>
                                 <button type="button" class="admin-action-btn admin-action-btn--danger" data-fournisseur-action="delete" title="Supprimer" aria-label="Supprimer">${affActionIcons.del}</button>
                             </div>
                         </td>
@@ -2363,12 +2768,12 @@
                         <td>${escapeHtml(item.nom_complet)}</td>
                         <td>${escapeHtml(item.contact)}</td>
                         <td><span class="user-statue-badge user-statue-badge--${statue}">${userStatueLabel(statue)}</span></td>
-                        <td>${escapeHtml(item.login)}</td>
+                        <td class="admin-table__login">${escapeHtml(loginLocal(item.login))}</td>
                         <td>${escapeHtml(item.password)}</td>
                         <td>
                             <div class="admin-actions">
-                                <button type="button" class="admin-action-btn" data-user-action="view" title="Voir" aria-label="Voir">${affActionIcons.view}</button>
-                                <button type="button" class="admin-action-btn" data-user-action="edit" title="Modifier" aria-label="Modifier">${affActionIcons.edit}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--view" data-user-action="view" title="Voir" aria-label="Voir">${affActionIcons.view}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--edit" data-user-action="edit" title="Modifier" aria-label="Modifier">${affActionIcons.edit}</button>
                                 <button type="button" class="admin-action-btn admin-action-btn--danger" data-user-action="delete" title="Supprimer" aria-label="Supprimer">${affActionIcons.del}</button>
                             </div>
                         </td>
@@ -2493,6 +2898,9 @@
         if (window.location.hash === '#fiche-produit') {
             showAdminView('fiche-produit');
             document.querySelector('[data-admin-view="fiche-produit"]')?.classList.add('is-active');
+        } else if (window.location.hash === '#mouvement-stock' || window.location.hash === '#mouvement-produit') {
+            showAdminView('mouvement-stock');
+            document.querySelector('[data-admin-view="mouvement-stock"]')?.classList.add('is-active');
         } else if (window.location.hash === '#fiche-affilie') {
             showAdminView('fiche-affilie');
             document.querySelector('[data-admin-view="fiche-affilie"]')?.classList.add('is-active');

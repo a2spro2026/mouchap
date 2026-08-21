@@ -40,6 +40,37 @@
                     </span>
                     <span>Catalogue</span>
                 </a>
+
+                <div class="aff-menu" id="aff-menu-commande">
+                    <button type="button" class="aff-side-link aff-menu__toggle" data-aff-menu-toggle aria-expanded="false">
+                        <span class="aff-side-link__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path stroke-linecap="round" d="M9 12h6M9 16h4"/></svg>
+                        </span>
+                        <span>Commande</span>
+                        <span class="aff-menu__chevron" aria-hidden="true"></span>
+                    </button>
+                    <div class="aff-submenu">
+                        <a href="#bon-commande" class="aff-sublink" data-aff-nav="bon-commande">
+                            <span class="aff-sublink__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path stroke-linecap="round" d="M14 2v6h6M9 13h6M9 17h4"/></svg>
+                            </span>
+                            <span>Bon de Commande</span>
+                        </a>
+                        <a href="#balance-commande" class="aff-sublink" data-aff-nav="balance-commande">
+                            <span class="aff-sublink__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18"/><path stroke-linecap="round" stroke-linejoin="round" d="M7 14l4-4 3 3 5-6"/></svg>
+                            </span>
+                            <span>Balance Commande</span>
+                        </a>
+                        <a href="#balance-paiement" class="aff-sublink" data-aff-nav="balance-paiement">
+                            <span class="aff-sublink__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M2 10h20"/><circle cx="16" cy="15" r="1.4"/></svg>
+                            </span>
+                            <span>Balance Paiement</span>
+                        </a>
+                    </div>
+                </div>
+
                 <a href="#messages" class="aff-side-link" data-aff-nav="messages">
                     <span class="aff-side-link__icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4h16v12H5.2L4 17.5V4z"/><path stroke-linecap="round" d="M8 8h8M8 12h5"/></svg>
@@ -184,7 +215,7 @@
                                     <th>Size</th>
                                     <th>Qte disponible</th>
                                     <th>Média</th>
-                                    <th>Télécharger</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="aff-cat-tbody"></tbody>
@@ -199,6 +230,108 @@
                         <button type="button" class="admin-btn admin-btn--ghost" id="aff-season-gallery-back">Retour</button>
                     </div>
                     <div class="aff-season-grid" id="aff-season-grid"></div>
+                </div>
+            </section>
+
+            {{-- Bon de Commande --}}
+            <section class="aff-view" id="aff-view-bon-commande" data-aff-view="bon-commande" hidden>
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Commande</p>
+                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Bon de Commande</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--primary" id="bn-add-btn">Ajouter</button>
+                            <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel aff-cmd-table-wrap">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--bn">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N° Bn</th>
+                                        <th>Réf</th>
+                                        <th>Désignation</th>
+                                        <th>Qte</th>
+                                        <th>Prix/u</th>
+                                        <th>Nom Client</th>
+                                        <th>Ville</th>
+                                        <th>Contact</th>
+                                        <th>Adresse</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bn-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Balance Commande --}}
+            <section class="aff-view" id="aff-view-balance-commande" data-aff-view="balance-commande" hidden>
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Commande</p>
+                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Balance Commande</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--primary" id="bal-cmd-print">Imprimer</button>
+                            <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel aff-cmd-table-wrap">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--bal-cmd" id="bal-cmd-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N° Bn</th>
+                                        <th>Nom Client</th>
+                                        <th>Montant</th>
+                                        <th>Marge</th>
+                                        <th>Statue</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bal-cmd-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Balance Paiement --}}
+            <section class="aff-view" id="aff-view-balance-paiement" data-aff-view="balance-paiement" hidden>
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Commande</p>
+                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Balance Paiement</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel aff-cmd-table-wrap">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--bal-paie">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N° Bn</th>
+                                        <th>Nom Client</th>
+                                        <th>Date Paie</th>
+                                        <th>Reçu</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bal-paie-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -244,6 +377,95 @@
                         </fieldset>
                         <div class="product-sheet__footer">
                             <button type="button" class="admin-btn admin-btn--ghost" data-aff-order-close>Fermer</button>
+                            <button type="submit" class="admin-btn admin-btn--primary">Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Panneau saisie Bon de Commande --}}
+            <div class="product-sheet" id="bn-sheet" hidden aria-hidden="true">
+                <div class="product-sheet__backdrop" data-bn-sheet-close></div>
+                <div class="product-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="bn-sheet-title">
+                    <div class="product-sheet__header">
+                        <div>
+                            <p class="product-sheet__eyebrow">Commande · Saisie</p>
+                            <h3 class="product-sheet__title" id="bn-sheet-title">Nouveau bon</h3>
+                        </div>
+                        <button type="button" class="product-sheet__x" data-bn-sheet-close aria-label="Fermer">×</button>
+                    </div>
+                    <form class="product-sheet__form" id="bn-form" novalidate>
+                        <input type="hidden" id="bn-uid">
+                        <input type="hidden" id="bn-product-id">
+                        <label class="admin-field">
+                            <span class="admin-field__label">Date</span>
+                            <input type="date" id="bn-date" class="admin-field__input" required>
+                        </label>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Réf</span>
+                                <input type="text" id="bn-ref" class="admin-field__input" required>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Qte</span>
+                                <input type="number" id="bn-qte" class="admin-field__input" min="1" step="1" value="1" required>
+                            </label>
+                        </div>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Désignation</span>
+                            <input type="text" id="bn-designation" class="admin-field__input" required>
+                        </label>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Prix/u (DH)</span>
+                            <input type="number" id="bn-prix" class="admin-field__input" min="0" step="0.01" value="0" required>
+                        </label>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Nom Client</span>
+                            <input type="text" id="bn-client" class="admin-field__input" required>
+                        </label>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Ville</span>
+                                <input type="text" id="bn-ville" class="admin-field__input" required>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Contact</span>
+                                <input type="tel" id="bn-contact" class="admin-field__input" required>
+                            </label>
+                        </div>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Adresse</span>
+                            <input type="text" id="bn-adresse" class="admin-field__input" placeholder="Adresse de livraison">
+                        </label>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Statue</span>
+                                <select id="bn-statue" class="admin-field__input">
+                                    <option value="reporte">Reportée</option>
+                                    <option value="livree">Livrée</option>
+                                    <option value="annulee">Annulée</option>
+                                </select>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Marge (DH)</span>
+                                <input type="number" id="bn-marge" class="admin-field__input" min="0" step="0.01" value="0">
+                            </label>
+                        </div>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Date Paie</span>
+                                <input type="date" id="bn-date-paie" class="admin-field__input">
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Reçu</span>
+                                <select id="bn-recu" class="admin-field__input">
+                                    <option value="non">Non</option>
+                                    <option value="oui">Oui</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="product-sheet__footer">
+                            <button type="button" class="admin-btn admin-btn--ghost" data-bn-sheet-close>Fermer</button>
                             <button type="submit" class="admin-btn admin-btn--primary">Valider</button>
                         </div>
                     </form>
@@ -504,6 +726,7 @@
                 tbody.innerHTML = items
                     .map((p) => {
                         const media = renderCatalogueMedia(p);
+                        const canOrder = Number(p.qte || 0) > 0;
                         return `<tr data-product-id="${escapeHtml(p.id)}">
                             <td>${escapeHtml(p.ref)}</td>
                             <td>${escapeHtml(p.designation)}</td>
@@ -515,11 +738,14 @@
                             <td>${media}</td>
                             <td>
                                 <div class="admin-actions">
-                                    <button type="button" class="admin-action-btn" data-cat-action="view" title="Voir le média" aria-label="Voir le média">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    <button type="button" class="admin-action-btn admin-action-btn--view" data-cat-action="view" title="Voir le média" aria-label="Voir">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
                                     </button>
-                                    <button type="button" class="admin-action-btn" data-cat-action="download" title="Télécharger" aria-label="Télécharger">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+                                    <button type="button" class="admin-action-btn admin-action-btn--edit" data-cat-action="download" title="Télécharger" aria-label="Télécharger">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+                                    </button>
+                                    <button type="button" class="admin-action-btn admin-action-btn--order" data-cat-action="order" title="Commander" aria-label="Commander" ${canOrder ? '' : 'disabled'}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path stroke-linecap="round" d="M9 12h6M9 16h4"/></svg>
                                     </button>
                                 </div>
                             </td>
@@ -729,7 +955,7 @@
 
                 if (btn.dataset.catAction === 'cart') {
                     hideDlMenu();
-                    openOrderSheet(product);
+                    openBonFromProduct(product);
                     return;
                 }
 
@@ -750,6 +976,10 @@
                 }
                 if (btn.dataset.catAction === 'download') {
                     showDownloadMenu(product, btn);
+                }
+                if (btn.dataset.catAction === 'order') {
+                    hideDlMenu();
+                    openBonFromProduct(product);
                 }
             });
 
@@ -826,7 +1056,8 @@
             });
 
             const statueLabel = {
-                confirme: 'Confirmée',
+                confirme: 'Livrée',
+                livree: 'Livrée',
                 annulee: 'Annulée',
                 reporte: 'Reportée',
                 retour: 'Retour',
@@ -834,6 +1065,7 @@
 
             const statueClass = {
                 confirme: 'aff-statue-pill--ok',
+                livree: 'aff-statue-pill--ok',
                 annulee: 'aff-statue-pill--ko',
                 reporte: 'aff-statue-pill--warn',
                 retour: 'aff-statue-pill--retour',
@@ -850,6 +1082,13 @@
             };
 
             const formatMoney = (n) => `${Number(n || 0).toLocaleString('fr-MA')} DH`;
+            const todayInput = () => new Date().toISOString().slice(0, 10);
+
+            const actionIconsBn = {
+                view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>',
+                edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.5 4.5l7 7"/><path d="M4 20l.8-4.2L15.5 5.1a1.8 1.8 0 0 1 2.5 0l.9.9a1.8 1.8 0 0 1 0 2.5L7.2 20.2 3 21z"/></svg>',
+                del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6.5 7l.8 12.2A1.5 1.5 0 0 0 8.8 20.5h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7"/><path d="M10 11v6M14 11v6"/></svg>',
+            };
 
             const loadOrders = () => ordersCache;
             const saveOrders = (items) => { ordersCache = items; };
@@ -859,20 +1098,208 @@
                 return ordersCache;
             };
 
+            const openBnSheet = (order = null, preset = null) => {
+                const sheet = document.getElementById('bn-sheet');
+                if (!sheet) return;
+                document.getElementById('bn-sheet-title').textContent = order ? 'Modifier le bon' : 'Nouveau bon';
+                document.getElementById('bn-uid').value = order?.uid || order?.id || '';
+                document.getElementById('bn-product-id').value = order?.product_id || preset?.id || '';
+                document.getElementById('bn-date').value = order?.date || todayInput();
+                document.getElementById('bn-ref').value = order?.ref_prod || preset?.ref || '';
+                document.getElementById('bn-designation').value = order?.designation || preset?.designation || '';
+                document.getElementById('bn-qte').value = order?.qte || 1;
+                document.getElementById('bn-prix').value = order?.prix_u ?? preset?.prix ?? 0;
+                document.getElementById('bn-client').value = order?.nom_client || session?.nom_complet || '';
+                document.getElementById('bn-ville').value = order?.ville || session?.ville || '';
+                document.getElementById('bn-contact').value = order?.contact || session?.contact || '';
+                document.getElementById('bn-adresse').value = order?.adresse || '';
+                document.getElementById('bn-statue').value = order?.statue === 'confirme' ? 'livree' : (order?.statue || 'reporte');
+                document.getElementById('bn-marge').value = order?.marge ?? 0;
+                document.getElementById('bn-date-paie').value = order?.date_paie || '';
+                document.getElementById('bn-recu').value = order?.recu || 'non';
+                const readOnly = !!(preset && preset.viewOnly);
+                sheet.querySelectorAll('input, select').forEach((el) => {
+                    if (el.type === 'hidden') return;
+                    el.disabled = readOnly;
+                });
+                const saveBtn = sheet.querySelector('button[type="submit"]');
+                if (saveBtn) saveBtn.hidden = readOnly;
+                sheet.hidden = false;
+                sheet.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('product-sheet-open');
+            };
+
+            const closeBnSheet = () => {
+                const sheet = document.getElementById('bn-sheet');
+                if (!sheet) return;
+                sheet.hidden = true;
+                sheet.setAttribute('aria-hidden', 'true');
+                if (document.getElementById('aff-order-sheet')?.hidden !== false) {
+                    document.body.classList.remove('product-sheet-open');
+                }
+            };
+
+            const openBonFromProduct = (product) => {
+                showView('bon-commande');
+                document.querySelector('#aff-menu-commande')?.classList.add('is-open');
+                openBnSheet(null, product);
+            };
+
+            const renderBonCommande = async () => {
+                await refreshMyOrders();
+                const tbody = document.getElementById('bn-tbody');
+                if (!tbody) return;
+                const orders = myOrders();
+                if (!orders.length) {
+                    tbody.innerHTML = `<tr><td colspan="11" class="admin-table__empty">Aucun bon de commande. Cliquez sur Ajouter.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = orders.map((o) => `<tr data-uid="${escapeHtml(o.uid || o.id)}">
+                    <td>${escapeHtml(formatAffDate(o.date))}</td>
+                    <td>${escapeHtml(o.n_cmd || '—')}</td>
+                    <td>${escapeHtml(o.ref_prod || '—')}</td>
+                    <td>${escapeHtml(o.designation || '—')}</td>
+                    <td>${escapeHtml(o.qte ?? 0)}</td>
+                    <td>${escapeHtml(formatMoney(o.prix_u))}</td>
+                    <td>${escapeHtml(o.nom_client || '—')}</td>
+                    <td>${escapeHtml(o.ville || '—')}</td>
+                    <td>${escapeHtml(o.contact || '—')}</td>
+                    <td>${escapeHtml(o.adresse || '—')}</td>
+                    <td>
+                        <div class="admin-actions">
+                            <button type="button" class="admin-action-btn admin-action-btn--view" data-bn-action="view" title="Voir">${actionIconsBn.view}</button>
+                            <button type="button" class="admin-action-btn admin-action-btn--edit" data-bn-action="edit" title="Modifier">${actionIconsBn.edit}</button>
+                            <button type="button" class="admin-action-btn admin-action-btn--danger" data-bn-action="delete" title="Supprimer">${actionIconsBn.del}</button>
+                        </div>
+                    </td>
+                </tr>`).join('');
+            };
+
+            const renderBalanceCommande = async () => {
+                await refreshMyOrders();
+                const tbody = document.getElementById('bal-cmd-tbody');
+                if (!tbody) return;
+                const orders = myOrders();
+                if (!orders.length) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">Aucune commande.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = orders.map((o) => {
+                    const st = o.statue === 'confirme' ? 'livree' : (o.statue || 'reporte');
+                    return `<tr data-uid="${escapeHtml(o.uid || o.id)}">
+                        <td>${escapeHtml(formatAffDate(o.date))}</td>
+                        <td>${escapeHtml(o.n_cmd || '—')}</td>
+                        <td>${escapeHtml(o.nom_client || '—')}</td>
+                        <td>${escapeHtml(formatMoney(o.montant))}</td>
+                        <td>${escapeHtml(formatMoney(o.marge))}</td>
+                        <td>
+                            <select class="aff-bal-statue ${statueClass[st] || ''}" data-bal-statue>
+                                <option value="livree" ${st === 'livree' ? 'selected' : ''}>Livrée</option>
+                                <option value="annulee" ${st === 'annulee' ? 'selected' : ''}>Annulée</option>
+                                <option value="reporte" ${st === 'reporte' ? 'selected' : ''}>Reportée</option>
+                            </select>
+                        </td>
+                    </tr>`;
+                }).join('');
+
+                tbody.querySelectorAll('[data-bal-statue]').forEach((select) => {
+                    select.onchange = async () => {
+                        const uid = select.closest('tr')?.dataset.uid;
+                        try {
+                            const updated = await api(`/api/affilie/orders/${uid}`, {
+                                method: 'POST',
+                                body: { statue: select.value },
+                            });
+                            ordersCache = ordersCache.map((o) => (String(o.uid || o.id) === String(uid) ? updated : o));
+                            renderBalanceCommande();
+                            renderBalancePaiement();
+                        } catch (e) {
+                            alert(e.message || 'Mise à jour impossible');
+                        }
+                    };
+                });
+            };
+
+            const renderBalancePaiement = async () => {
+                await refreshMyOrders();
+                const tbody = document.getElementById('bal-paie-tbody');
+                if (!tbody) return;
+                const orders = myOrders();
+                if (!orders.length) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="admin-table__empty">Aucun paiement.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = orders.map((o) => `<tr data-uid="${escapeHtml(o.uid || o.id)}">
+                    <td>${escapeHtml(formatAffDate(o.date))}</td>
+                    <td>${escapeHtml(o.n_cmd || '—')}</td>
+                    <td>${escapeHtml(o.nom_client || '—')}</td>
+                    <td><input type="date" class="aff-inline-date" data-bal-date-paie value="${escapeHtml(o.date_paie || '')}"></td>
+                    <td>
+                        <select class="aff-bal-recu" data-bal-recu>
+                            <option value="oui" ${o.recu === 'oui' ? 'selected' : ''}>Oui</option>
+                            <option value="non" ${o.recu !== 'oui' ? 'selected' : ''}>Non</option>
+                        </select>
+                    </td>
+                </tr>`).join('');
+
+                const patchField = async (uid, body) => {
+                    const updated = await api(`/api/affilie/orders/${uid}`, { method: 'POST', body });
+                    ordersCache = ordersCache.map((o) => (String(o.uid || o.id) === String(uid) ? updated : o));
+                };
+
+                tbody.querySelectorAll('[data-bal-date-paie]').forEach((input) => {
+                    input.onchange = async () => {
+                        try {
+                            await patchField(input.closest('tr')?.dataset.uid, { date_paie: input.value || null });
+                        } catch (e) { alert(e.message || 'Erreur'); }
+                    };
+                });
+                tbody.querySelectorAll('[data-bal-recu]').forEach((select) => {
+                    select.onchange = async () => {
+                        try {
+                            await patchField(select.closest('tr')?.dataset.uid, { recu: select.value });
+                        } catch (e) { alert(e.message || 'Erreur'); }
+                    };
+                });
+            };
+
+            const printBalanceCommande = () => {
+                const orders = myOrders();
+                const win = window.open('', '_blank', 'noopener,noreferrer,width=980,height=720');
+                if (!win) { alert('Autorisez les pop-ups.'); return; }
+                const rows = orders.map((o) => {
+                    const st = o.statue === 'confirme' ? 'livree' : o.statue;
+                    return `<tr>
+                        <td>${escapeHtml(formatAffDate(o.date))}</td>
+                        <td>${escapeHtml(o.n_cmd || '')}</td>
+                        <td>${escapeHtml(o.nom_client || '')}</td>
+                        <td>${escapeHtml(formatMoney(o.montant))}</td>
+                        <td>${escapeHtml(formatMoney(o.marge))}</td>
+                        <td>${escapeHtml(statueLabel[st] || st)}</td>
+                    </tr>`;
+                }).join('') || `<tr><td colspan="6">Aucune commande</td></tr>`;
+                win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Balance Commande</title>
+                    <style>body{font-family:Georgia,serif;padding:20px;color:#2a1520}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #d7b7c0;padding:8px;text-align:center}th{background:#6b1e3a;color:#fff}</style></head>
+                    <body><h1>Balance Commande</h1><p>MOUCHAP · ${escapeHtml(session?.nom_complet || '')}</p>
+                    <table><thead><tr><th>Date</th><th>N° Bn</th><th>Nom Client</th><th>Montant</th><th>Marge</th><th>Statue</th></tr></thead>
+                    <tbody>${rows}</tbody></table>
+                    <script>window.onload=function(){window.print();}<\/script></body></html>`);
+                win.document.close();
+            };
+
             const renderCommandes = async () => {
                 await refreshMyOrders();
                 const orders = myOrders();
-                const confirmees = orders.filter((o) => o.statue === 'confirme');
+                const confirmees = orders.filter((o) => o.statue === 'confirme' || o.statue === 'livree');
                 const annulees = orders.filter((o) => o.statue === 'annulee');
                 const retours = orders.filter((o) => o.statue === 'retour');
                 const totalConfirmees = confirmees.reduce((sum, o) => sum + Number(o.montant || 0), 0);
-                const revenue = totalConfirmees;
 
                 document.getElementById('aff-cmd-confirmees').textContent = String(confirmees.length);
                 document.getElementById('aff-cmd-annulees').textContent = String(annulees.length);
                 document.getElementById('aff-cmd-retour').textContent = String(retours.length);
                 document.getElementById('aff-cmd-total-confirmees').textContent = formatMoney(totalConfirmees);
-                document.getElementById('aff-cmd-revenue').textContent = formatMoney(revenue);
+                document.getElementById('aff-cmd-revenue').textContent = formatMoney(totalConfirmees);
 
                 const tbody = document.getElementById('aff-cmd-tbody');
                 if (!tbody) return;
@@ -884,7 +1311,7 @@
 
                 tbody.innerHTML = orders
                     .map((o) => {
-                        const st = o.statue || 'confirme';
+                        const st = o.statue === 'confirme' ? 'livree' : (o.statue || 'reporte');
                         return `<tr>
                             <td>${escapeHtml(formatAffDate(o.date))}</td>
                             <td>${escapeHtml(o.n_cmd || '—')}</td>
@@ -911,6 +1338,26 @@
                     link.classList.toggle('is-active', link.dataset.affNav === viewId);
                 });
 
+                const commandeViews = ['bon-commande', 'balance-commande', 'balance-paiement'];
+                const menu = document.getElementById('aff-menu-commande');
+                if (menu) {
+                    const open = commandeViews.includes(viewId);
+                    menu.classList.toggle('is-open', open);
+                    menu.querySelector('[data-aff-menu-toggle]')?.setAttribute('aria-expanded', String(open));
+                }
+
+                const titles = {
+                    accueil: 'Espace Affilié',
+                    catalogue: 'Catalogue',
+                    'bon-commande': 'Bon de Commande',
+                    'balance-commande': 'Balance Commande',
+                    'balance-paiement': 'Balance Paiement',
+                    messages: 'Messages',
+                    profil: 'Mon profil',
+                };
+                const titleEl = document.getElementById('aff-welcome-title');
+                if (titleEl) titleEl.textContent = titles[viewId] || 'Espace Affilié';
+
                 if (viewId === 'messages') {
                     const inbox = loadInbox().map((msg) =>
                         msg.affilie_id === session.id || msg.login === session.login
@@ -920,17 +1367,100 @@
                     saveInbox(inbox);
                     renderMessages();
                 }
-
-                if (viewId === 'accueil') {
-                    renderCommandes();
-                }
-
+                if (viewId === 'accueil') renderCommandes();
                 if (viewId === 'catalogue') {
                     hideDlMenu();
                     closeSeasonGallery();
                     refreshCatalogueFromServer();
                 }
+                if (viewId === 'bon-commande') renderBonCommande();
+                if (viewId === 'balance-commande') renderBalanceCommande();
+                if (viewId === 'balance-paiement') renderBalancePaiement();
             };
+
+            document.querySelectorAll('[data-aff-menu-toggle]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const menu = btn.closest('.aff-menu');
+                    const open = !menu.classList.contains('is-open');
+                    menu.classList.toggle('is-open', open);
+                    btn.setAttribute('aria-expanded', String(open));
+                });
+            });
+
+            document.getElementById('bn-add-btn')?.addEventListener('click', () => openBnSheet());
+            document.querySelectorAll('[data-bn-sheet-close]').forEach((el) => {
+                el.addEventListener('click', closeBnSheet);
+            });
+            document.getElementById('bal-cmd-print')?.addEventListener('click', printBalanceCommande);
+
+            document.getElementById('bn-tbody')?.addEventListener('click', async (event) => {
+                const btn = event.target.closest('[data-bn-action]');
+                if (!btn) return;
+                const uid = btn.closest('tr')?.dataset.uid;
+                const order = myOrders().find((o) => String(o.uid || o.id) === String(uid));
+                if (!order) return;
+                const action = btn.dataset.bnAction;
+                if (action === 'view') openBnSheet(order, { viewOnly: true });
+                if (action === 'edit') openBnSheet(order);
+                if (action === 'delete' && confirm(`Supprimer le bon ${order.n_cmd} ?`)) {
+                    try {
+                        await api(`/api/affilie/orders/${uid}`, { method: 'DELETE' });
+                        await renderBonCommande();
+                    } catch (e) { alert(e.message || 'Suppression impossible'); }
+                }
+            });
+
+            document.getElementById('bn-form')?.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const form = event.target;
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                const uid = document.getElementById('bn-uid').value;
+                const payload = {
+                    date: document.getElementById('bn-date').value,
+                    ref_prod: document.getElementById('bn-ref').value.trim(),
+                    designation: document.getElementById('bn-designation').value.trim(),
+                    qte: Number(document.getElementById('bn-qte').value || 1),
+                    prix_u: Number(document.getElementById('bn-prix').value || 0),
+                    nom_client: document.getElementById('bn-client').value.trim(),
+                    ville: document.getElementById('bn-ville').value.trim(),
+                    contact: document.getElementById('bn-contact').value.trim(),
+                    adresse: document.getElementById('bn-adresse').value.trim(),
+                    statue: document.getElementById('bn-statue').value,
+                    marge: Number(document.getElementById('bn-marge').value || 0),
+                    date_paie: document.getElementById('bn-date-paie').value || null,
+                    recu: document.getElementById('bn-recu').value,
+                    product_id: document.getElementById('bn-product-id').value
+                        ? Number(document.getElementById('bn-product-id').value)
+                        : null,
+                };
+                try {
+                    if (uid) {
+                        await api(`/api/affilie/orders/${uid}`, { method: 'POST', body: payload });
+                    } else {
+                        await api('/api/affilie/orders', { method: 'POST', body: payload });
+                    }
+                    closeBnSheet();
+                    await renderBonCommande();
+                    await renderCommandes();
+                } catch (e) {
+                    alert(e.message || 'Enregistrement impossible');
+                }
+            });
+
+            document.getElementById('bn-prix')?.addEventListener('input', () => {
+                const prix = Number(document.getElementById('bn-prix').value || 0);
+                const qte = Number(document.getElementById('bn-qte').value || 1);
+                const marge = document.getElementById('bn-marge');
+                if (marge && !marge.dataset.touched) {
+                    marge.value = String(Math.round(prix * qte * 0.2 * 100) / 100);
+                }
+            });
+            document.getElementById('bn-marge')?.addEventListener('input', (e) => {
+                e.target.dataset.touched = '1';
+            });
 
             document.querySelectorAll('[data-aff-nav]').forEach((link) => {
                 link.addEventListener('click', (event) => {

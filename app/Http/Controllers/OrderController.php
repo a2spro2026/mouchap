@@ -27,13 +27,8 @@ class OrderController extends Controller
 
     public function mine(): JsonResponse
     {
-        $affilie = Auth::guard('affilie')->user();
-
         return response()->json(
-            Order::query()
-                ->with('affilie')
-                ->where('affilie_id', $affilie->id)
-                ->latest()
+            $this->affiliateOrdersQuery()
                 ->get()
                 ->map(fn (Order $order) => $order->toApiArray())
                 ->values()
@@ -43,7 +38,7 @@ class OrderController extends Controller
     public function stats(): JsonResponse
     {
         $orders = Order::query()->get();
-        $confirmees = $orders->where('statue', 'confirme');
+        $confirmees = $orders->whereIn('statue', ['confirme', 'livree']);
         $ventes = $confirmees->sum(fn (Order $o) => (float) $o->montant);
 
         $parVille = [];
@@ -65,13 +60,86 @@ class OrderController extends Controller
         ]);
     }
 
+    public function store(Request $request): JsonResponse
+    {
+        $affilie = Auth::guard('affilie')->user();
+        $data = $this->validatedAffiliateOrder($request);
+
+        $prix = (float) $data['prix_u'];
+        $qte = (int) $data['qte'];
+        $montant = round($prix * $qte, 2);
+        $marge = isset($data['marge']) ? (float) $data['marge'] : round($montant * 0.2, 2);
+
+        $order = Order::create([
+            'n_cmd' => MouchapCodes::nextOrderCode(),
+            'date' => $data['date'] ?? now()->toDateString(),
+            'affilie_id' => $affilie->id,
+            'affilie_nom' => $affilie->nom_complet,
+            'ville' => $data['ville'],
+            'product_id' => $data['product_id'] ?? null,
+            'ref_prod' => $data['ref_prod'],
+            'designation' => $data['designation'],
+            'nom_client' => $data['nom_client'],
+            'contact' => $data['contact'],
+            'adresse' => $data['adresse'] ?? '',
+            'qte' => $qte,
+            'sizes' => $data['sizes'] ?? [],
+            'couleurs' => $data['couleurs'] ?? [],
+            'prix_u' => $prix,
+            'montant' => $montant,
+            'marge' => $marge,
+            'date_paie' => $data['date_paie'] ?? null,
+            'recu' => $data['recu'] ?? 'non',
+            'statue' => $data['statue'] ?? 'reporte',
+            'stock' => 'dispo',
+            'source' => 'bon_commande',
+        ]);
+
+        return response()->json($order->fresh('affilie')->toApiArray(), 201);
+    }
+
+    public function updateMine(Request $request, Order $order): JsonResponse
+    {
+        $this->ensureOwnsOrder($order);
+        $data = $this->validatedAffiliateOrder($request, true);
+
+        $payload = collect($data)->only([
+            'date', 'ref_prod', 'designation', 'nom_client', 'ville', 'contact', 'adresse',
+            'qte', 'sizes', 'couleurs', 'prix_u', 'marge', 'date_paie', 'recu', 'statue', 'product_id',
+        ])->all();
+
+        if (isset($payload['prix_u']) || isset($payload['qte'])) {
+            $prix = (float) ($payload['prix_u'] ?? $order->prix_u);
+            $qte = (int) ($payload['qte'] ?? $order->qte);
+            $payload['montant'] = round($prix * $qte, 2);
+            if (! array_key_exists('marge', $payload)) {
+                $payload['marge'] = round($payload['montant'] * 0.2, 2);
+            }
+        }
+
+        $order->update($payload);
+
+        return response()->json($order->fresh('affilie')->toApiArray());
+    }
+
+    public function destroyMine(Order $order): JsonResponse
+    {
+        $this->ensureOwnsOrder($order);
+        $order->delete();
+
+        return response()->json(['deleted' => true]);
+    }
+
     public function update(Request $request, Order $order): JsonResponse
     {
         $data = $request->validate([
-            'statue' => ['sometimes', Rule::in(['confirme', 'annulee', 'reporte', 'retour'])],
+            'statue' => ['sometimes', Rule::in(['confirme', 'livree', 'annulee', 'reporte', 'retour'])],
             'stock' => ['sometimes', Rule::in(['dispo', 'faible', 'rupture'])],
             'prix_u' => ['sometimes', 'numeric', 'min:0'],
             'montant' => ['sometimes', 'numeric', 'min:0'],
+            'marge' => ['sometimes', 'numeric'],
+            'date_paie' => ['sometimes', 'nullable', 'date'],
+            'recu' => ['sometimes', Rule::in(['oui', 'non'])],
         ]);
 
         if (isset($data['prix_u']) && ! isset($data['montant'])) {
@@ -113,6 +181,9 @@ class OrderController extends Controller
         $stock = $product->qte === 0 ? 'rupture' : ($product->qte <= 5 ? 'faible' : 'dispo');
         $product->update(['statue' => $stock]);
 
+        $prix = (float) $product->prix;
+        $montant = round($prix * $quantity, 2);
+
         $order = Order::create([
             'n_cmd' => MouchapCodes::nextOrderCode(),
             'date' => now()->toDateString(),
@@ -124,19 +195,64 @@ class OrderController extends Controller
             'designation' => $product->designation,
             'nom_client' => $affilie->nom_complet,
             'contact' => $affilie->contact ?: '—',
+            'adresse' => '',
             'qte' => $quantity,
             'sizes' => $data['sizes'],
             'couleurs' => $data['couleurs'],
-            'prix_u' => 0,
-            'montant' => 0,
+            'prix_u' => $prix,
+            'montant' => $montant,
+            'marge' => round($montant * 0.2, 2),
+            'recu' => 'non',
             'statue' => 'reporte',
             'stock' => $stock,
             'source' => 'catalogue',
         ]);
 
         return response()->json([
-            'order' => $order->toApiArray(),
+            'order' => $order->fresh('affilie')->toApiArray(),
             'product' => app(ProductController::class)->serializePublic($product->fresh()),
         ], 201);
+    }
+
+    private function affiliateOrdersQuery()
+    {
+        $affilie = Auth::guard('affilie')->user();
+
+        return Order::query()
+            ->with('affilie')
+            ->where('affilie_id', $affilie->id)
+            ->latest();
+    }
+
+    private function ensureOwnsOrder(Order $order): void
+    {
+        $affilie = Auth::guard('affilie')->user();
+        abort_unless((int) $order->affilie_id === (int) $affilie->id, 403);
+    }
+
+    private function validatedAffiliateOrder(Request $request, bool $partial = false): array
+    {
+        $required = $partial ? 'sometimes' : 'required';
+
+        return $request->validate([
+            'date' => [$partial ? 'sometimes' : 'nullable', 'date'],
+            'ref_prod' => [$required, 'string', 'max:80'],
+            'designation' => [$required, 'string', 'max:255'],
+            'qte' => [$required, 'integer', 'min:1'],
+            'prix_u' => [$required, 'numeric', 'min:0'],
+            'nom_client' => [$required, 'string', 'max:255'],
+            'ville' => [$required, 'string', 'max:120'],
+            'contact' => [$required, 'string', 'max:30'],
+            'adresse' => ['nullable', 'string', 'max:255'],
+            'marge' => ['nullable', 'numeric'],
+            'date_paie' => ['nullable', 'date'],
+            'recu' => ['nullable', Rule::in(['oui', 'non'])],
+            'statue' => ['nullable', Rule::in(['livree', 'annulee', 'reporte', 'confirme', 'retour'])],
+            'product_id' => ['nullable', 'integer', 'exists:products,id'],
+            'sizes' => ['nullable', 'array'],
+            'sizes.*' => ['string', 'max:40'],
+            'couleurs' => ['nullable', 'array'],
+            'couleurs.*' => ['string', 'max:40'],
+        ]);
     }
 }

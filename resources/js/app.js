@@ -412,6 +412,7 @@ const bootMouchapUi = () => {
 
         const contact = affilieRegisterForm.querySelector('[name="contact"]');
         const rib = affilieRegisterForm.querySelector('[name="rib"]');
+        const submitBtn = affilieRegisterForm.querySelector('[type="submit"]');
 
         if (contact && !/^[0-9]{10}$/.test(contact.value)) {
             contact.focus({ preventScroll: true });
@@ -430,7 +431,15 @@ const bootMouchapUi = () => {
             return;
         }
 
+        if (submitBtn?.disabled) {
+            return;
+        }
+
         const formData = new FormData(affilieRegisterForm);
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Envoi…';
+        }
 
         try {
             await window.mouchapApi('/api/affiliation-requests', {
@@ -452,6 +461,10 @@ const bootMouchapUi = () => {
             }
         } catch (error) {
             alert(error.message || 'Envoi impossible.');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Envoyer';
+            }
         }
     });
 

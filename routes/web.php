@@ -69,6 +69,9 @@ Route::middleware('affilie')->group(function () {
 
     Route::post('/api/catalogue/products/{product}/order', [OrderController::class, 'storeFromCatalogue']);
     Route::get('/api/affilie/orders', [OrderController::class, 'mine']);
+    Route::post('/api/affilie/orders', [OrderController::class, 'store']);
+    Route::post('/api/affilie/orders/{order}', [OrderController::class, 'updateMine']);
+    Route::delete('/api/affilie/orders/{order}', [OrderController::class, 'destroyMine']);
     Route::get('/api/affilie/messages', [MessageController::class, 'index']);
     Route::post('/api/affilie/messages/{message}/read', [MessageController::class, 'markRead']);
     Route::post('/api/affilie/messages/read-all', [MessageController::class, 'markAllRead']);

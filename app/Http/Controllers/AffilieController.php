@@ -24,6 +24,17 @@ class AffilieController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $this->validated($request);
+        $data['cin'] = MouchapCodes::normalizeCin($data['cin'] ?? '');
+        $data['contact'] = preg_replace('/\D+/', '', (string) ($data['contact'] ?? '')) ?: ($data['contact'] ?? '');
+        $data['nom_complet'] = trim(preg_replace('/\s+/', ' ', $data['nom_complet']));
+
+        if ($existing = MouchapCodes::findExistingAffilie($data['cin'], $data['contact'])) {
+            return response()->json([
+                'message' => "Un affilié existe déjà pour ce CIN/contact ({$existing->code}).",
+                'affilie' => $existing->toApiArray(),
+            ], 422);
+        }
+
         $password = $data['password'] ?: MouchapCodes::randomPassword();
 
         $affilie = Affilie::create([

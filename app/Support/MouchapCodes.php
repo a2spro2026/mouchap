@@ -110,4 +110,31 @@ class MouchapCodes
 
         return $user !== '' ? $user.'@mouchap.com' : '';
     }
+
+    public static function normalizeCin(?string $value): string
+    {
+        return Str::upper(preg_replace('/\s+/', '', (string) $value) ?? '');
+    }
+
+    public static function findExistingAffilie(?string $cin, ?string $contact): ?Affilie
+    {
+        $cin = self::normalizeCin($cin);
+        $contact = preg_replace('/\D+/', '', (string) $contact) ?: '';
+
+        if ($cin === '' && $contact === '') {
+            return null;
+        }
+
+        return Affilie::query()
+            ->where(function ($query) use ($cin, $contact) {
+                if ($cin !== '') {
+                    $query->orWhereRaw("UPPER(REPLACE(cin, ' ', '')) = ?", [$cin]);
+                }
+                if ($contact !== '') {
+                    $query->orWhere('contact', $contact);
+                }
+            })
+            ->orderBy('id')
+            ->first();
+    }
 }
