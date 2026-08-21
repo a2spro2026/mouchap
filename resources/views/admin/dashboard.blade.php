@@ -19,10 +19,22 @@
                     alt=""
                     class="admin-sidebar__logo"
                 >
-                <div>
+                <div class="admin-sidebar__brand-text">
                     <p class="admin-sidebar__name">MOUCHAP</p>
                     <p class="admin-sidebar__role">Administration</p>
                 </div>
+                <button
+                    type="button"
+                    class="admin-sidebar__toggle"
+                    id="admin-sidebar-hide"
+                    title="Masquer le menu"
+                    aria-label="Masquer le panneau latéral"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 6 9 12l6 6"/>
+                        <path stroke-linecap="round" d="M4 4v16"/>
+                    </svg>
+                </button>
             </div>
 
             <div class="admin-sidebar__glow" aria-hidden="true"></div>
@@ -229,9 +241,24 @@
         {{-- Main --}}
         <div class="admin-main">
             <header class="admin-topbar">
-                <div>
-                    <p class="admin-topbar__eyebrow">Espace privé</p>
-                    <h1 class="admin-topbar__title">Tableau de Bord</h1>
+                <div class="admin-topbar__lead">
+                    <button
+                        type="button"
+                        class="admin-sidebar__toggle admin-sidebar__toggle--show"
+                        id="admin-sidebar-show"
+                        title="Afficher le menu"
+                        aria-label="Afficher le panneau latéral"
+                        hidden
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/>
+                            <path stroke-linecap="round" d="M20 4v16"/>
+                        </svg>
+                    </button>
+                    <div>
+                        <p class="admin-topbar__eyebrow">Espace privé</p>
+                        <h1 class="admin-topbar__title">Tableau de Bord</h1>
+                    </div>
                 </div>
                 <div class="admin-topbar__actions">
                     <div class="admin-notif" id="admin-notif">
@@ -586,48 +613,47 @@
             {{-- Vue Fiche Affilié --}}
             <section class="admin-view" id="admin-view-fiche-affilie" data-view="fiche-affilie" hidden aria-label="Fiche Affilié">
                 <div class="admin-panel">
-                    <div class="affilies-hero">
-                        <img
-                            src="{{ asset('images/mouchap-affilies-banner.jpg') }}?v={{ @filemtime(public_path('images/mouchap-affilies-banner.jpg')) ?: time() }}"
-                            alt=""
-                            class="affilies-hero__media"
-                        >
-                        <div class="affilies-hero__veil" aria-hidden="true"></div>
-                        <div class="affilies-hero__actions">
-                            <button type="button" class="admin-btn admin-btn--primary" id="affilie-add-btn">Ajouter</button>
-                            <button type="button" class="admin-btn admin-btn--ghost admin-btn--on-dark" id="affilie-close-btn" data-admin-view="commandes">Fermer</button>
+                    <div class="affilies-topbar">
+                        <div class="affilies-hero">
+                            <img
+                                src="{{ asset('images/mouchap-affilies-banner.jpg') }}?v={{ @filemtime(public_path('images/mouchap-affilies-banner.jpg')) ?: time() }}"
+                                alt=""
+                                class="affilies-hero__media"
+                            >
+                            <div class="affilies-hero__veil" aria-hidden="true"></div>
                         </div>
-                    </div>
 
-                    <div class="affilies-summary" id="affilies-summary" aria-live="polite">
-                        <div class="affilies-summary__main">
-                            <span class="affilies-summary__icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-                                </svg>
-                            </span>
-                            <div>
-                                <p class="affilies-summary__eyebrow">Réseau MOUCHAP</p>
+                        <div class="affilies-summary" id="affilies-summary" aria-live="polite">
+                            <div class="affilies-summary__main">
+                                <span class="affilies-summary__icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                </span>
                                 <p class="affilies-summary__label">
                                     <span class="affilies-summary__count" id="affilies-count-total">0</span>
                                     affiliés
                                 </p>
                             </div>
-                        </div>
-                        <div class="affilies-summary__stats">
-                            <div class="affilies-summary__stat affilies-summary__stat--actif">
-                                <span class="affilies-summary__stat-value" id="affilies-count-actif">0</span>
-                                <span class="affilies-summary__stat-label">Actifs</span>
+                            <div class="affilies-summary__stats">
+                                <div class="affilies-summary__stat affilies-summary__stat--actif">
+                                    <span class="affilies-summary__stat-value" id="affilies-count-actif">0</span>
+                                    <span class="affilies-summary__stat-label">Actifs</span>
+                                </div>
+                                <div class="affilies-summary__stat affilies-summary__stat--susp">
+                                    <span class="affilies-summary__stat-value" id="affilies-count-susp">0</span>
+                                    <span class="affilies-summary__stat-label">Suspendus</span>
+                                </div>
+                                <div class="affilies-summary__stat affilies-summary__stat--villes">
+                                    <span class="affilies-summary__stat-value" id="affilies-count-villes">0</span>
+                                    <span class="affilies-summary__stat-label">Villes</span>
+                                </div>
                             </div>
-                            <div class="affilies-summary__stat affilies-summary__stat--susp">
-                                <span class="affilies-summary__stat-value" id="affilies-count-susp">0</span>
-                                <span class="affilies-summary__stat-label">Suspendus</span>
-                            </div>
-                            <div class="affilies-summary__stat affilies-summary__stat--villes">
-                                <span class="affilies-summary__stat-value" id="affilies-count-villes">0</span>
-                                <span class="affilies-summary__stat-label">Villes</span>
+                            <div class="affilies-summary__actions">
+                                <button type="button" class="admin-btn admin-btn--primary" id="affilie-add-btn">Ajouter</button>
+                                <button type="button" class="admin-btn admin-btn--ghost admin-btn--on-dark" id="affilie-close-btn" data-admin-view="commandes">Fermer</button>
                             </div>
                         </div>
                     </div>
@@ -1156,6 +1182,24 @@
         let ordersCache = [];
         let affiliesCache = [];
         let fournisseursCache = [];
+
+        const adminShell = document.querySelector('.admin-shell');
+        const adminSidebarHide = document.getElementById('admin-sidebar-hide');
+        const adminSidebarShow = document.getElementById('admin-sidebar-show');
+        const SIDEBAR_KEY = 'mouchap_admin_sidebar_collapsed';
+
+        const setAdminSidebarCollapsed = (collapsed) => {
+            adminShell?.classList.toggle('is-sidebar-collapsed', collapsed);
+            if (adminSidebarShow) adminSidebarShow.hidden = !collapsed;
+            if (adminSidebarHide) adminSidebarHide.setAttribute('aria-expanded', String(!collapsed));
+            try { localStorage.setItem(SIDEBAR_KEY, collapsed ? '1' : '0'); } catch {}
+        };
+
+        adminSidebarHide?.addEventListener('click', () => setAdminSidebarCollapsed(true));
+        adminSidebarShow?.addEventListener('click', () => setAdminSidebarCollapsed(false));
+        try {
+            if (localStorage.getItem(SIDEBAR_KEY) === '1') setAdminSidebarCollapsed(true);
+        } catch {}
         let usersCache = [];
         document.getElementById('admin-logout')?.addEventListener('click', async () => {
             try { await api('/api/auth/admin/logout', { method: 'POST' }); } catch {}
