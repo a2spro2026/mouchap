@@ -445,7 +445,7 @@
                         <div class="product-sheet__row">
                             <label class="admin-field">
                                 <span class="admin-field__label">Prix/U (DH)</span>
-                                <input type="number" id="bn-prix" class="admin-field__input" min="0" step="0.01" value="0" readonly required>
+                                <input type="number" id="bn-prix" class="admin-field__input" min="0" step="0.01" value="0" required>
                             </label>
                             <label class="admin-field">
                                 <span class="admin-field__label">Sous-Total (DH)</span>
@@ -1132,7 +1132,7 @@
                 sheet.querySelectorAll('input, select').forEach((el) => {
                     if (el.type === 'hidden') return;
                     if (el.id === 'bn-date' || el.id === 'bn-ncmd' || el.id === 'bn-designation'
-                        || el.id === 'bn-categorie' || el.id === 'bn-famille' || el.id === 'bn-prix'
+                        || el.id === 'bn-categorie' || el.id === 'bn-famille'
                         || el.id === 'bn-sous-total') {
                         el.disabled = true;
                         return;
