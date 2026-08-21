@@ -101,7 +101,7 @@ class OrderController extends Controller
             'marge' => $marge,
             'date_paie' => $data['date_paie'] ?? null,
             'recu' => $data['recu'] ?? 'non',
-            'statue' => $data['statue'] ?? 'reporte',
+            'statue' => $data['statue'] ?? 'en_attente',
             'stock' => 'dispo',
             'source' => 'bon_commande',
         ]);
@@ -148,7 +148,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order): JsonResponse
     {
         $data = $request->validate([
-            'statue' => ['sometimes', Rule::in(['confirme', 'livree', 'annulee', 'reporte', 'retour'])],
+            'statue' => ['sometimes', Rule::in(['confirme', 'livree', 'annulee', 'reporte', 'retour', 'en_attente'])],
             'stock' => ['sometimes', Rule::in(['dispo', 'faible', 'rupture'])],
             'prix_u' => ['sometimes', 'numeric', 'min:0'],
             'montant' => ['sometimes', 'numeric', 'min:0'],
@@ -220,7 +220,7 @@ class OrderController extends Controller
             'montant' => $montant,
             'marge' => round($montant * 0.2, 2),
             'recu' => 'non',
-            'statue' => 'reporte',
+            'statue' => 'en_attente',
             'stock' => $stock,
             'source' => 'catalogue',
         ]);
@@ -267,7 +267,7 @@ class OrderController extends Controller
             'marge' => ['nullable', 'numeric'],
             'date_paie' => ['nullable', 'date'],
             'recu' => ['nullable', Rule::in(['oui', 'non'])],
-            'statue' => ['nullable', Rule::in(['livree', 'annulee', 'reporte', 'confirme', 'retour'])],
+            'statue' => ['nullable', Rule::in(['livree', 'annulee', 'reporte', 'confirme', 'retour', 'en_attente'])],
             'product_id' => ['nullable', 'integer', 'exists:products,id'],
             'sizes' => ['nullable', 'array'],
             'sizes.*' => ['string', 'max:40'],

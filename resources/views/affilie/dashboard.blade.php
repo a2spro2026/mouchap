@@ -1041,10 +1041,11 @@
                 closeOrderSheet();
                 renderCatalogueTable();
                 if (currentSaison) renderSeasonGallery(currentSaison);
-                alert('Commande envoyée. Statut : Reportée (en attente de validation admin).');
+                alert('Commande envoyée. Statut : En Attente (administration).');
             });
 
             const statueLabel = {
+                en_attente: 'En Attente',
                 confirme: 'Livrée',
                 livree: 'Livrée',
                 annulee: 'Annulée',
@@ -1053,6 +1054,7 @@
             };
 
             const statueClass = {
+                en_attente: 'aff-statue-pill--warn',
                 confirme: 'aff-statue-pill--ok',
                 livree: 'aff-statue-pill--ok',
                 annulee: 'aff-statue-pill--ko',
@@ -1296,7 +1298,7 @@
                     return;
                 }
                 tbody.innerHTML = orders.map((o) => {
-                    const st = o.statue === 'confirme' ? 'livree' : (o.statue || 'reporte');
+                    const st = o.statue === 'confirme' ? 'livree' : (o.statue || 'en_attente');
                     return `<tr data-uid="${escapeHtml(o.uid || o.id)}">
                         <td>${escapeHtml(formatAffDate(o.date))}</td>
                         <td>${escapeHtml(o.n_cmd || '—')}</td>
@@ -1305,6 +1307,7 @@
                         <td>${escapeHtml(formatMoney(o.marge))}</td>
                         <td>
                             <select class="aff-bal-statue ${statueClass[st] || ''}" data-bal-statue>
+                                <option value="en_attente" ${st === 'en_attente' ? 'selected' : ''}>En Attente</option>
                                 <option value="livree" ${st === 'livree' ? 'selected' : ''}>Livrée</option>
                                 <option value="annulee" ${st === 'annulee' ? 'selected' : ''}>Annulée</option>
                                 <option value="reporte" ${st === 'reporte' ? 'selected' : ''}>Reportée</option>
@@ -1422,7 +1425,7 @@
 
                 tbody.innerHTML = orders
                     .map((o) => {
-                        const st = o.statue === 'confirme' ? 'livree' : (o.statue || 'reporte');
+                        const st = o.statue === 'confirme' ? 'livree' : (o.statue || 'en_attente');
                         return `<tr>
                             <td>${escapeHtml(formatAffDate(o.date))}</td>
                             <td>${escapeHtml(o.n_cmd || '—')}</td>
@@ -1550,7 +1553,7 @@
                     nom_client: session?.nom_complet || '—',
                     ville: session?.ville || '—',
                     contact: session?.contact || '—',
-                    statue: 'reporte',
+                    statue: 'en_attente',
                     product_id: product?.id
                         ? Number(product.id)
                         : (document.getElementById('bn-product-id').value

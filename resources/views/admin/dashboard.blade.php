@@ -1337,6 +1337,7 @@
             livree: 'status-select--confirme',
             annulee: 'status-select--annulee',
             reporte: 'status-select--reporte',
+            en_attente: 'status-select--en_attente',
             retour: 'status-select--retour',
         };
 
@@ -1432,7 +1433,8 @@
                         <td>${formatMoney(item.montant)}</td>
                         <td><button type="button" class="admin-action-btn" title="Voir" aria-label="Voir">${eye}</button></td>
                         <td>
-                            <select class="status-select status-select--${item.statue || 'reporte'}" data-status data-order-field="statue">
+                            <select class="status-select status-select--${item.statue || 'en_attente'}" data-status data-order-field="statue">
+                                <option value="en_attente" ${item.statue === 'en_attente' || !item.statue ? 'selected' : ''}>En Attente</option>
                                 <option value="livree" ${item.statue === 'livree' || item.statue === 'confirme' ? 'selected' : ''}>Livrée</option>
                                 <option value="annulee" ${item.statue === 'annulee' ? 'selected' : ''}>Annulée</option>
                                 <option value="reporte" ${item.statue === 'reporte' ? 'selected' : ''}>Reportée</option>
@@ -1476,8 +1478,9 @@
 
         renderOrders();
 
-        const normalizeOrderStatue = (value) => (value === 'confirme' ? 'livree' : (value || 'reporte'));
+        const normalizeOrderStatue = (value) => (value === 'confirme' ? 'livree' : (value || 'en_attente'));
         const orderStatueLabel = {
+            en_attente: 'En Attente',
             livree: 'Livrée',
             confirme: 'Livrée',
             annulee: 'Annulée',
@@ -1517,6 +1520,7 @@
                     <td>${escapeHtml(formatMoney(item.montant))}</td>
                     <td>
                         <select class="status-select ${statusClassMap[st] || ''}" data-admin-bn-statue>
+                            <option value="en_attente" ${st === 'en_attente' ? 'selected' : ''}>En Attente</option>
                             <option value="livree" ${st === 'livree' ? 'selected' : ''}>Livrée</option>
                             <option value="annulee" ${st === 'annulee' ? 'selected' : ''}>Annulée</option>
                             <option value="reporte" ${st === 'reporte' ? 'selected' : ''}>Reportée</option>
@@ -1559,6 +1563,7 @@
                     <td>${escapeHtml(formatMoney(item.marge))}</td>
                     <td>
                         <select class="status-select ${statusClassMap[st] || ''}" data-admin-bal-statue>
+                            <option value="en_attente" ${st === 'en_attente' ? 'selected' : ''}>En Attente</option>
                             <option value="livree" ${st === 'livree' ? 'selected' : ''}>Livrée</option>
                             <option value="annulee" ${st === 'annulee' ? 'selected' : ''}>Annulée</option>
                             <option value="reporte" ${st === 'reporte' ? 'selected' : ''}>Reportée</option>
