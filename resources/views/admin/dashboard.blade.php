@@ -104,6 +104,31 @@
                     </div>
                 </div>
 
+                {{-- Commandes (commandes affiliés) --}}
+                <div class="admin-menu">
+                    <button type="button" class="admin-side-link admin-menu__toggle" data-menu-toggle aria-expanded="false">
+                        <span class="admin-side-link__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path stroke-linecap="round" d="M9 12h6M9 16h4"/></svg>
+                        </span>
+                        <span class="admin-side-link__label">Commandes</span>
+                        <span class="admin-menu__chevron" aria-hidden="true"></span>
+                    </button>
+                    <div class="admin-submenu">
+                        <a href="#admin-bon-commande" class="admin-sublink" data-admin-view="admin-bon-commande">
+                            <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path stroke-linecap="round" d="M14 2v6h6M9 13h6M9 17h4"/></svg></span>
+                            <span>Bon de Commande</span>
+                        </a>
+                        <a href="#admin-balance-commande" class="admin-sublink" data-admin-view="admin-balance-commande">
+                            <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18"/><path stroke-linecap="round" stroke-linejoin="round" d="M7 14l4-4 3 3 5-6"/></svg></span>
+                            <span>Balance</span>
+                        </a>
+                        <a href="#admin-paiement-commande" class="admin-sublink" data-admin-view="admin-paiement-commande">
+                            <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M2 10h20"/><circle cx="16" cy="15" r="1.4"/></svg></span>
+                            <span>Paiement</span>
+                        </a>
+                    </div>
+                </div>
+
                 {{-- Affiliés --}}
                 <div class="admin-menu">
                     <button type="button" class="admin-side-link admin-menu__toggle" data-menu-toggle aria-expanded="false">
@@ -142,10 +167,6 @@
                         <a href="#fiche-client" class="admin-sublink">
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" d="M19 8v6M16 11h6"/></svg></span>
                             <span>Fiche Client</span>
-                        </a>
-                        <a href="#bon-commande" class="admin-sublink">
-                            <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path stroke-linecap="round" d="M9 12h6M9 16h4"/></svg></span>
-                            <span>Bon Commande</span>
                         </a>
                         <a href="#reglements-ventes" class="admin-sublink">
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
@@ -306,6 +327,110 @@
                                 {{-- rempli en JS --}}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Admin Bon de Commande (commandes affiliés) --}}
+            <section class="admin-view" id="admin-view-admin-bon-commande" data-view="admin-bon-commande" hidden aria-label="Bon de Commande">
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Commandes</p>
+                            <h2 class="admin-panel__title">Bon de Commande</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--ghost" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--admin-bn">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N° Bn</th>
+                                        <th>Affilié</th>
+                                        <th>Réf</th>
+                                        <th>Désignation</th>
+                                        <th>Catégorie</th>
+                                        <th>Famille</th>
+                                        <th>Size</th>
+                                        <th>Qte</th>
+                                        <th>Prix/U</th>
+                                        <th>Sous-Total</th>
+                                        <th>Statue</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-bn-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Admin Balance Commande --}}
+            <section class="admin-view" id="admin-view-admin-balance-commande" data-view="admin-balance-commande" hidden aria-label="Balance Commande">
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Commandes</p>
+                            <h2 class="admin-panel__title">Balance</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--primary" id="admin-bal-print">Imprimer</button>
+                            <button type="button" class="admin-btn admin-btn--ghost" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--admin-bal" id="admin-bal-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N° Bn</th>
+                                        <th>Affilié</th>
+                                        <th>Nom Client</th>
+                                        <th>Montant</th>
+                                        <th>Marge</th>
+                                        <th>Statue</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-bal-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Admin Paiement Commande --}}
+            <section class="admin-view" id="admin-view-admin-paiement-commande" data-view="admin-paiement-commande" hidden aria-label="Paiement Commande">
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Commandes</p>
+                            <h2 class="admin-panel__title">Paiement</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--ghost" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--admin-paie">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N° Bn</th>
+                                        <th>Affilié</th>
+                                        <th>Nom Client</th>
+                                        <th>Date Paie</th>
+                                        <th>Reçu</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-paie-tbody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1209,6 +1334,7 @@
 
         const statusClassMap = {
             confirme: 'status-select--confirme',
+            livree: 'status-select--confirme',
             annulee: 'status-select--annulee',
             reporte: 'status-select--reporte',
             retour: 'status-select--retour',
@@ -1255,6 +1381,13 @@
 
         const formatMoney = (n) => `${Number(n || 0).toLocaleString('fr-MA')} DH`;
 
+        const escapeHtml = (value) =>
+            String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;');
+
         const readStoredList = (key) => {
             try {
                 const parsed = JSON.parse(localStorage.getItem(key) || '[]');
@@ -1299,8 +1432,8 @@
                         <td>${formatMoney(item.montant)}</td>
                         <td><button type="button" class="admin-action-btn" title="Voir" aria-label="Voir">${eye}</button></td>
                         <td>
-                            <select class="status-select status-select--${item.statue || 'confirme'}" data-status data-order-field="statue">
-                                <option value="confirme" ${item.statue === 'confirme' ? 'selected' : ''}>Confirmée</option>
+                            <select class="status-select status-select--${item.statue || 'reporte'}" data-status data-order-field="statue">
+                                <option value="livree" ${item.statue === 'livree' || item.statue === 'confirme' ? 'selected' : ''}>Livrée</option>
                                 <option value="annulee" ${item.statue === 'annulee' ? 'selected' : ''}>Annulée</option>
                                 <option value="reporte" ${item.statue === 'reporte' ? 'selected' : ''}>Reportée</option>
                                 <option value="retour" ${item.statue === 'retour' ? 'selected' : ''}>Retour</option>
@@ -1343,6 +1476,176 @@
 
         renderOrders();
 
+        const normalizeOrderStatue = (value) => (value === 'confirme' ? 'livree' : (value || 'reporte'));
+        const orderStatueLabel = {
+            livree: 'Livrée',
+            confirme: 'Livrée',
+            annulee: 'Annulée',
+            reporte: 'Reportée',
+            retour: 'Retour',
+        };
+
+        const patchAdminOrder = async (id, body) => {
+            const updated = await api(`/api/admin/orders/${id}`, { method: 'PATCH', body });
+            ordersCache = ordersCache.map((o) => (String(o.id) === String(id) ? updated : o));
+            return updated;
+        };
+
+        const renderAdminBonCommande = async () => {
+            const tbody = document.getElementById('admin-bn-tbody');
+            if (!tbody) return;
+            try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
+            const items = loadOrders();
+            if (!items.length) {
+                tbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucune commande affilié pour le moment.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = items.map((item) => {
+                const st = normalizeOrderStatue(item.statue);
+                const size = item.size || (Array.isArray(item.sizes) && item.sizes[0]) || '—';
+                return `<tr data-order-id="${escapeHtml(item.id)}">
+                    <td>${escapeHtml(formatOrderDate(item.date))}</td>
+                    <td>${escapeHtml(item.n_cmd || '—')}</td>
+                    <td>${escapeHtml(item.affilie_nom || '—')}</td>
+                    <td>${escapeHtml(item.ref_prod || '—')}</td>
+                    <td>${escapeHtml(item.designation || '—')}</td>
+                    <td>${escapeHtml(item.categorie || '—')}</td>
+                    <td>${escapeHtml(item.famille || '—')}</td>
+                    <td>${escapeHtml(size)}</td>
+                    <td>${escapeHtml(item.qte ?? 0)}</td>
+                    <td>${escapeHtml(formatMoney(item.prix_u))}</td>
+                    <td>${escapeHtml(formatMoney(item.montant))}</td>
+                    <td>
+                        <select class="status-select ${statusClassMap[st] || ''}" data-admin-bn-statue>
+                            <option value="livree" ${st === 'livree' ? 'selected' : ''}>Livrée</option>
+                            <option value="annulee" ${st === 'annulee' ? 'selected' : ''}>Annulée</option>
+                            <option value="reporte" ${st === 'reporte' ? 'selected' : ''}>Reportée</option>
+                            <option value="retour" ${st === 'retour' ? 'selected' : ''}>Retour</option>
+                        </select>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            tbody.querySelectorAll('[data-admin-bn-statue]').forEach((select) => {
+                syncSelectClass(select, statusClassMap);
+                select.onchange = async () => {
+                    syncSelectClass(select, statusClassMap);
+                    const id = select.closest('tr')?.dataset.orderId;
+                    try {
+                        await patchAdminOrder(id, { statue: select.value });
+                        renderOrders();
+                    } catch (e) { alert(e.message || 'Erreur'); }
+                };
+            });
+        };
+
+        const renderAdminBalanceCommande = async () => {
+            const tbody = document.getElementById('admin-bal-tbody');
+            if (!tbody) return;
+            try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
+            const items = loadOrders();
+            if (!items.length) {
+                tbody.innerHTML = `<tr><td colspan="7" class="admin-table__empty">Aucune commande.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = items.map((item) => {
+                const st = normalizeOrderStatue(item.statue);
+                return `<tr data-order-id="${escapeHtml(item.id)}">
+                    <td>${escapeHtml(formatOrderDate(item.date))}</td>
+                    <td>${escapeHtml(item.n_cmd || '—')}</td>
+                    <td>${escapeHtml(item.affilie_nom || '—')}</td>
+                    <td>${escapeHtml(item.nom_client || '—')}</td>
+                    <td>${escapeHtml(formatMoney(item.montant))}</td>
+                    <td>${escapeHtml(formatMoney(item.marge))}</td>
+                    <td>
+                        <select class="status-select ${statusClassMap[st] || ''}" data-admin-bal-statue>
+                            <option value="livree" ${st === 'livree' ? 'selected' : ''}>Livrée</option>
+                            <option value="annulee" ${st === 'annulee' ? 'selected' : ''}>Annulée</option>
+                            <option value="reporte" ${st === 'reporte' ? 'selected' : ''}>Reportée</option>
+                        </select>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            tbody.querySelectorAll('[data-admin-bal-statue]').forEach((select) => {
+                syncSelectClass(select, statusClassMap);
+                select.onchange = async () => {
+                    syncSelectClass(select, statusClassMap);
+                    const id = select.closest('tr')?.dataset.orderId;
+                    try {
+                        await patchAdminOrder(id, { statue: select.value });
+                        renderOrders();
+                    } catch (e) { alert(e.message || 'Erreur'); }
+                };
+            });
+        };
+
+        const renderAdminPaiementCommande = async () => {
+            const tbody = document.getElementById('admin-paie-tbody');
+            if (!tbody) return;
+            try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
+            const items = loadOrders();
+            if (!items.length) {
+                tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">Aucun paiement.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = items.map((item) => `<tr data-order-id="${escapeHtml(item.id)}">
+                <td>${escapeHtml(formatOrderDate(item.date))}</td>
+                <td>${escapeHtml(item.n_cmd || '—')}</td>
+                <td>${escapeHtml(item.affilie_nom || '—')}</td>
+                <td>${escapeHtml(item.nom_client || '—')}</td>
+                <td><input type="date" class="aff-inline-date" data-admin-date-paie value="${escapeHtml(item.date_paie || '')}"></td>
+                <td>
+                    <select class="aff-bal-recu" data-admin-recu>
+                        <option value="oui" ${item.recu === 'oui' ? 'selected' : ''}>Oui</option>
+                        <option value="non" ${item.recu !== 'oui' ? 'selected' : ''}>Non</option>
+                    </select>
+                </td>
+            </tr>`).join('');
+
+            tbody.querySelectorAll('[data-admin-date-paie]').forEach((input) => {
+                input.onchange = async () => {
+                    try {
+                        await patchAdminOrder(input.closest('tr')?.dataset.orderId, {
+                            date_paie: input.value || null,
+                        });
+                    } catch (e) { alert(e.message || 'Erreur'); }
+                };
+            });
+            tbody.querySelectorAll('[data-admin-recu]').forEach((select) => {
+                select.onchange = async () => {
+                    try {
+                        await patchAdminOrder(select.closest('tr')?.dataset.orderId, { recu: select.value });
+                    } catch (e) { alert(e.message || 'Erreur'); }
+                };
+            });
+        };
+
+        document.getElementById('admin-bal-print')?.addEventListener('click', () => {
+            const items = loadOrders();
+            const win = window.open('', '_blank', 'noopener,noreferrer,width=980,height=720');
+            if (!win) { alert('Autorisez les pop-ups.'); return; }
+            const rows = items.map((item) => {
+                const st = normalizeOrderStatue(item.statue);
+                return `<tr>
+                    <td>${escapeHtml(formatOrderDate(item.date))}</td>
+                    <td>${escapeHtml(item.n_cmd || '')}</td>
+                    <td>${escapeHtml(item.affilie_nom || '')}</td>
+                    <td>${escapeHtml(item.nom_client || '')}</td>
+                    <td>${escapeHtml(formatMoney(item.montant))}</td>
+                    <td>${escapeHtml(formatMoney(item.marge))}</td>
+                    <td>${escapeHtml(orderStatueLabel[st] || st)}</td>
+                </tr>`;
+            }).join('') || `<tr><td colspan="7">Aucune commande</td></tr>`;
+            win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>Balance Commandes</title>
+                <style>body{font-family:Georgia,serif;padding:20px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #d7b7c0;padding:8px;text-align:center}th{background:#6b1e3a;color:#fff}</style></head>
+                <body><h1>Balance Commandes</h1><p>MOUCHAP Admin</p>
+                <table><thead><tr><th>Date</th><th>N° Bn</th><th>Affilié</th><th>Client</th><th>Montant</th><th>Marge</th><th>Statue</th></tr></thead>
+                <tbody>${rows}</tbody></table>
+                <script>window.onload=function(){window.print();}<\/script></body></html>`);
+            win.document.close();
+        });
+
         /* ——— Navigation vues ——— */
         const showAdminView = (viewId) => {
             document.querySelectorAll('.admin-view').forEach((view) => {
@@ -1362,6 +1665,18 @@
                 document.querySelector('.admin-topbar__title').textContent = 'Mouvement Stock';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Stock';
                 renderStockMove();
+            } else if (viewId === 'admin-bon-commande') {
+                document.querySelector('.admin-topbar__title').textContent = 'Bon de Commande';
+                document.querySelector('.admin-topbar__eyebrow').textContent = 'Commandes';
+                renderAdminBonCommande();
+            } else if (viewId === 'admin-balance-commande') {
+                document.querySelector('.admin-topbar__title').textContent = 'Balance';
+                document.querySelector('.admin-topbar__eyebrow').textContent = 'Commandes';
+                renderAdminBalanceCommande();
+            } else if (viewId === 'admin-paiement-commande') {
+                document.querySelector('.admin-topbar__title').textContent = 'Paiement';
+                document.querySelector('.admin-topbar__eyebrow').textContent = 'Commandes';
+                renderAdminPaiementCommande();
             } else if (viewId === 'fiche-affilie') {
                 document.querySelector('.admin-topbar__title').textContent = 'Fiche Affilié';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Affiliés';
@@ -1377,6 +1692,9 @@
             } else {
                 document.querySelector('.admin-topbar__title').textContent = 'Tableau de Bord';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Espace privé';
+                if (viewId === 'commandes') {
+                    renderOrders();
+                }
                 document.querySelectorAll('.admin-sublink').forEach((item) => item.classList.remove('is-active'));
             }
         };
@@ -1613,13 +1931,6 @@
                 renderProducts();
             }
         };
-
-        const escapeHtml = (value) =>
-            String(value ?? '')
-                .replaceAll('&', '&amp;')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
-                .replaceAll('"', '&quot;');
 
         const formatPrix = (prix) => `${Number(prix || 0).toLocaleString('fr-MA')} DH`;
         const saisonLabels = {

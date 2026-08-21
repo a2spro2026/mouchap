@@ -3025,6 +3025,39 @@ body.product-sheet-open {
     border-top: 1px solid rgba(74, 18, 40, 0.1);
 }
 
+.product-sheet__hint {
+    margin: 0.15rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: #8a4a5c;
+}
+
+.bn-stock-info {
+    margin: 0.45rem 0 0;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.55rem;
+    font-size: 0.82rem;
+    color: #4a1228;
+    background: rgba(107, 30, 58, 0.08);
+    border: 1px solid rgba(107, 30, 58, 0.14);
+}
+
+.bn-stock-info strong {
+    font-variant-numeric: tabular-nums;
+}
+
+.bn-stock-info.is-low {
+    color: #8a4a12;
+    background: rgba(196, 140, 40, 0.12);
+    border-color: rgba(196, 140, 40, 0.28);
+}
+
+.bn-stock-info.is-empty {
+    color: #8a1f2e;
+    background: rgba(180, 40, 55, 0.1);
+    border-color: rgba(180, 40, 55, 0.28);
+}
+
 .product-sheet .admin-field__input {
     background: #fff;
 }

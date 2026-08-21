@@ -255,12 +255,12 @@
                                         <th>N° Bn</th>
                                         <th>Réf</th>
                                         <th>Désignation</th>
+                                        <th>Catégorie</th>
+                                        <th>Famille</th>
+                                        <th>Size</th>
                                         <th>Qte</th>
-                                        <th>Prix/u</th>
-                                        <th>Nom Client</th>
-                                        <th>Ville</th>
-                                        <th>Contact</th>
-                                        <th>Adresse</th>
+                                        <th>Prix/U</th>
+                                        <th>Sous-Total</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -389,7 +389,7 @@
                 <div class="product-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="bn-sheet-title">
                     <div class="product-sheet__header">
                         <div>
-                            <p class="product-sheet__eyebrow">Commande · Saisie</p>
+                            <p class="product-sheet__eyebrow">Commande · Livraison</p>
                             <h3 class="product-sheet__title" id="bn-sheet-title">Nouveau bon</h3>
                         </div>
                         <button type="button" class="product-sheet__x" data-bn-sheet-close aria-label="Fermer">×</button>
@@ -397,76 +397,65 @@
                     <form class="product-sheet__form" id="bn-form" novalidate>
                         <input type="hidden" id="bn-uid">
                         <input type="hidden" id="bn-product-id">
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Date</span>
+                                <input type="date" id="bn-date" class="admin-field__input" readonly required>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">N° Bn</span>
+                                <input type="text" id="bn-ncmd" class="admin-field__input" value="Auto" readonly>
+                            </label>
+                        </div>
                         <label class="admin-field">
-                            <span class="admin-field__label">Date</span>
-                            <input type="date" id="bn-date" class="admin-field__input" required>
+                            <span class="admin-field__label">Réf</span>
+                            <select id="bn-ref" class="admin-field__input" required>
+                                <option value="">Sélectionner une référence…</option>
+                            </select>
+                            <p class="bn-stock-info" id="bn-stock-info" hidden>
+                                Stock disponible : <strong id="bn-stock-qte">0</strong>
+                            </p>
+                        </label>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Désignation</span>
+                            <input type="text" id="bn-designation" class="admin-field__input" readonly required>
                         </label>
                         <div class="product-sheet__row">
                             <label class="admin-field">
-                                <span class="admin-field__label">Réf</span>
-                                <input type="text" id="bn-ref" class="admin-field__input" required>
+                                <span class="admin-field__label">Catégorie</span>
+                                <input type="text" id="bn-categorie" class="admin-field__input" readonly>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Famille</span>
+                                <input type="text" id="bn-famille" class="admin-field__input" readonly>
+                            </label>
+                        </div>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Size</span>
+                                <select id="bn-size" class="admin-field__input" required>
+                                    <option value="">—</option>
+                                </select>
                             </label>
                             <label class="admin-field">
                                 <span class="admin-field__label">Qte</span>
                                 <input type="number" id="bn-qte" class="admin-field__input" min="1" step="1" value="1" required>
                             </label>
                         </div>
-                        <label class="admin-field">
-                            <span class="admin-field__label">Désignation</span>
-                            <input type="text" id="bn-designation" class="admin-field__input" required>
-                        </label>
-                        <label class="admin-field">
-                            <span class="admin-field__label">Prix/u (DH)</span>
-                            <input type="number" id="bn-prix" class="admin-field__input" min="0" step="0.01" value="0" required>
-                        </label>
-                        <label class="admin-field">
-                            <span class="admin-field__label">Nom Client</span>
-                            <input type="text" id="bn-client" class="admin-field__input" required>
-                        </label>
                         <div class="product-sheet__row">
                             <label class="admin-field">
-                                <span class="admin-field__label">Ville</span>
-                                <input type="text" id="bn-ville" class="admin-field__input" required>
+                                <span class="admin-field__label">Prix/U (DH)</span>
+                                <input type="number" id="bn-prix" class="admin-field__input" min="0" step="0.01" value="0" readonly required>
                             </label>
                             <label class="admin-field">
-                                <span class="admin-field__label">Contact</span>
-                                <input type="tel" id="bn-contact" class="admin-field__input" required>
+                                <span class="admin-field__label">Sous-Total (DH)</span>
+                                <input type="text" id="bn-sous-total" class="admin-field__input" value="0 DH" readonly>
                             </label>
                         </div>
-                        <label class="admin-field">
-                            <span class="admin-field__label">Adresse</span>
-                            <input type="text" id="bn-adresse" class="admin-field__input" placeholder="Adresse de livraison">
-                        </label>
-                        <div class="product-sheet__row">
-                            <label class="admin-field">
-                                <span class="admin-field__label">Statue</span>
-                                <select id="bn-statue" class="admin-field__input">
-                                    <option value="reporte">Reportée</option>
-                                    <option value="livree">Livrée</option>
-                                    <option value="annulee">Annulée</option>
-                                </select>
-                            </label>
-                            <label class="admin-field">
-                                <span class="admin-field__label">Marge (DH)</span>
-                                <input type="number" id="bn-marge" class="admin-field__input" min="0" step="0.01" value="0">
-                            </label>
-                        </div>
-                        <div class="product-sheet__row">
-                            <label class="admin-field">
-                                <span class="admin-field__label">Date Paie</span>
-                                <input type="date" id="bn-date-paie" class="admin-field__input">
-                            </label>
-                            <label class="admin-field">
-                                <span class="admin-field__label">Reçu</span>
-                                <select id="bn-recu" class="admin-field__input">
-                                    <option value="non">Non</option>
-                                    <option value="oui">Oui</option>
-                                </select>
-                            </label>
-                        </div>
+                        <p class="product-sheet__hint" id="bn-send-hint">Valider envoie la commande à l’administration pour livraison.</p>
                         <div class="product-sheet__footer">
                             <button type="button" class="admin-btn admin-btn--ghost" data-bn-sheet-close>Fermer</button>
-                            <button type="submit" class="admin-btn admin-btn--primary">Valider</button>
+                            <button type="submit" class="admin-btn admin-btn--primary" id="bn-submit-btn">Valider</button>
                         </div>
                     </form>
                 </div>
@@ -1098,35 +1087,155 @@
                 return ordersCache;
             };
 
-            const openBnSheet = (order = null, preset = null) => {
+            const openBnSheet = async (order = null, preset = null) => {
                 const sheet = document.getElementById('bn-sheet');
                 if (!sheet) return;
-                document.getElementById('bn-sheet-title').textContent = order ? 'Modifier le bon' : 'Nouveau bon';
+                await refreshCatalogueFromServer().catch(() => {});
+                fillBnRefOptions();
+
+                const readOnly = !!(order && order.viewOnly) || !!(preset && preset.viewOnly);
+                document.getElementById('bn-sheet-title').textContent = order
+                    ? (readOnly ? 'Détail du bon' : 'Modifier le bon')
+                    : 'Nouveau bon';
                 document.getElementById('bn-uid').value = order?.uid || order?.id || '';
-                document.getElementById('bn-product-id').value = order?.product_id || preset?.id || '';
                 document.getElementById('bn-date').value = order?.date || todayInput();
-                document.getElementById('bn-ref').value = order?.ref_prod || preset?.ref || '';
-                document.getElementById('bn-designation').value = order?.designation || preset?.designation || '';
+                document.getElementById('bn-ncmd').value = order?.n_cmd || 'Auto';
                 document.getElementById('bn-qte').value = order?.qte || 1;
-                document.getElementById('bn-prix').value = order?.prix_u ?? preset?.prix ?? 0;
-                document.getElementById('bn-client').value = order?.nom_client || session?.nom_complet || '';
-                document.getElementById('bn-ville').value = order?.ville || session?.ville || '';
-                document.getElementById('bn-contact').value = order?.contact || session?.contact || '';
-                document.getElementById('bn-adresse').value = order?.adresse || '';
-                document.getElementById('bn-statue').value = order?.statue === 'confirme' ? 'livree' : (order?.statue || 'reporte');
-                document.getElementById('bn-marge').value = order?.marge ?? 0;
-                document.getElementById('bn-date-paie').value = order?.date_paie || '';
-                document.getElementById('bn-recu').value = order?.recu || 'non';
-                const readOnly = !!(preset && preset.viewOnly);
+
+                const productId = order?.product_id || preset?.id || '';
+                const ref = order?.ref_prod || preset?.ref || '';
+                const refSelect = document.getElementById('bn-ref');
+                if (ref && ![...refSelect.options].some((o) => o.value === ref)) {
+                    const opt = document.createElement('option');
+                    opt.value = ref;
+                    opt.textContent = ref;
+                    opt.dataset.productId = productId || '';
+                    refSelect.appendChild(opt);
+                }
+                refSelect.value = ref;
+                const fromCatalogue = findCatalogueProduct(ref, productId);
+                const fromPreset = preset && preset.ref ? preset : null;
+                applyBnProduct(
+                    fromCatalogue || fromPreset || {
+                        id: productId,
+                        ref,
+                        designation: order?.designation,
+                        categorie: order?.categorie,
+                        famille: order?.famille,
+                        size: order?.size || (order?.sizes || [])[0] || '',
+                        prix: order?.prix_u,
+                    },
+                    order?.size || (order?.sizes || [])[0] || ''
+                );
+                updateBnSousTotal();
+
                 sheet.querySelectorAll('input, select').forEach((el) => {
                     if (el.type === 'hidden') return;
+                    if (el.id === 'bn-date' || el.id === 'bn-ncmd' || el.id === 'bn-designation'
+                        || el.id === 'bn-categorie' || el.id === 'bn-famille' || el.id === 'bn-prix'
+                        || el.id === 'bn-sous-total') {
+                        el.disabled = true;
+                        return;
+                    }
                     el.disabled = readOnly;
                 });
-                const saveBtn = sheet.querySelector('button[type="submit"]');
+                const saveBtn = document.getElementById('bn-submit-btn');
                 if (saveBtn) saveBtn.hidden = readOnly;
+                const hint = document.getElementById('bn-send-hint');
+                if (hint) hint.hidden = readOnly;
                 sheet.hidden = false;
                 sheet.setAttribute('aria-hidden', 'false');
                 document.body.classList.add('product-sheet-open');
+            };
+
+            const fillBnRefOptions = () => {
+                const select = document.getElementById('bn-ref');
+                if (!select) return;
+                const current = select.value;
+                const items = loadCatalogue().filter((p) => p.etat !== 'inactif');
+                select.innerHTML = `<option value="">Sélectionner une référence…</option>`
+                    + items.map((p) => `<option value="${escapeHtml(p.ref)}" data-product-id="${escapeHtml(p.id)}">${escapeHtml(p.ref)} — ${escapeHtml(p.designation || '')}</option>`).join('');
+                if (current) select.value = current;
+            };
+
+            const findCatalogueProduct = (ref, productId = '') => {
+                const items = loadCatalogue();
+                if (productId) {
+                    const byId = items.find((p) => String(p.id) === String(productId));
+                    if (byId) return byId;
+                }
+                return items.find((p) => String(p.ref) === String(ref)) || null;
+            };
+
+            const parseProductSizes = (sizeValue) => {
+                const raw = String(sizeValue || '').trim();
+                if (!raw) return [];
+                return raw.split(/[/|,;]+/).map((s) => s.trim()).filter(Boolean);
+            };
+
+            const fillBnSizeOptions = (sizeValue, preferred = '') => {
+                const select = document.getElementById('bn-size');
+                if (!select) return;
+                const sizes = parseProductSizes(sizeValue);
+                if (!sizes.length && preferred) sizes.push(preferred);
+                select.innerHTML = sizes.length
+                    ? sizes.map((s) => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')
+                    : `<option value="">—</option>`;
+                if (preferred && [...select.options].some((o) => o.value === preferred)) {
+                    select.value = preferred;
+                } else if (sizes.length) {
+                    select.value = sizes[0];
+                }
+            };
+
+            const updateBnStockInfo = (product) => {
+                const info = document.getElementById('bn-stock-info');
+                const stockEl = document.getElementById('bn-stock-qte');
+                const qteInput = document.getElementById('bn-qte');
+                if (!info || !stockEl) return;
+                if (!product || product.ref == null && !product.id) {
+                    info.hidden = true;
+                    info.classList.remove('is-low', 'is-empty');
+                    if (qteInput) qteInput.removeAttribute('max');
+                    return;
+                }
+                const stock = Math.max(0, Number(product.qte ?? 0));
+                stockEl.textContent = String(stock);
+                info.hidden = false;
+                info.classList.toggle('is-empty', stock <= 0);
+                info.classList.toggle('is-low', stock > 0 && stock <= 5);
+                if (qteInput) {
+                    if (stock > 0) {
+                        qteInput.max = String(stock);
+                        const current = Number(qteInput.value || 1);
+                        if (current > stock) qteInput.value = String(stock);
+                        if (current < 1) qteInput.value = '1';
+                    } else {
+                        qteInput.max = '0';
+                        qteInput.value = '1';
+                    }
+                }
+            };
+
+            const applyBnProduct = (product, preferredSize = '') => {
+                if (!product) {
+                    updateBnStockInfo(null);
+                    return;
+                }
+                document.getElementById('bn-product-id').value = product.id || '';
+                document.getElementById('bn-designation').value = product.designation || '';
+                document.getElementById('bn-categorie').value = product.categorie || '';
+                document.getElementById('bn-famille').value = product.famille || '';
+                document.getElementById('bn-prix').value = product.prix ?? product.prix_u ?? 0;
+                fillBnSizeOptions(product.size || preferredSize, preferredSize || parseProductSizes(product.size)[0] || '');
+                updateBnStockInfo(product);
+            };
+
+            const updateBnSousTotal = () => {
+                const prix = Number(document.getElementById('bn-prix')?.value || 0);
+                const qte = Number(document.getElementById('bn-qte')?.value || 1);
+                const el = document.getElementById('bn-sous-total');
+                if (el) el.value = formatMoney(Math.round(prix * qte * 100) / 100);
             };
 
             const closeBnSheet = () => {
@@ -1145,6 +1254,8 @@
                 openBnSheet(null, product);
             };
 
+            const orderSizeLabel = (o) => o.size || (Array.isArray(o.sizes) && o.sizes.length ? o.sizes[0] : '—');
+
             const renderBonCommande = async () => {
                 await refreshMyOrders();
                 const tbody = document.getElementById('bn-tbody');
@@ -1159,12 +1270,12 @@
                     <td>${escapeHtml(o.n_cmd || '—')}</td>
                     <td>${escapeHtml(o.ref_prod || '—')}</td>
                     <td>${escapeHtml(o.designation || '—')}</td>
+                    <td>${escapeHtml(o.categorie || '—')}</td>
+                    <td>${escapeHtml(o.famille || '—')}</td>
+                    <td>${escapeHtml(orderSizeLabel(o))}</td>
                     <td>${escapeHtml(o.qte ?? 0)}</td>
                     <td>${escapeHtml(formatMoney(o.prix_u))}</td>
-                    <td>${escapeHtml(o.nom_client || '—')}</td>
-                    <td>${escapeHtml(o.ville || '—')}</td>
-                    <td>${escapeHtml(o.contact || '—')}</td>
-                    <td>${escapeHtml(o.adresse || '—')}</td>
+                    <td>${escapeHtml(formatMoney(o.montant))}</td>
                     <td>
                         <div class="admin-actions">
                             <button type="button" class="admin-action-btn admin-action-btn--view" data-bn-action="view" title="Voir">${actionIconsBn.view}</button>
@@ -1400,7 +1511,7 @@
                 const order = myOrders().find((o) => String(o.uid || o.id) === String(uid));
                 if (!order) return;
                 const action = btn.dataset.bnAction;
-                if (action === 'view') openBnSheet(order, { viewOnly: true });
+                if (action === 'view') openBnSheet({ ...order, viewOnly: true });
                 if (action === 'edit') openBnSheet(order);
                 if (action === 'delete' && confirm(`Supprimer le bon ${order.n_cmd} ?`)) {
                     try {
@@ -1418,24 +1529,36 @@
                     return;
                 }
                 const uid = document.getElementById('bn-uid').value;
+                const ref = document.getElementById('bn-ref').value.trim();
+                const product = findCatalogueProduct(ref, document.getElementById('bn-product-id').value);
+                const qte = Number(document.getElementById('bn-qte').value || 1);
+                const stock = Number(product?.qte ?? 0);
+                if (product && stock >= 0 && qte > stock) {
+                    alert(`Stock insuffisant. Disponible : ${stock}`);
+                    return;
+                }
                 const payload = {
-                    date: document.getElementById('bn-date').value,
-                    ref_prod: document.getElementById('bn-ref').value.trim(),
+                    date: document.getElementById('bn-date').value || todayInput(),
+                    ref_prod: ref,
                     designation: document.getElementById('bn-designation').value.trim(),
-                    qte: Number(document.getElementById('bn-qte').value || 1),
+                    categorie: document.getElementById('bn-categorie').value.trim(),
+                    famille: document.getElementById('bn-famille').value.trim(),
+                    size: document.getElementById('bn-size').value.trim(),
+                    sizes: [document.getElementById('bn-size').value.trim()].filter(Boolean),
+                    qte,
                     prix_u: Number(document.getElementById('bn-prix').value || 0),
-                    nom_client: document.getElementById('bn-client').value.trim(),
-                    ville: document.getElementById('bn-ville').value.trim(),
-                    contact: document.getElementById('bn-contact').value.trim(),
-                    adresse: document.getElementById('bn-adresse').value.trim(),
-                    statue: document.getElementById('bn-statue').value,
-                    marge: Number(document.getElementById('bn-marge').value || 0),
-                    date_paie: document.getElementById('bn-date-paie').value || null,
-                    recu: document.getElementById('bn-recu').value,
-                    product_id: document.getElementById('bn-product-id').value
-                        ? Number(document.getElementById('bn-product-id').value)
-                        : null,
+                    nom_client: session?.nom_complet || '—',
+                    ville: session?.ville || '—',
+                    contact: session?.contact || '—',
+                    statue: 'reporte',
+                    product_id: product?.id
+                        ? Number(product.id)
+                        : (document.getElementById('bn-product-id').value
+                            ? Number(document.getElementById('bn-product-id').value)
+                            : null),
                 };
+                const submitBtn = document.getElementById('bn-submit-btn');
+                if (submitBtn) submitBtn.disabled = true;
                 try {
                     if (uid) {
                         await api(`/api/affilie/orders/${uid}`, { method: 'POST', body: payload });
@@ -1445,22 +1568,28 @@
                     closeBnSheet();
                     await renderBonCommande();
                     await renderCommandes();
+                    alert('Commande envoyée à l’administration pour livraison.');
                 } catch (e) {
-                    alert(e.message || 'Enregistrement impossible');
+                    alert(e.message || 'Envoi impossible');
+                } finally {
+                    if (submitBtn) submitBtn.disabled = false;
                 }
             });
 
-            document.getElementById('bn-prix')?.addEventListener('input', () => {
-                const prix = Number(document.getElementById('bn-prix').value || 0);
-                const qte = Number(document.getElementById('bn-qte').value || 1);
-                const marge = document.getElementById('bn-marge');
-                if (marge && !marge.dataset.touched) {
-                    marge.value = String(Math.round(prix * qte * 0.2 * 100) / 100);
-                }
+            document.getElementById('bn-ref')?.addEventListener('change', async () => {
+                const select = document.getElementById('bn-ref');
+                const chosenRef = select.value;
+                const chosenId = select.selectedOptions[0]?.dataset.productId || '';
+                try { await refreshCatalogueFromServer(); } catch {}
+                fillBnRefOptions();
+                select.value = chosenRef;
+                const product = findCatalogueProduct(chosenRef, chosenId);
+                applyBnProduct(product);
+                updateBnSousTotal();
             });
-            document.getElementById('bn-marge')?.addEventListener('input', (e) => {
-                e.target.dataset.touched = '1';
-            });
+
+            document.getElementById('bn-qte')?.addEventListener('input', updateBnSousTotal);
+            document.getElementById('bn-prix')?.addEventListener('input', updateBnSousTotal);
 
             document.querySelectorAll('[data-aff-nav]').forEach((link) => {
                 link.addEventListener('click', (event) => {

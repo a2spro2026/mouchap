@@ -17,7 +17,7 @@ class OrderController extends Controller
     {
         return response()->json(
             Order::query()
-                ->with('affilie')
+                ->with(['affilie', 'product'])
                 ->latest()
                 ->get()
                 ->map(fn (Order $order) => $order->toApiArray())
@@ -70,20 +70,31 @@ class OrderController extends Controller
         $montant = round($prix * $qte, 2);
         $marge = isset($data['marge']) ? (float) $data['marge'] : round($montant * 0.2, 2);
 
+        $product = isset($data['product_id'])
+            ? Product::query()->find($data['product_id'])
+            : Product::query()->where('ref', $data['ref_prod'])->first();
+
+        $sizes = $data['sizes'] ?? [];
+        if (isset($data['size']) && trim((string) $data['size']) !== '') {
+            $sizes = [trim((string) $data['size'])];
+        }
+
         $order = Order::create([
             'n_cmd' => MouchapCodes::nextOrderCode(),
             'date' => $data['date'] ?? now()->toDateString(),
             'affilie_id' => $affilie->id,
             'affilie_nom' => $affilie->nom_complet,
-            'ville' => $data['ville'],
-            'product_id' => $data['product_id'] ?? null,
+            'ville' => $data['ville'] ?? $affilie->ville,
+            'product_id' => $product?->id ?? ($data['product_id'] ?? null),
             'ref_prod' => $data['ref_prod'],
-            'designation' => $data['designation'],
-            'nom_client' => $data['nom_client'],
-            'contact' => $data['contact'],
+            'designation' => $data['designation'] ?? $product?->designation,
+            'categorie' => $data['categorie'] ?? $product?->categorie,
+            'famille' => $data['famille'] ?? $product?->famille,
+            'nom_client' => $data['nom_client'] ?? $affilie->nom_complet,
+            'contact' => $data['contact'] ?? $affilie->contact,
             'adresse' => $data['adresse'] ?? '',
             'qte' => $qte,
-            'sizes' => $data['sizes'] ?? [],
+            'sizes' => $sizes,
             'couleurs' => $data['couleurs'] ?? [],
             'prix_u' => $prix,
             'montant' => $montant,
@@ -104,9 +115,13 @@ class OrderController extends Controller
         $data = $this->validatedAffiliateOrder($request, true);
 
         $payload = collect($data)->only([
-            'date', 'ref_prod', 'designation', 'nom_client', 'ville', 'contact', 'adresse',
+            'date', 'ref_prod', 'designation', 'categorie', 'famille', 'nom_client', 'ville', 'contact', 'adresse',
             'qte', 'sizes', 'couleurs', 'prix_u', 'marge', 'date_paie', 'recu', 'statue', 'product_id',
         ])->all();
+
+        if (isset($data['size']) && trim((string) $data['size']) !== '') {
+            $payload['sizes'] = [trim((string) $data['size'])];
+        }
 
         if (isset($payload['prix_u']) || isset($payload['qte'])) {
             $prix = (float) ($payload['prix_u'] ?? $order->prix_u);
@@ -193,6 +208,8 @@ class OrderController extends Controller
             'product_id' => $product->id,
             'ref_prod' => $product->ref,
             'designation' => $product->designation,
+            'categorie' => $product->categorie,
+            'famille' => $product->famille,
             'nom_client' => $affilie->nom_complet,
             'contact' => $affilie->contact ?: '—',
             'adresse' => '',
@@ -219,7 +236,7 @@ class OrderController extends Controller
         $affilie = Auth::guard('affilie')->user();
 
         return Order::query()
-            ->with('affilie')
+            ->with(['affilie', 'product'])
             ->where('affilie_id', $affilie->id)
             ->latest();
     }
@@ -238,11 +255,14 @@ class OrderController extends Controller
             'date' => [$partial ? 'sometimes' : 'nullable', 'date'],
             'ref_prod' => [$required, 'string', 'max:80'],
             'designation' => [$required, 'string', 'max:255'],
+            'categorie' => ['nullable', 'string', 'max:120'],
+            'famille' => ['nullable', 'string', 'max:120'],
+            'size' => ['nullable', 'string', 'max:40'],
             'qte' => [$required, 'integer', 'min:1'],
             'prix_u' => [$required, 'numeric', 'min:0'],
-            'nom_client' => [$required, 'string', 'max:255'],
-            'ville' => [$required, 'string', 'max:120'],
-            'contact' => [$required, 'string', 'max:30'],
+            'nom_client' => ['nullable', 'string', 'max:255'],
+            'ville' => ['nullable', 'string', 'max:120'],
+            'contact' => ['nullable', 'string', 'max:30'],
             'adresse' => ['nullable', 'string', 'max:255'],
             'marge' => ['nullable', 'numeric'],
             'date_paie' => ['nullable', 'date'],
