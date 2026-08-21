@@ -634,20 +634,20 @@
 
                     <div class="admin-table-wrap admin-table-wrap--panel">
                         <div class="admin-table-scroll">
-                            <table class="admin-table admin-table--affilies">
+                            <table class="admin-table admin-table--affilies" id="affilies-table">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Nom Complet</th>
-                                        <th>Titre</th>
-                                        <th>Contact</th>
-                                        <th>Ville</th>
-                                        <th>Banque</th>
-                                        <th>Rib</th>
-                                        <th>Type Paiement</th>
-                                        <th>Statue</th>
-                                        <th>Login</th>
-                                        <th>Mot de Passe</th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="date">Date <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="nom_complet">Nom Complet <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="titre">Titre <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="contact">Contact <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="ville">Ville <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="banque">Banque <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="rib">Rib <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="type_paiement">Type Paiement <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="statue">Statue <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="login">Login <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
+                                        <th><button type="button" class="th-sort" data-aff-sort="password">Mot de Passe <span class="th-sort__arrows" aria-hidden="true"></span></button></th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -2438,6 +2438,7 @@
         const affilieViewSheet = document.getElementById('affilie-view-sheet');
         const affilieViewBody = document.getElementById('affilie-view-body');
         let affilieViewCurrentId = null;
+        let affiliesSort = { key: 'date', dir: 'desc' };
 
         const affActionIcons = {
             view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>',
@@ -2559,11 +2560,41 @@
             set('affilies-count-villes', villes);
         };
 
+        const syncAffiliesSortButtons = () => {
+            document.querySelectorAll('[data-aff-sort]').forEach((btn) => {
+                const active = btn.dataset.affSort === affiliesSort.key;
+                btn.classList.toggle('is-asc', active && affiliesSort.dir === 'asc');
+                btn.classList.toggle('is-desc', active && affiliesSort.dir === 'desc');
+            });
+        };
+
+        const sortAffiliesList = (items = []) => {
+            const key = affiliesSort.key;
+            const dir = affiliesSort.dir === 'asc' ? 1 : -1;
+            return [...items].sort((a, b) => {
+                let av = a?.[key];
+                let bv = b?.[key];
+                if (key === 'login') {
+                    av = loginLocal(av);
+                    bv = loginLocal(bv);
+                }
+                if (key === 'date') {
+                    const at = Date.parse(av) || 0;
+                    const bt = Date.parse(bv) || 0;
+                    return (at - bt) * dir;
+                }
+                av = String(av ?? '').toLowerCase();
+                bv = String(bv ?? '').toLowerCase();
+                return av.localeCompare(bv, 'fr', { sensitivity: 'base', numeric: true }) * dir;
+            });
+        };
+
         const renderAffilies = async () => {
             await renderKpis();
             if (!affiliesTbody) return;
-            const items = await syncAffiliesFromValidated();
+            const items = sortAffiliesList(await syncAffiliesFromValidated());
             updateAffiliesSummary(items);
+            syncAffiliesSortButtons();
 
             if (!items.length) {
                 affiliesTbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucun affilié validé. Validez une demande ou cliquez sur Ajouter.</td></tr>`;
@@ -2764,6 +2795,19 @@
         };
 
         document.getElementById('affilie-add-btn')?.addEventListener('click', () => openAffilieSheet());
+
+        document.querySelectorAll('[data-aff-sort]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const key = btn.dataset.affSort;
+                if (!key) return;
+                if (affiliesSort.key === key) {
+                    affiliesSort.dir = affiliesSort.dir === 'asc' ? 'desc' : 'asc';
+                } else {
+                    affiliesSort = { key, dir: key === 'date' ? 'desc' : 'asc' };
+                }
+                renderAffilies();
+            });
+        });
         document.querySelectorAll('[data-affilie-sheet-close]').forEach((el) => {
             el.addEventListener('click', closeAffilieSheet);
         });

@@ -2439,10 +2439,10 @@ table tbody td {
     position: relative;
     flex-shrink: 0;
     overflow: hidden;
-    height: clamp(7.5rem, 14vw, 10.5rem);
-    border-radius: 1.1rem;
+    height: clamp(3.6rem, 7vw, 4.75rem);
+    border-radius: 0.75rem;
     border: 1px solid rgba(74, 18, 40, 0.14);
-    box-shadow: 0 14px 34px rgba(42, 21, 32, 0.16);
+    box-shadow: 0 8px 18px rgba(42, 21, 32, 0.12);
 }
 
 .affilies-hero__media {
@@ -2450,27 +2450,34 @@ table tbody td {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 40%;
-    transform: scale(1.02);
+    object-position: center 38%;
+    transform: scale(1.01);
 }
 
 .affilies-hero__veil {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(90deg, rgba(42, 21, 32, 0.55) 0%, rgba(74, 18, 40, 0.28) 42%, rgba(42, 21, 32, 0.18) 100%),
-        linear-gradient(180deg, rgba(42, 21, 32, 0.1), rgba(42, 21, 32, 0.42));
+        linear-gradient(90deg, rgba(42, 21, 32, 0.5) 0%, rgba(74, 18, 40, 0.24) 42%, rgba(42, 21, 32, 0.16) 100%),
+        linear-gradient(180deg, rgba(42, 21, 32, 0.08), rgba(42, 21, 32, 0.36));
     pointer-events: none;
 }
 
 .affilies-hero__actions {
     position: absolute;
     z-index: 1;
-    right: 0.9rem;
-    bottom: 0.85rem;
+    right: 0.55rem;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
     display: flex;
-    gap: 0.55rem;
+    gap: 0.4rem;
     flex-wrap: wrap;
+}
+
+.affilies-hero__actions .admin-btn {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.78rem;
 }
 
 .admin-btn--on-dark {
@@ -2490,66 +2497,67 @@ table tbody td {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem 1.25rem;
+    gap: 0.45rem 0.75rem;
     flex-shrink: 0;
-    padding: 0.85rem 1.1rem;
+    padding: 0.4rem 0.7rem;
     border: 1px solid rgba(74, 18, 40, 0.12);
-    border-radius: 1rem;
+    border-radius: 0.7rem;
     background:
         linear-gradient(120deg, rgba(74, 18, 40, 0.97), rgba(107, 30, 58, 0.92) 52%, rgba(138, 42, 74, 0.9)),
         radial-gradient(circle at 100% 0%, rgba(255, 214, 224, 0.22), transparent 45%);
     box-shadow:
-        0 12px 28px rgba(42, 21, 32, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        0 6px 14px rgba(42, 21, 32, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .affilies-summary__main {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
-    min-width: 12rem;
+    gap: 0.5rem;
+    min-width: 0;
 }
 
 .affilies-summary__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.7rem;
-    height: 2.7rem;
-    border-radius: 0.85rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 0.5rem;
     background: rgba(255, 248, 246, 0.12);
     border: 1px solid rgba(255, 248, 246, 0.18);
     color: #fff8f6;
 }
 
 .affilies-summary__icon svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 0.9rem;
+    height: 0.9rem;
 }
 
 .affilies-summary__eyebrow {
     margin: 0;
-    font-size: 0.58rem;
+    font-size: 0.5rem;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: rgba(255, 214, 224, 0.78);
 }
 
 .affilies-summary__label {
-    margin: 0.15rem 0 0;
+    margin: 0;
     font-family: var(--font-display);
-    font-size: 1.35rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: #fff8f6;
     letter-spacing: 0.01em;
+    line-height: 1.15;
 }
 
 .affilies-summary__count {
     display: inline-block;
-    min-width: 1.4ch;
-    margin-right: 0.2rem;
-    font-size: 1.7rem;
+    min-width: 1.2ch;
+    margin-right: 0.15rem;
+    font-size: 1.05rem;
     font-variant-numeric: tabular-nums;
     color: #ffd6e0;
 }
@@ -2557,34 +2565,35 @@ table tbody td {
 .affilies-summary__stats {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem;
+    gap: 0.35rem;
 }
 
 .affilies-summary__stat {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: baseline;
     justify-content: center;
-    min-width: 5.2rem;
-    padding: 0.45rem 0.75rem;
-    border-radius: 0.75rem;
+    gap: 0.3rem;
+    min-width: 0;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
     background: rgba(255, 248, 246, 0.1);
     border: 1px solid rgba(255, 248, 246, 0.14);
 }
 
 .affilies-summary__stat-value {
-    font-size: 1.15rem;
+    font-size: 0.85rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: #fff8f6;
-    line-height: 1.1;
+    line-height: 1;
 }
 
 .affilies-summary__stat-label {
-    margin-top: 0.15rem;
-    font-size: 0.58rem;
+    margin-top: 0;
+    font-size: 0.52rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: rgba(255, 232, 236, 0.72);
 }
@@ -2630,6 +2639,74 @@ table tbody td {
     font-size: 0.62rem;
     letter-spacing: 0.06em;
     white-space: normal;
+}
+
+.th-sort {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+}
+
+.th-sort:hover {
+    color: #6b1e3a;
+}
+
+.th-sort__arrows {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-shrink: 0;
+    opacity: 0.35;
+}
+
+.th-sort__arrows::before,
+.th-sort__arrows::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 3.5px solid transparent;
+    border-right: 3.5px solid transparent;
+}
+
+.th-sort__arrows::before {
+    border-bottom: 4px solid currentColor;
+}
+
+.th-sort__arrows::after {
+    border-top: 4px solid currentColor;
+}
+
+.th-sort.is-asc .th-sort__arrows,
+.th-sort.is-desc .th-sort__arrows {
+    opacity: 1;
+}
+
+.th-sort.is-asc .th-sort__arrows::before {
+    border-bottom-color: #6b1e3a;
+}
+
+.th-sort.is-asc .th-sort__arrows::after {
+    opacity: 0.25;
+}
+
+.th-sort.is-desc .th-sort__arrows::after {
+    border-top-color: #6b1e3a;
+}
+
+.th-sort.is-desc .th-sort__arrows::before {
+    opacity: 0.25;
 }
 
 .admin-table--affilies th:nth-child(1),
