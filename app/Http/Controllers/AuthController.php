@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         if ($login === '' || ! Auth::attempt(['email' => $login, 'password' => $data['password']], true)) {
             return response()->json([
-                'message' => 'Identifiants admin incorrects. Utilisez admin / admin123 (statue Gérant).',
+                'message' => 'Identifiants admin incorrects. Utilisez yahya / 0661755048 (statue Gérant).',
             ], 422);
         }
 

@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\AffiliationRequest;
 use App\Models\Affilie;
 use App\Models\Fournisseur;
+use App\Models\Message;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -69,6 +70,15 @@ class MouchapCodes
         do {
             $code = 'CMD-'.strtoupper(Str::random(5));
         } while (Order::query()->where('n_cmd', $code)->exists());
+
+        return $code;
+    }
+
+    public static function nextMessageCode(): string
+    {
+        do {
+            $code = 'MSG-'.strtoupper(Str::random(5));
+        } while (Message::query()->where('n_msg', $code)->exists());
 
         return $code;
     }

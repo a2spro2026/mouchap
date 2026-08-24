@@ -141,10 +141,13 @@ class AffiliationRequestController extends Controller
                         .'Bienvenue dans le réseau MOUCHAP.';
 
                     Message::create([
+                        'n_msg' => MouchapCodes::nextMessageCode(),
+                        'date' => now()->toDateString(),
                         'affilie_id' => $affilie->id,
                         'type' => 'validation',
                         'title' => "Confirmation d'affiliation",
                         'body' => $body,
+                        'reponse' => '',
                     ]);
 
                     $payload['message'] = "Message de confirmation envoyé à {$affilie->nom_complet}";

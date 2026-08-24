@@ -256,7 +256,7 @@
                         <option value="caisse">Caisse</option>
                         <option value="depot">Depot</option>
                     </select>
-                    <span class="admin-field__hint">Compte démo : <strong>admin</strong> / <strong>admin123</strong></span>
+                    <span class="admin-field__hint">Compte par défaut : <strong>yahya</strong> / <strong>0661755048</strong></span>
                 </label>
 
                 <label class="admin-field">
@@ -267,8 +267,8 @@
                             name="login_user"
                             id="admin-login"
                             class="admin-field__input login-suffix__input"
-                            value=""
-                            placeholder="admin"
+                            value="yahya"
+                            placeholder="yahya"
                             autocomplete="off"
                             autocapitalize="off"
                             autocorrect="off"
@@ -277,7 +277,7 @@
                         >
                         <span class="login-suffix__domain" aria-hidden="true">@mouchap.com</span>
                     </div>
-                    <input type="hidden" name="login" id="admin-login-full" value="">
+                    <input type="hidden" name="login" id="admin-login-full" value="yahya@mouchap.com">
                     <span class="admin-field__hint">Le suffixe <strong>@mouchap.com</strong> est ajouté automatiquement</span>
                     <span class="admin-field__error" id="admin-login-error" hidden>Saisissez un identifiant valide avant @mouchap.com</span>
                 </label>
@@ -289,7 +289,7 @@
                         name="password"
                         id="admin-password"
                         class="admin-field__input"
-                        value=""
+                        value="0661755048"
                         autocomplete="new-password"
                         required
                     >

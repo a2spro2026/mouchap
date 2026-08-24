@@ -79,6 +79,11 @@ class OrderController extends Controller
             $sizes = [trim((string) $data['size'])];
         }
 
+        $couleurs = $data['couleurs'] ?? [];
+        if (isset($data['couleur']) && trim((string) $data['couleur']) !== '') {
+            $couleurs = [trim((string) $data['couleur'])];
+        }
+
         $order = Order::create([
             'n_cmd' => MouchapCodes::nextOrderCode(),
             'date' => $data['date'] ?? now()->toDateString(),
@@ -93,9 +98,10 @@ class OrderController extends Controller
             'nom_client' => $data['nom_client'] ?? $affilie->nom_complet,
             'contact' => $data['contact'] ?? $affilie->contact,
             'adresse' => $data['adresse'] ?? '',
+            'remarque' => $data['remarque'] ?? '',
             'qte' => $qte,
             'sizes' => $sizes,
-            'couleurs' => $data['couleurs'] ?? [],
+            'couleurs' => $couleurs,
             'prix_u' => $prix,
             'montant' => $montant,
             'marge' => $marge,
@@ -116,11 +122,15 @@ class OrderController extends Controller
 
         $payload = collect($data)->only([
             'date', 'ref_prod', 'designation', 'categorie', 'famille', 'nom_client', 'ville', 'contact', 'adresse',
-            'qte', 'sizes', 'couleurs', 'prix_u', 'marge', 'date_paie', 'recu', 'statue', 'product_id',
+            'remarque', 'qte', 'sizes', 'couleurs', 'prix_u', 'marge', 'date_paie', 'recu', 'statue', 'product_id',
         ])->all();
 
         if (isset($data['size']) && trim((string) $data['size']) !== '') {
             $payload['sizes'] = [trim((string) $data['size'])];
+        }
+
+        if (isset($data['couleur']) && trim((string) $data['couleur']) !== '') {
+            $payload['couleurs'] = [trim((string) $data['couleur'])];
         }
 
         if (isset($payload['prix_u']) || isset($payload['qte'])) {
@@ -264,6 +274,7 @@ class OrderController extends Controller
             'ville' => ['nullable', 'string', 'max:120'],
             'contact' => ['nullable', 'string', 'max:30'],
             'adresse' => ['nullable', 'string', 'max:255'],
+            'remarque' => ['nullable', 'string', 'max:1000'],
             'marge' => ['nullable', 'numeric'],
             'date_paie' => ['nullable', 'date'],
             'recu' => ['nullable', Rule::in(['oui', 'non'])],
@@ -271,6 +282,7 @@ class OrderController extends Controller
             'product_id' => ['nullable', 'integer', 'exists:products,id'],
             'sizes' => ['nullable', 'array'],
             'sizes.*' => ['string', 'max:40'],
+            'couleur' => ['nullable', 'string', 'max:40'],
             'couleurs' => ['nullable', 'array'],
             'couleurs.*' => ['string', 'max:40'],
         ]);

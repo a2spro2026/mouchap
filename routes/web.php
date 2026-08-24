@@ -57,6 +57,11 @@ Route::middleware('admin')->group(function () {
     Route::get('/api/admin/orders', [OrderController::class, 'index']);
     Route::get('/api/admin/stats', [OrderController::class, 'stats']);
     Route::patch('/api/admin/orders/{order}', [OrderController::class, 'update']);
+
+    Route::get('/api/admin/messages', [MessageController::class, 'adminIndex']);
+    Route::get('/api/admin/messages/unread-count', [MessageController::class, 'adminUnreadCount']);
+    Route::post('/api/admin/messages', [MessageController::class, 'adminStore']);
+    Route::post('/api/admin/messages/{message}/read', [MessageController::class, 'adminMarkRead']);
 });
 
 Route::middleware('affilie')->group(function () {
@@ -73,6 +78,7 @@ Route::middleware('affilie')->group(function () {
     Route::post('/api/affilie/orders/{order}', [OrderController::class, 'updateMine']);
     Route::delete('/api/affilie/orders/{order}', [OrderController::class, 'destroyMine']);
     Route::get('/api/affilie/messages', [MessageController::class, 'index']);
+    Route::post('/api/affilie/messages', [MessageController::class, 'store']);
     Route::post('/api/affilie/messages/{message}/read', [MessageController::class, 'markRead']);
     Route::post('/api/affilie/messages/read-all', [MessageController::class, 'markAllRead']);
 });

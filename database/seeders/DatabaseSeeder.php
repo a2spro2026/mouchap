@@ -22,6 +22,18 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::query()->updateOrCreate(
+            ['email' => 'yahya@mouchap.com'],
+            [
+                'code' => 'USR0002',
+                'name' => 'Yahya',
+                'contact' => '0661755048',
+                'statue' => 'gerant',
+                'password' => '0661755048',
+                'password_display' => '0661755048',
+            ]
+        );
+
         Product::query()->updateOrCreate(
             ['ref' => 'PRD0001'],
             [

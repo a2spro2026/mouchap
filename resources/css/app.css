@@ -1473,6 +1473,35 @@ html {
     color: #f3bec7;
 }
 
+.admin-side-link__badge,
+.admin-sublink__badge {
+    min-width: 1.2rem;
+    height: 1.2rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: #f3d5dc;
+    color: #4a1228;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.admin-sublink__badge {
+    margin-left: auto;
+}
+
+.admin-menu__toggle .admin-side-link__badge {
+    margin-left: 0.35rem;
+}
+
+.admin-table tr.is-unread td {
+    font-weight: 600;
+    background: rgba(107, 30, 58, 0.06);
+}
+
 .admin-side-link {
     display: flex;
     align-items: center;
@@ -3207,6 +3236,28 @@ body.product-sheet-open {
     font-size: 0.82rem;
     line-height: 1.4;
     color: #8a4a5c;
+}
+
+.bn-section {
+    margin: 0 0 0.85rem;
+    padding: 0.75rem 0.85rem 0.55rem;
+    border: 1px solid rgba(74, 18, 40, 0.12);
+    border-radius: 0.85rem;
+    background: rgba(255, 248, 246, 0.55);
+}
+
+.bn-section__title {
+    padding: 0 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #6b1e3a;
+}
+
+.bn-section .admin-field__input[readonly],
+.bn-section textarea.admin-field__input {
+    resize: vertical;
 }
 
 .bn-stock-info {

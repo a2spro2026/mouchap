@@ -214,6 +214,7 @@
                                     <th>Saison</th>
                                     <th>Size</th>
                                     <th>Qte disponible</th>
+                                    <th>P/U</th>
                                     <th>Média</th>
                                     <th>Actions</th>
                                 </tr>
@@ -397,78 +398,186 @@
                     <form class="product-sheet__form" id="bn-form" novalidate>
                         <input type="hidden" id="bn-uid">
                         <input type="hidden" id="bn-product-id">
-                        <div class="product-sheet__row">
+                        <input type="hidden" id="bn-date">
+                        <input type="hidden" id="bn-ncmd" value="Auto">
+
+                        <fieldset class="bn-section">
+                            <legend class="bn-section__title">Détail Pièce</legend>
                             <label class="admin-field">
-                                <span class="admin-field__label">Date</span>
-                                <input type="date" id="bn-date" class="admin-field__input" readonly required>
-                            </label>
-                            <label class="admin-field">
-                                <span class="admin-field__label">N° Bn</span>
-                                <input type="text" id="bn-ncmd" class="admin-field__input" value="Auto" readonly>
-                            </label>
-                        </div>
-                        <label class="admin-field">
-                            <span class="admin-field__label">Réf</span>
-                            <select id="bn-ref" class="admin-field__input" required>
-                                <option value="">Sélectionner une référence…</option>
-                            </select>
-                            <p class="bn-stock-info" id="bn-stock-info" hidden>
-                                Stock disponible : <strong id="bn-stock-qte">0</strong>
-                            </p>
-                        </label>
-                        <label class="admin-field">
-                            <span class="admin-field__label">Désignation</span>
-                            <input type="text" id="bn-designation" class="admin-field__input" readonly required>
-                        </label>
-                        <div class="product-sheet__row">
-                            <label class="admin-field">
-                                <span class="admin-field__label">Catégorie</span>
-                                <input type="text" id="bn-categorie" class="admin-field__input" readonly>
-                            </label>
-                            <label class="admin-field">
-                                <span class="admin-field__label">Famille</span>
-                                <input type="text" id="bn-famille" class="admin-field__input" readonly>
-                            </label>
-                        </div>
-                        <div class="product-sheet__row">
-                            <label class="admin-field">
-                                <span class="admin-field__label">Size</span>
-                                <select id="bn-size" class="admin-field__input" required>
-                                    <option value="">—</option>
+                                <span class="admin-field__label">Réf</span>
+                                <select id="bn-ref" class="admin-field__input" required>
+                                    <option value="">Sélectionner une référence…</option>
                                 </select>
+                                <p class="bn-stock-info" id="bn-stock-info" hidden>
+                                    Stock disponible : <strong id="bn-stock-qte">0</strong>
+                                </p>
                             </label>
                             <label class="admin-field">
-                                <span class="admin-field__label">Qte</span>
-                                <input type="number" id="bn-qte" class="admin-field__input" min="1" step="1" value="1" required>
+                                <span class="admin-field__label">Désignation</span>
+                                <input type="text" id="bn-designation" class="admin-field__input" readonly required>
                             </label>
-                        </div>
-                        <div class="product-sheet__row">
+                            <div class="product-sheet__row">
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Catégorie</span>
+                                    <input type="text" id="bn-categorie" class="admin-field__input" readonly>
+                                </label>
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Famille</span>
+                                    <input type="text" id="bn-famille" class="admin-field__input" readonly>
+                                </label>
+                            </div>
+                            <div class="product-sheet__row">
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Size</span>
+                                    <select id="bn-size" class="admin-field__input" required>
+                                        <option value="">—</option>
+                                    </select>
+                                </label>
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Qte</span>
+                                    <input type="number" id="bn-qte" class="admin-field__input" min="1" step="1" value="1" required>
+                                </label>
+                            </div>
                             <label class="admin-field">
-                                <span class="admin-field__label">Prix/U (DH)</span>
-                                <input type="number" id="bn-prix" class="admin-field__input" min="0" step="0.01" value="0" required>
+                                <span class="admin-field__label">Couleur</span>
+                                <input type="text" id="bn-couleur" class="admin-field__input" list="bn-couleur-list" placeholder="ex. Noir" required>
+                                <datalist id="bn-couleur-list"></datalist>
+                            </label>
+                            <div class="product-sheet__row">
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Prix/U (DH)</span>
+                                    <input type="number" id="bn-prix" class="admin-field__input" min="0" step="0.01" value="0" required>
+                                </label>
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Sous-Total (DH)</span>
+                                    <input type="text" id="bn-sous-total" class="admin-field__input" value="0 DH" readonly>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="bn-section">
+                            <legend class="bn-section__title">Détail Client</legend>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Nom Complet</span>
+                                <input type="text" id="bn-client" class="admin-field__input" required>
+                            </label>
+                            <div class="product-sheet__row">
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Contact</span>
+                                    <input type="tel" id="bn-contact" class="admin-field__input" required>
+                                </label>
+                                <label class="admin-field">
+                                    <span class="admin-field__label">Ville</span>
+                                    <input type="text" id="bn-ville" class="admin-field__input" required>
+                                </label>
+                            </div>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Adresse</span>
+                                <input type="text" id="bn-adresse" class="admin-field__input" placeholder="Adresse de livraison">
                             </label>
                             <label class="admin-field">
-                                <span class="admin-field__label">Sous-Total (DH)</span>
-                                <input type="text" id="bn-sous-total" class="admin-field__input" value="0 DH" readonly>
+                                <span class="admin-field__label">Remarque</span>
+                                <textarea id="bn-remarque" class="admin-field__input" rows="2" placeholder="Notes…"></textarea>
                             </label>
-                        </div>
-                        <p class="product-sheet__hint" id="bn-send-hint">Valider envoie la commande à l’administration pour livraison.</p>
+                        </fieldset>
+
+                        <p class="product-sheet__hint" id="bn-send-hint">Envoyer transmet la commande à l’administration pour livraison.</p>
                         <div class="product-sheet__footer">
                             <button type="button" class="admin-btn admin-btn--ghost" data-bn-sheet-close>Fermer</button>
-                            <button type="submit" class="admin-btn admin-btn--primary" id="bn-submit-btn">Valider</button>
+                            <button type="submit" class="admin-btn admin-btn--primary" id="bn-submit-btn">Envoyer</button>
                         </div>
                     </form>
                 </div>
             </div>
 
             <section class="aff-view" id="aff-view-messages" data-aff-view="messages" hidden>
-                <div class="aff-panel">
-                    <h2 class="aff-panel__title">Messages</h2>
-                    <div class="aff-messages" id="aff-messages-list">
-                        <p class="aff-panel__text">Aucun message.</p>
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Espace Affilié</p>
+                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Messages</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--primary" id="msg-add-btn">Ajouter</button>
+                            <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel aff-cmd-table-wrap">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--aff-msg">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N°</th>
+                                        <th>Objet</th>
+                                        <th>Message</th>
+                                        <th>Réponse</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="aff-msg-tbody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
+
+            {{-- Panneau nouveau message --}}
+            <div class="product-sheet" id="msg-sheet" hidden aria-hidden="true">
+                <div class="product-sheet__backdrop" data-msg-sheet-close></div>
+                <div class="product-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="msg-sheet-title">
+                    <div class="product-sheet__header">
+                        <div>
+                            <p class="product-sheet__eyebrow">Messages</p>
+                            <h3 class="product-sheet__title" id="msg-sheet-title">Nouveau message</h3>
+                        </div>
+                        <button type="button" class="product-sheet__x" data-msg-sheet-close aria-label="Fermer">×</button>
+                    </div>
+                    <form class="product-sheet__form" id="msg-form" novalidate>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Date</span>
+                                <input type="date" id="msg-date" class="admin-field__input" readonly required>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">N° Message</span>
+                                <input type="text" id="msg-ncmd" class="admin-field__input" value="Auto" readonly>
+                            </label>
+                        </div>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Objet</span>
+                            <input type="text" id="msg-objet" class="admin-field__input" required placeholder="Objet du message">
+                        </label>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Message</span>
+                            <textarea id="msg-body" class="admin-field__input" rows="5" required placeholder="Votre message…"></textarea>
+                        </label>
+                        <div class="product-sheet__footer">
+                            <button type="button" class="admin-btn admin-btn--ghost" data-msg-sheet-close>Fermer</button>
+                            <button type="submit" class="admin-btn admin-btn--primary" id="msg-submit-btn">Envoyer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Voir message --}}
+            <div class="product-sheet" id="msg-view-sheet" hidden aria-hidden="true">
+                <div class="product-sheet__backdrop" data-msg-view-close></div>
+                <div class="product-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="msg-view-title">
+                    <div class="product-sheet__header">
+                        <div>
+                            <p class="product-sheet__eyebrow">Messages</p>
+                            <h3 class="product-sheet__title" id="msg-view-title">Détail message</h3>
+                        </div>
+                        <button type="button" class="product-sheet__x" data-msg-view-close aria-label="Fermer">×</button>
+                    </div>
+                    <div class="product-sheet__form" id="msg-view-body"></div>
+                    <div class="product-sheet__footer">
+                        <button type="button" class="admin-btn admin-btn--ghost" data-msg-view-close>Fermer</button>
+                        <button type="button" class="admin-btn admin-btn--primary" id="msg-view-print">Imprimer</button>
+                    </div>
+                </div>
+            </div>
 
             <section class="aff-view" id="aff-view-profil" data-aff-view="profil" hidden>
                 <div class="aff-panel">
@@ -540,7 +649,7 @@
                 }
 
                 const name = session.nom_complet || 'Affilié';
-                document.getElementById('aff-welcome-title').textContent = `Bonjour, ${name.split(' ')[0]}`;
+                document.getElementById('aff-welcome-title').textContent = 'Espace Affilié';
                 document.getElementById('aff-user-name').textContent = name;
                 document.getElementById('aff-user-login').textContent = session.login || '—';
                 document.getElementById('aff-avatar').textContent = (name.trim()[0] || 'A').toUpperCase();
@@ -573,10 +682,10 @@
             const renderMessages = async () => {
                 await refreshInbox();
                 const messages = myMessages().sort(
-                    (a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)
+                    (a, b) => new Date(b.created_at || b.date || 0) - new Date(a.created_at || a.date || 0)
                 );
                 const badge = document.getElementById('aff-msg-badge');
-                const unread = messages.filter((m) => !m.read).length;
+                const unread = messages.filter((m) => !m.read && m.type !== 'outbound').length;
                 if (badge) {
                     if (unread > 0) {
                         badge.hidden = false;
@@ -616,26 +725,114 @@
                     }
                 }
 
-                const list = document.getElementById('aff-messages-list');
-                if (!list) return;
+                const tbody = document.getElementById('aff-msg-tbody');
+                if (!tbody) return;
                 if (!messages.length) {
-                    list.innerHTML = '<p class="aff-panel__text">Aucun message.</p>';
+                    tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">Aucun message. Cliquez sur Ajouter.</td></tr>`;
                     return;
                 }
-                list.innerHTML = messages
-                    .map((msg) => {
-                        const date = msg.created_at
-                            ? new Date(msg.created_at).toLocaleString('fr-FR')
-                            : '';
-                        return `<article class="aff-message ${msg.read ? '' : 'is-unread'}" data-msg-id="${escapeHtml(msg.id)}">
-                            <div class="aff-message__top">
-                                <strong>${escapeHtml(msg.title || 'Message')}</strong>
-                                <span>${escapeHtml(date)}</span>
+
+                const viewIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>';
+                const printIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 8V4h10v4"/><path d="M7 17H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v6H7z"/></svg>';
+
+                tbody.innerHTML = messages.map((msg) => {
+                    const date = formatAffDate(msg.date || (msg.created_at || '').slice(0, 10));
+                    const excerpt = (value) => {
+                        const text = String(value || '').trim();
+                        if (!text) return '—';
+                        return text.length > 48 ? `${text.slice(0, 48)}…` : text;
+                    };
+                    return `<tr data-msg-id="${escapeHtml(msg.id)}">
+                        <td>${escapeHtml(date)}</td>
+                        <td>${escapeHtml(msg.n_msg || '—')}</td>
+                        <td>${escapeHtml(msg.objet || msg.title || '—')}</td>
+                        <td>${escapeHtml(excerpt(msg.message || msg.body))}</td>
+                        <td>${escapeHtml(excerpt(msg.reponse))}</td>
+                        <td>
+                            <div class="admin-actions">
+                                <button type="button" class="admin-action-btn admin-action-btn--view" data-msg-action="view" title="Voir">${viewIcon}</button>
+                                <button type="button" class="admin-action-btn admin-action-btn--pdf" data-msg-action="print" title="Imprimer">${printIcon}</button>
                             </div>
-                            <p>${escapeHtml(msg.body || '')}</p>
-                        </article>`;
-                    })
-                    .join('');
+                        </td>
+                    </tr>`;
+                }).join('');
+            };
+
+            const openMsgSheet = () => {
+                const sheet = document.getElementById('msg-sheet');
+                if (!sheet) return;
+                document.getElementById('msg-date').value = todayInput();
+                document.getElementById('msg-ncmd').value = 'Auto';
+                document.getElementById('msg-objet').value = '';
+                document.getElementById('msg-body').value = '';
+                sheet.hidden = false;
+                sheet.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('product-sheet-open');
+            };
+
+            const closeMsgSheet = () => {
+                const sheet = document.getElementById('msg-sheet');
+                if (!sheet) return;
+                sheet.hidden = true;
+                sheet.setAttribute('aria-hidden', 'true');
+                if (document.getElementById('msg-view-sheet')?.hidden !== false
+                    && document.getElementById('bn-sheet')?.hidden !== false
+                    && document.getElementById('aff-order-sheet')?.hidden !== false) {
+                    document.body.classList.remove('product-sheet-open');
+                }
+            };
+
+            let currentViewMsg = null;
+
+            const openMsgView = (msg) => {
+                currentViewMsg = msg;
+                const sheet = document.getElementById('msg-view-sheet');
+                const body = document.getElementById('msg-view-body');
+                if (!sheet || !body) return;
+                document.getElementById('msg-view-title').textContent = msg.n_msg || 'Message';
+                body.innerHTML = `
+                    <div class="affilie-view__grid">
+                        <div class="affilie-view__item"><dt>Date</dt><dd>${escapeHtml(formatAffDate(msg.date || (msg.created_at || '').slice(0, 10)))}</dd></div>
+                        <div class="affilie-view__item"><dt>N°</dt><dd>${escapeHtml(msg.n_msg || '—')}</dd></div>
+                        <div class="affilie-view__item affilie-view__item--full"><dt>Objet</dt><dd>${escapeHtml(msg.objet || msg.title || '—')}</dd></div>
+                        <div class="affilie-view__item affilie-view__item--full"><dt>Message</dt><dd>${escapeHtml(msg.message || msg.body || '—')}</dd></div>
+                        <div class="affilie-view__item affilie-view__item--full"><dt>Réponse</dt><dd>${escapeHtml(msg.reponse || '—')}</dd></div>
+                    </div>`;
+                sheet.hidden = false;
+                sheet.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('product-sheet-open');
+                if (msg.id && !msg.read && msg.type !== 'outbound') {
+                    api(`/api/affilie/messages/${msg.id}/read`, { method: 'POST' }).catch(() => {});
+                }
+            };
+
+            const closeMsgView = () => {
+                const sheet = document.getElementById('msg-view-sheet');
+                if (!sheet) return;
+                sheet.hidden = true;
+                sheet.setAttribute('aria-hidden', 'true');
+                if (document.getElementById('msg-sheet')?.hidden !== false
+                    && document.getElementById('bn-sheet')?.hidden !== false
+                    && document.getElementById('aff-order-sheet')?.hidden !== false) {
+                    document.body.classList.remove('product-sheet-open');
+                }
+            };
+
+            const printMessage = (msg) => {
+                if (!msg) return;
+                const win = window.open('', '_blank', 'noopener,noreferrer,width=780,height=720');
+                if (!win) { alert('Autorisez les pop-ups.'); return; }
+                win.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><title>${escapeHtml(msg.n_msg || 'Message')}</title>
+                    <style>body{font-family:Georgia,serif;padding:24px;color:#2a1520}h1{font-size:1.4rem;margin:0 0 .5rem}p{white-space:pre-wrap;line-height:1.5}.meta{color:#8a4a5c;font-size:.9rem;margin-bottom:1.2rem}dt{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#8a4a5c}dd{margin:0 0 1rem;font-weight:600}</style></head>
+                    <body>
+                        <h1>Message ${escapeHtml(msg.n_msg || '')}</h1>
+                        <p class="meta">MOUCHAP · ${escapeHtml(formatAffDate(msg.date || (msg.created_at || '').slice(0, 10)))}</p>
+                        <dt>Objet</dt><dd>${escapeHtml(msg.objet || msg.title || '—')}</dd>
+                        <dt>Message</dt><dd>${escapeHtml(msg.message || msg.body || '—')}</dd>
+                        <dt>Réponse</dt><dd>${escapeHtml(msg.reponse || '—')}</dd>
+                        <script>window.onload=function(){window.print;}<\/script>
+                    </body></html>`);
+                win.document.close();
             };
 
             const ORDERS_KEY = 'mouchap_orders';
@@ -650,6 +847,8 @@
                 printemps: 'Printemps',
                 ete: 'Été',
             };
+
+            const formatMoney = (n) => `${Number(n || 0).toLocaleString('fr-MA')} DH`;
 
             const loadCatalogue = () => {
                 try {
@@ -709,7 +908,7 @@
                     items = items.filter((p) => p.saison === saisonFilter);
                 }
                 if (!items.length) {
-                    tbody.innerHTML = `<tr><td colspan="9" class="admin-table__empty">Aucun produit.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="10" class="admin-table__empty">Aucun produit.</td></tr>`;
                     return;
                 }
                 tbody.innerHTML = items
@@ -724,6 +923,7 @@
                             <td>${escapeHtml(saisonLabels[p.saison] || p.saison || '—')}</td>
                             <td>${escapeHtml(p.size)}</td>
                             <td><strong>${escapeHtml(p.qte ?? 0)}</strong></td>
+                            <td>${escapeHtml(formatMoney(p.prix))}</td>
                             <td>${media}</td>
                             <td>
                                 <div class="admin-actions">
@@ -777,7 +977,7 @@
                                 ${media}
                             </div>
                             <h4 class="aff-cat-item__title">${escapeHtml(p.designation)}</h4>
-                            <p class="aff-cat-item__stock">${escapeHtml(p.qte ?? 0)} disponible(s)</p>
+                            <p class="aff-cat-item__stock">${escapeHtml(p.qte ?? 0)} disponible(s) · ${escapeHtml(formatMoney(p.prix))}</p>
                             <div class="aff-cat-item__actions">
                                 <button type="button" class="admin-action-btn" data-cat-action="download" title="Télécharger" aria-label="Télécharger">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
@@ -1072,7 +1272,6 @@
                 return Number.isNaN(d.getTime()) ? value : d.toLocaleDateString('fr-FR');
             };
 
-            const formatMoney = (n) => `${Number(n || 0).toLocaleString('fr-MA')} DH`;
             const todayInput = () => new Date().toISOString().slice(0, 10);
 
             const actionIconsBn = {
@@ -1103,6 +1302,12 @@
                 document.getElementById('bn-date').value = order?.date || todayInput();
                 document.getElementById('bn-ncmd').value = order?.n_cmd || 'Auto';
                 document.getElementById('bn-qte').value = order?.qte || 1;
+                document.getElementById('bn-client').value = order?.nom_client || '';
+                document.getElementById('bn-contact').value = order?.contact || '';
+                document.getElementById('bn-ville').value = order?.ville || '';
+                document.getElementById('bn-adresse').value = order?.adresse || '';
+                document.getElementById('bn-remarque').value = order?.remarque || '';
+                document.getElementById('bn-couleur').value = order?.couleur || (order?.couleurs || [])[0] || '';
 
                 const productId = order?.product_id || preset?.id || '';
                 const ref = order?.ref_prod || preset?.ref || '';
@@ -1125,16 +1330,17 @@
                         categorie: order?.categorie,
                         famille: order?.famille,
                         size: order?.size || (order?.sizes || [])[0] || '',
+                        couleurs: order?.couleurs || [],
                         prix: order?.prix_u,
                     },
-                    order?.size || (order?.sizes || [])[0] || ''
+                    order?.size || (order?.sizes || [])[0] || '',
+                    order?.couleur || (order?.couleurs || [])[0] || ''
                 );
                 updateBnSousTotal();
 
-                sheet.querySelectorAll('input, select').forEach((el) => {
+                sheet.querySelectorAll('input, select, textarea').forEach((el) => {
                     if (el.type === 'hidden') return;
-                    if (el.id === 'bn-date' || el.id === 'bn-ncmd' || el.id === 'bn-designation'
-                        || el.id === 'bn-categorie' || el.id === 'bn-famille'
+                    if (el.id === 'bn-designation' || el.id === 'bn-categorie' || el.id === 'bn-famille'
                         || el.id === 'bn-sous-total') {
                         el.disabled = true;
                         return;
@@ -1219,7 +1425,22 @@
                 }
             };
 
-            const applyBnProduct = (product, preferredSize = '') => {
+            const fillBnCouleurOptions = (product, preferred = '') => {
+                const list = document.getElementById('bn-couleur-list');
+                const input = document.getElementById('bn-couleur');
+                if (!list || !input) return;
+                const colors = Array.isArray(product?.couleurs) && product.couleurs.length
+                    ? product.couleurs
+                    : ['Noir', 'Beige', 'Blanc', 'Rouge', 'Bleu'];
+                list.innerHTML = colors.map((c) => `<option value="${escapeHtml(c)}"></option>`).join('');
+                if (preferred) {
+                    input.value = preferred;
+                } else if (!input.value && colors.length) {
+                    input.value = colors[0];
+                }
+            };
+
+            const applyBnProduct = (product, preferredSize = '', preferredCouleur = '') => {
                 if (!product) {
                     updateBnStockInfo(null);
                     return;
@@ -1230,6 +1451,7 @@
                 document.getElementById('bn-famille').value = product.famille || '';
                 document.getElementById('bn-prix').value = product.prix ?? product.prix_u ?? 0;
                 fillBnSizeOptions(product.size || preferredSize, preferredSize || parseProductSizes(product.size)[0] || '');
+                fillBnCouleurOptions(product, preferredCouleur);
                 updateBnStockInfo(product);
             };
 
@@ -1505,6 +1727,51 @@
             document.querySelectorAll('[data-bn-sheet-close]').forEach((el) => {
                 el.addEventListener('click', closeBnSheet);
             });
+
+            document.getElementById('msg-add-btn')?.addEventListener('click', () => openMsgSheet());
+            document.querySelectorAll('[data-msg-sheet-close]').forEach((el) => {
+                el.addEventListener('click', closeMsgSheet);
+            });
+            document.querySelectorAll('[data-msg-view-close]').forEach((el) => {
+                el.addEventListener('click', closeMsgView);
+            });
+            document.getElementById('msg-view-print')?.addEventListener('click', () => printMessage(currentViewMsg));
+            document.getElementById('aff-msg-tbody')?.addEventListener('click', (event) => {
+                const btn = event.target.closest('[data-msg-action]');
+                if (!btn) return;
+                const id = btn.closest('tr')?.dataset.msgId;
+                const msg = myMessages().find((m) => String(m.id) === String(id));
+                if (!msg) return;
+                if (btn.dataset.msgAction === 'view') openMsgView(msg);
+                if (btn.dataset.msgAction === 'print') printMessage(msg);
+            });
+            document.getElementById('msg-form')?.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const form = event.target;
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+                const submitBtn = document.getElementById('msg-submit-btn');
+                if (submitBtn) submitBtn.disabled = true;
+                try {
+                    await api('/api/affilie/messages', {
+                        method: 'POST',
+                        body: {
+                            date: document.getElementById('msg-date').value || todayInput(),
+                            objet: document.getElementById('msg-objet').value.trim(),
+                            message: document.getElementById('msg-body').value.trim(),
+                        },
+                    });
+                    closeMsgSheet();
+                    await renderMessages();
+                    alert('Message envoyé.');
+                } catch (e) {
+                    alert(e.message || 'Envoi impossible');
+                } finally {
+                    if (submitBtn) submitBtn.disabled = false;
+                }
+            });
             document.getElementById('bal-cmd-print')?.addEventListener('click', printBalanceCommande);
 
             document.getElementById('bn-tbody')?.addEventListener('click', async (event) => {
@@ -1540,6 +1807,7 @@
                     alert(`Stock insuffisant. Disponible : ${stock}`);
                     return;
                 }
+                const couleur = document.getElementById('bn-couleur').value.trim();
                 const payload = {
                     date: document.getElementById('bn-date').value || todayInput(),
                     ref_prod: ref,
@@ -1548,11 +1816,15 @@
                     famille: document.getElementById('bn-famille').value.trim(),
                     size: document.getElementById('bn-size').value.trim(),
                     sizes: [document.getElementById('bn-size').value.trim()].filter(Boolean),
+                    couleur,
+                    couleurs: couleur ? [couleur] : [],
                     qte,
                     prix_u: Number(document.getElementById('bn-prix').value || 0),
-                    nom_client: session?.nom_complet || '—',
-                    ville: session?.ville || '—',
-                    contact: session?.contact || '—',
+                    nom_client: document.getElementById('bn-client').value.trim(),
+                    ville: document.getElementById('bn-ville').value.trim(),
+                    contact: document.getElementById('bn-contact').value.trim(),
+                    adresse: document.getElementById('bn-adresse').value.trim(),
+                    remarque: document.getElementById('bn-remarque').value.trim(),
                     statue: 'en_attente',
                     product_id: product?.id
                         ? Number(product.id)

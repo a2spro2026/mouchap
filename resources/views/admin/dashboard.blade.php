@@ -148,12 +148,18 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                         </span>
                         <span class="admin-side-link__label">Affiliés</span>
+                        <span class="admin-side-link__badge" id="admin-aff-msg-badge" hidden>0</span>
                         <span class="admin-menu__chevron" aria-hidden="true"></span>
                     </button>
                     <div class="admin-submenu">
                         <a href="#fiche-affilie" class="admin-sublink" data-admin-view="fiche-affilie">
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path stroke-linecap="round" d="M16 11h4"/></svg></span>
                             <span>Fiche Affilié</span>
+                        </a>
+                        <a href="#messages-affilie" class="admin-sublink" data-admin-view="messages-affilie">
+                            <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v11H8l-4 3V5z"/></svg></span>
+                            <span>Message</span>
+                            <span class="admin-sublink__badge" id="admin-msg-sub-badge" hidden>0</span>
                         </a>
                         <a href="#gestion-paiement" class="admin-sublink">
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="5" width="20" height="14" rx="2"/><path stroke-linecap="round" d="M2 10h20"/><circle cx="16" cy="15" r="1.5"/></svg></span>
@@ -686,6 +692,39 @@
                 </div>
             </section>
 
+            {{-- Vue Messages Affiliés --}}
+            <section class="admin-view" id="admin-view-messages-affilie" data-view="messages-affilie" hidden aria-label="Messages Affiliés">
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Affiliés</p>
+                            <h2 class="admin-panel__title">Message</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--primary" id="admin-msg-add-btn">Ajouter</button>
+                            <button type="button" class="admin-btn admin-btn--ghost" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--admin-msg">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>N°</th>
+                                        <th>Nom Affilié</th>
+                                        <th>Objet</th>
+                                        <th>Message</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-msg-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {{-- Vue Fiche Fournisseur --}}
             <section class="admin-view" id="admin-view-fiche-fournisseur" data-view="fiche-fournisseur" hidden aria-label="Fiche Fournisseur">
                 <div class="admin-panel">
@@ -867,6 +906,67 @@
                     <button type="submit" class="admin-btn admin-btn--primary" id="product-save-btn">Enregistrer</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    {{-- Feuille message admin --}}
+    <div class="product-sheet" id="admin-msg-sheet" hidden aria-hidden="true">
+        <div class="product-sheet__backdrop" data-admin-msg-sheet-close></div>
+        <div class="product-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="admin-msg-sheet-title">
+            <div class="product-sheet__header">
+                <div>
+                    <p class="product-sheet__eyebrow">Affiliés · Message</p>
+                    <h3 class="product-sheet__title" id="admin-msg-sheet-title">Nouveau message</h3>
+                </div>
+                <button type="button" class="product-sheet__x" data-admin-msg-sheet-close aria-label="Fermer">×</button>
+            </div>
+            <form class="product-sheet__form" id="admin-msg-form" novalidate>
+                <div class="product-sheet__row">
+                    <label class="admin-field">
+                        <span class="admin-field__label">Date</span>
+                        <input type="date" id="admin-msg-date" class="admin-field__input" readonly required>
+                    </label>
+                    <label class="admin-field">
+                        <span class="admin-field__label">N°</span>
+                        <input type="text" id="admin-msg-n" class="admin-field__input" value="Auto" readonly>
+                    </label>
+                </div>
+                <label class="admin-field">
+                    <span class="admin-field__label">Nom Affilié</span>
+                    <select id="admin-msg-affilie" class="admin-field__input" required>
+                        <option value="">Sélectionner un affilié…</option>
+                    </select>
+                </label>
+                <label class="admin-field">
+                    <span class="admin-field__label">Objet</span>
+                    <input type="text" id="admin-msg-objet" class="admin-field__input" required placeholder="Objet du message">
+                </label>
+                <label class="admin-field">
+                    <span class="admin-field__label">Message</span>
+                    <textarea id="admin-msg-body" class="admin-field__input" rows="5" required placeholder="Votre message…"></textarea>
+                </label>
+                <div class="product-sheet__footer">
+                    <button type="button" class="admin-btn admin-btn--ghost" data-admin-msg-sheet-close>Fermer</button>
+                    <button type="submit" class="admin-btn admin-btn--primary" id="admin-msg-submit-btn">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="product-sheet" id="admin-msg-view-sheet" hidden aria-hidden="true">
+        <div class="product-sheet__backdrop" data-admin-msg-view-close></div>
+        <div class="product-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="admin-msg-view-title">
+            <div class="product-sheet__header">
+                <div>
+                    <p class="product-sheet__eyebrow">Affiliés · Message</p>
+                    <h3 class="product-sheet__title" id="admin-msg-view-title">Détail message</h3>
+                </div>
+                <button type="button" class="product-sheet__x" data-admin-msg-view-close aria-label="Fermer">×</button>
+            </div>
+            <div class="product-sheet__form" id="admin-msg-view-body"></div>
+            <div class="product-sheet__footer">
+                <button type="button" class="admin-btn admin-btn--ghost" data-admin-msg-view-close>Fermer</button>
+            </div>
         </div>
     </div>
 
@@ -1730,6 +1830,10 @@
                 document.querySelector('.admin-topbar__title').textContent = 'Fiche Affilié';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Affiliés';
                 renderAffilies();
+            } else if (viewId === 'messages-affilie') {
+                document.querySelector('.admin-topbar__title').textContent = 'Message';
+                document.querySelector('.admin-topbar__eyebrow').textContent = 'Affiliés';
+                renderAdminMessages();
             } else if (viewId === 'fiche-fournisseur') {
                 document.querySelector('.admin-topbar__title').textContent = 'Fiche Fournisseur';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Fournisseurs';
@@ -2936,6 +3040,201 @@
             }
         });
 
+        /* ——— Messages Affiliés ——— */
+        let adminMessagesCache = [];
+        let currentAdminViewMsg = null;
+
+        const todayInputDate = () => new Date().toISOString().slice(0, 10);
+
+        const setAdminMsgBadges = (count) => {
+            const n = Number(count || 0);
+            ['admin-aff-msg-badge', 'admin-msg-sub-badge'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (n > 0) {
+                    el.hidden = false;
+                    el.textContent = String(n);
+                } else {
+                    el.hidden = true;
+                }
+            });
+        };
+
+        const refreshAdminMsgBadge = async () => {
+            try {
+                const data = await api('/api/admin/messages/unread-count');
+                setAdminMsgBadges(data.count || 0);
+            } catch {
+                setAdminMsgBadges(0);
+            }
+        };
+
+        const renderAdminMessages = async () => {
+            const tbody = document.getElementById('admin-msg-tbody');
+            if (!tbody) return;
+            try {
+                adminMessagesCache = await api('/api/admin/messages');
+            } catch {
+                adminMessagesCache = [];
+            }
+            await refreshAdminMsgBadge();
+
+            if (!adminMessagesCache.length) {
+                tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">Aucun message. Cliquez sur Ajouter.</td></tr>`;
+                return;
+            }
+
+            const viewIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>';
+            const excerpt = (value) => {
+                const text = String(value || '').trim();
+                if (!text) return '—';
+                return text.length > 48 ? `${text.slice(0, 48)}…` : text;
+            };
+
+            tbody.innerHTML = adminMessagesCache.map((msg) => {
+                const unread = msg.type === 'outbound' && !msg.read;
+                return `<tr data-msg-id="${escapeHtml(msg.id)}" class="${unread ? 'is-unread' : ''}">
+                    <td>${escapeHtml(formatOrderDate(msg.date))}</td>
+                    <td>${escapeHtml(msg.n_msg || '—')}</td>
+                    <td>${escapeHtml(msg.affilie_nom || '—')}</td>
+                    <td>${escapeHtml(msg.objet || msg.title || '—')}</td>
+                    <td>${escapeHtml(excerpt(msg.message || msg.body))}</td>
+                    <td>
+                        <div class="admin-actions">
+                            <button type="button" class="admin-action-btn admin-action-btn--view" data-admin-msg-action="view" title="Voir">${viewIcon}</button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+        };
+
+        const fillAdminMsgAffilies = async () => {
+            const select = document.getElementById('admin-msg-affilie');
+            if (!select) return;
+            if (!affiliesCache.length) {
+                try { affiliesCache = await api('/api/admin/affilies'); } catch { affiliesCache = []; }
+            }
+            const current = select.value;
+            select.innerHTML = `<option value="">Sélectionner un affilié…</option>` +
+                affiliesCache
+                    .slice()
+                    .sort((a, b) => String(a.nom_complet || '').localeCompare(String(b.nom_complet || ''), 'fr'))
+                    .map((a) => `<option value="${escapeHtml(a.uid)}">${escapeHtml(a.nom_complet || a.id)}</option>`)
+                    .join('');
+            if (current) select.value = current;
+        };
+
+        const openAdminMsgSheet = async () => {
+            const sheet = document.getElementById('admin-msg-sheet');
+            if (!sheet) return;
+            document.getElementById('admin-msg-date').value = todayInputDate();
+            document.getElementById('admin-msg-n').value = 'Auto';
+            document.getElementById('admin-msg-objet').value = '';
+            document.getElementById('admin-msg-body').value = '';
+            await fillAdminMsgAffilies();
+            document.getElementById('admin-msg-affilie').value = '';
+            sheet.hidden = false;
+            sheet.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('product-sheet-open');
+        };
+
+        const closeAdminMsgSheet = () => {
+            const sheet = document.getElementById('admin-msg-sheet');
+            if (!sheet) return;
+            sheet.hidden = true;
+            sheet.setAttribute('aria-hidden', 'true');
+            if (document.getElementById('admin-msg-view-sheet')?.hidden !== false) {
+                document.body.classList.remove('product-sheet-open');
+            }
+        };
+
+        const openAdminMsgView = async (msg) => {
+            currentAdminViewMsg = msg;
+            const sheet = document.getElementById('admin-msg-view-sheet');
+            const body = document.getElementById('admin-msg-view-body');
+            if (!sheet || !body) return;
+            document.getElementById('admin-msg-view-title').textContent = msg.n_msg || 'Message';
+            body.innerHTML = `
+                <div class="affilie-view__grid">
+                    <div class="affilie-view__item"><dt>Date</dt><dd>${escapeHtml(formatOrderDate(msg.date))}</dd></div>
+                    <div class="affilie-view__item"><dt>N°</dt><dd>${escapeHtml(msg.n_msg || '—')}</dd></div>
+                    <div class="affilie-view__item affilie-view__item--full"><dt>Nom Affilié</dt><dd>${escapeHtml(msg.affilie_nom || '—')}</dd></div>
+                    <div class="affilie-view__item affilie-view__item--full"><dt>Objet</dt><dd>${escapeHtml(msg.objet || msg.title || '—')}</dd></div>
+                    <div class="affilie-view__item affilie-view__item--full"><dt>Message</dt><dd>${escapeHtml(msg.message || msg.body || '—')}</dd></div>
+                </div>`;
+            sheet.hidden = false;
+            sheet.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('product-sheet-open');
+            if (msg.type === 'outbound' && !msg.read && msg.id) {
+                try {
+                    await api(`/api/admin/messages/${msg.id}/read`, { method: 'POST' });
+                    adminMessagesCache = adminMessagesCache.map((m) =>
+                        String(m.id) === String(msg.id) ? { ...m, read: true } : m
+                    );
+                    await refreshAdminMsgBadge();
+                    if (document.getElementById('admin-view-messages-affilie')?.classList.contains('is-active')) {
+                        renderAdminMessages();
+                    }
+                } catch {}
+            }
+        };
+
+        const closeAdminMsgView = () => {
+            const sheet = document.getElementById('admin-msg-view-sheet');
+            if (!sheet) return;
+            sheet.hidden = true;
+            sheet.setAttribute('aria-hidden', 'true');
+            if (document.getElementById('admin-msg-sheet')?.hidden !== false) {
+                document.body.classList.remove('product-sheet-open');
+            }
+        };
+
+        document.getElementById('admin-msg-add-btn')?.addEventListener('click', () => openAdminMsgSheet());
+        document.querySelectorAll('[data-admin-msg-sheet-close]').forEach((el) => {
+            el.addEventListener('click', closeAdminMsgSheet);
+        });
+        document.querySelectorAll('[data-admin-msg-view-close]').forEach((el) => {
+            el.addEventListener('click', closeAdminMsgView);
+        });
+        document.getElementById('admin-msg-tbody')?.addEventListener('click', (event) => {
+            const btn = event.target.closest('[data-admin-msg-action]');
+            if (!btn) return;
+            const id = btn.closest('tr')?.dataset.msgId;
+            const msg = adminMessagesCache.find((m) => String(m.id) === String(id));
+            if (msg && btn.dataset.adminMsgAction === 'view') openAdminMsgView(msg);
+        });
+        document.getElementById('admin-msg-form')?.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const form = event.target;
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            const submitBtn = document.getElementById('admin-msg-submit-btn');
+            if (submitBtn) submitBtn.disabled = true;
+            try {
+                await api('/api/admin/messages', {
+                    method: 'POST',
+                    body: {
+                        date: document.getElementById('admin-msg-date').value || todayInputDate(),
+                        affilie_uid: document.getElementById('admin-msg-affilie').value,
+                        objet: document.getElementById('admin-msg-objet').value.trim(),
+                        message: document.getElementById('admin-msg-body').value.trim(),
+                    },
+                });
+                closeAdminMsgSheet();
+                await renderAdminMessages();
+                alert('Message envoyé.');
+            } catch (e) {
+                alert(e.message || 'Envoi impossible');
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
+        });
+
+        refreshAdminMsgBadge();
+        window.setInterval(refreshAdminMsgBadge, 45000);
+
         /* ——— Fiche Fournisseur ——— */
         const FOURNISSEURS_KEY = 'mouchap_fournisseurs';
         const fournisseursTbody = document.getElementById('fournisseurs-tbody');
@@ -3308,6 +3607,9 @@
         } else if (window.location.hash === '#fiche-affilie') {
             showAdminView('fiche-affilie');
             document.querySelector('[data-admin-view="fiche-affilie"]')?.classList.add('is-active');
+        } else if (window.location.hash === '#messages-affilie') {
+            showAdminView('messages-affilie');
+            document.querySelector('[data-admin-view="messages-affilie"]')?.classList.add('is-active');
         } else if (window.location.hash === '#fiche-fournisseur') {
             showAdminView('fiche-fournisseur');
             document.querySelector('[data-admin-view="fiche-fournisseur"]')?.classList.add('is-active');
