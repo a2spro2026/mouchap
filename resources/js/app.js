@@ -263,6 +263,43 @@ const bootMouchapUi = () => {
         link.addEventListener('click', () => closeMobileNav());
     });
 
+    const waProof = document.getElementById('wa-proof');
+    const revealWaProof = () => {
+        if (waProof) {
+            waProof.classList.add('is-visible');
+        }
+    };
+
+    if (waProof) {
+        const whySection = document.getElementById('pourquoi');
+        if ('IntersectionObserver' in window && whySection) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            revealWaProof();
+                            observer.disconnect();
+                        }
+                    });
+                },
+                { threshold: 0.22 }
+            );
+            observer.observe(whySection);
+        } else {
+            revealWaProof();
+        }
+
+        document.querySelectorAll('a[href="#pourquoi"]').forEach((link) => {
+            link.addEventListener('click', () => {
+                window.setTimeout(revealWaProof, 180);
+            });
+        });
+
+        if (window.location.hash === '#pourquoi') {
+            window.setTimeout(revealWaProof, 120);
+        }
+    }
+
     document.addEventListener('keydown', (event) => {
         if (event.key !== 'Escape') {
             return;

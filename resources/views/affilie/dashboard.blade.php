@@ -50,12 +50,6 @@
                         <span class="aff-menu__chevron" aria-hidden="true"></span>
                     </button>
                     <div class="aff-submenu">
-                        <a href="#bon-commande" class="aff-sublink" data-aff-nav="bon-commande">
-                            <span class="aff-sublink__icon" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path stroke-linecap="round" d="M14 2v6h6M9 13h6M9 17h4"/></svg>
-                            </span>
-                            <span>Bon de Commande</span>
-                        </a>
                         <a href="#balance-commande" class="aff-sublink" data-aff-nav="balance-commande">
                             <span class="aff-sublink__icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18"/><path stroke-linecap="round" stroke-linejoin="round" d="M7 14l4-4 3 3 5-6"/></svg>
@@ -118,6 +112,7 @@
                     <p class="aff-confirm__text" id="aff-confirm-text"></p>
                 </article>
 
+                <div class="aff-section-surface">
                 <div class="aff-cards aff-cards--cmd" aria-label="Indicateurs commandes">
                     <article class="aff-stat aff-stat--ok">
                         <div class="aff-stat__glow" aria-hidden="true"></div>
@@ -177,110 +172,53 @@
                         </table>
                     </div>
                 </div>
+                </div>
             </section>
 
             <section class="aff-view" id="aff-view-catalogue" data-aff-view="catalogue" hidden>
-                <div class="admin-panel__toolbar aff-cmd-toolbar">
-                    <div>
-                        <p class="admin-panel__eyebrow">Espace Affilié</p>
-                        <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Catalogue</h2>
+                <div class="aff-section-surface">
+                    <div class="aff-season-cards" aria-label="Filtres saison">
+                        <button type="button" class="aff-season-card is-active" data-saison="all">
+                            <span class="aff-season-card__label">Tous</span>
+                            <span class="aff-season-card__ar" lang="ar" dir="rtl">الكل</span>
+                        </button>
+                        <button type="button" class="aff-season-card" data-saison="ete">
+                            <span class="aff-season-card__label">Été</span>
+                            <span class="aff-season-card__ar" lang="ar" dir="rtl">الصيف</span>
+                        </button>
+                        <button type="button" class="aff-season-card" data-saison="printemps">
+                            <span class="aff-season-card__label">Printemps</span>
+                            <span class="aff-season-card__ar" lang="ar" dir="rtl">الربيع</span>
+                        </button>
+                        <button type="button" class="aff-season-card" data-saison="automne">
+                            <span class="aff-season-card__label">Automne</span>
+                            <span class="aff-season-card__ar" lang="ar" dir="rtl">الخريف</span>
+                        </button>
+                        <button type="button" class="aff-season-card" data-saison="hiver">
+                            <span class="aff-season-card__label">Hiver</span>
+                            <span class="aff-season-card__ar" lang="ar" dir="rtl">الشتاء</span>
+                        </button>
                     </div>
-                </div>
 
-                <div class="aff-season-cards" aria-label="Saisons">
-                    <button type="button" class="aff-season-card" data-saison="ete">
-                        <span class="aff-season-card__label">Été</span>
-                    </button>
-                    <button type="button" class="aff-season-card" data-saison="printemps">
-                        <span class="aff-season-card__label">Printemps</span>
-                    </button>
-                    <button type="button" class="aff-season-card" data-saison="automne">
-                        <span class="aff-season-card__label">Automne</span>
-                    </button>
-                    <button type="button" class="aff-season-card" data-saison="hiver">
-                        <span class="aff-season-card__label">Hiver</span>
-                    </button>
-                </div>
-
-                <div class="admin-table-wrap admin-table-wrap--panel aff-cmd-table-wrap">
-                    <div class="admin-table-scroll">
-                        <table class="admin-table admin-table--aff-cat">
-                            <thead>
-                                <tr>
-                                    <th>Réf</th>
-                                    <th>Désignation</th>
-                                    <th>Catégorie</th>
-                                    <th>Famille</th>
-                                    <th>Saison</th>
-                                    <th>Size</th>
-                                    <th>Qte disponible</th>
-                                    <th>P/U</th>
-                                    <th>Média</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="aff-cat-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {{-- Galerie saison --}}
-                <div class="aff-season-gallery" id="aff-season-gallery" hidden>
-                    <div class="aff-season-gallery__head">
-                        <h3 class="aff-panel__title" id="aff-season-gallery-title">Saison</h3>
-                        <button type="button" class="admin-btn admin-btn--ghost" id="aff-season-gallery-back">Retour</button>
-                    </div>
-                    <div class="aff-season-grid" id="aff-season-grid"></div>
-                </div>
-            </section>
-
-            {{-- Bon de Commande --}}
-            <section class="aff-view" id="aff-view-bon-commande" data-aff-view="bon-commande" hidden>
-                <div class="admin-panel">
-                    <div class="admin-panel__toolbar">
-                        <div>
-                            <p class="admin-panel__eyebrow">Commande</p>
-                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Bon de Commande</h2>
+                    <div class="aff-season-gallery" id="aff-season-gallery">
+                        <div class="aff-season-gallery__head" id="aff-season-gallery-head" hidden>
+                            <h3 class="aff-section-kicker" id="aff-season-gallery-title"></h3>
                         </div>
-                        <div class="admin-panel__actions">
-                            <button type="button" class="admin-btn admin-btn--primary" id="bn-add-btn">Ajouter</button>
-                            <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
-                        </div>
-                    </div>
-                    <div class="admin-table-wrap admin-table-wrap--panel aff-cmd-table-wrap">
-                        <div class="admin-table-scroll">
-                            <table class="admin-table admin-table--bn">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>N° Bn</th>
-                                        <th>Réf</th>
-                                        <th>Désignation</th>
-                                        <th>Catégorie</th>
-                                        <th>Famille</th>
-                                        <th>Size</th>
-                                        <th>Qte</th>
-                                        <th>Prix/U</th>
-                                        <th>Sous-Total</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bn-tbody"></tbody>
-                            </table>
-                        </div>
+                        <div class="aff-season-grid" id="aff-season-grid"></div>
+                        <p class="aff-panel__text" id="aff-cat-hint" hidden>Aucun article dans le catalogue.</p>
                     </div>
                 </div>
             </section>
 
             {{-- Balance Commande --}}
             <section class="aff-view" id="aff-view-balance-commande" data-aff-view="balance-commande" hidden>
-                <div class="admin-panel">
-                    <div class="admin-panel__toolbar">
+                <div class="aff-section-surface">
+                    <div class="aff-section-toolbar">
                         <div>
-                            <p class="admin-panel__eyebrow">Commande</p>
-                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Balance Commande</h2>
+                            <p class="aff-section-eyebrow">Commande</p>
+                            <h2 class="aff-section-title">Balance Commande</h2>
                         </div>
-                        <div class="admin-panel__actions">
+                        <div class="aff-section-actions">
                             <button type="button" class="admin-btn admin-btn--primary" id="bal-cmd-print">Imprimer</button>
                             <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
                         </div>
@@ -291,7 +229,7 @@
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>N° Bn</th>
+                                        <th>N° Cmd</th>
                                         <th>Nom Client</th>
                                         <th>Montant</th>
                                         <th>Marge</th>
@@ -307,13 +245,13 @@
 
             {{-- Balance Paiement --}}
             <section class="aff-view" id="aff-view-balance-paiement" data-aff-view="balance-paiement" hidden>
-                <div class="admin-panel">
-                    <div class="admin-panel__toolbar">
+                <div class="aff-section-surface">
+                    <div class="aff-section-toolbar">
                         <div>
-                            <p class="admin-panel__eyebrow">Commande</p>
-                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Balance Paiement</h2>
+                            <p class="aff-section-eyebrow">Commande</p>
+                            <h2 class="aff-section-title">Balance Paiement</h2>
                         </div>
-                        <div class="admin-panel__actions">
+                        <div class="aff-section-actions">
                             <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
                         </div>
                     </div>
@@ -323,7 +261,7 @@
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>N° Bn</th>
+                                        <th>N° Cmd</th>
                                         <th>Nom Client</th>
                                         <th>Date Paie</th>
                                         <th>Reçu</th>
@@ -342,13 +280,28 @@
                 <button type="button" data-dl-format="pdf" id="aff-dl-pdf">Télécharger PDF</button>
             </div>
 
+            {{-- Panneau variantes (même style, couleurs / sizes) --}}
+            <div class="product-sheet" id="aff-variant-sheet" hidden aria-hidden="true">
+                <div class="product-sheet__backdrop" data-aff-variant-close></div>
+                <div class="product-sheet__panel product-sheet__panel--wide" role="dialog" aria-modal="true" aria-labelledby="aff-variant-title">
+                    <div class="product-sheet__header">
+                        <div>
+                            <p class="product-sheet__eyebrow">Variantes</p>
+                            <h3 class="product-sheet__title" id="aff-variant-title">Variantes</h3>
+                        </div>
+                        <button type="button" class="product-sheet__x" data-aff-variant-close aria-label="Fermer">×</button>
+                    </div>
+                    <div class="aff-variant-grid" id="aff-variant-grid"></div>
+                </div>
+            </div>
+
             {{-- Panneau commande catalogue --}}
             <div class="product-sheet" id="aff-order-sheet" hidden aria-hidden="true">
                 <div class="product-sheet__backdrop" data-aff-order-close></div>
-                <div class="product-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="aff-order-title">
+                <div class="product-sheet__panel product-sheet__panel--wide" role="dialog" aria-modal="true" aria-labelledby="aff-order-title">
                     <div class="product-sheet__header">
                         <div>
-                            <p class="product-sheet__eyebrow">Catalogue · Commande</p>
+                            <p class="product-sheet__eyebrow">Commande</p>
                             <h3 class="product-sheet__title" id="aff-order-title">Commander</h3>
                         </div>
                         <button type="button" class="product-sheet__x" data-aff-order-close aria-label="Fermer">×</button>
@@ -356,29 +309,86 @@
                     <form class="product-sheet__form" id="aff-order-form" novalidate>
                         @csrf
                         <input type="hidden" id="aff-order-product-id">
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Date</span>
+                                <input type="date" id="aff-order-date" class="admin-field__input" readonly required>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">ID</span>
+                                <input type="text" id="aff-order-id" class="admin-field__input" value="Auto" readonly>
+                            </label>
+                        </div>
                         <label class="admin-field">
-                            <span class="admin-field__label">Réf</span>
-                            <input type="text" id="aff-order-ref" class="admin-field__input" readonly>
+                            <span class="admin-field__label">Nom Complet Affilié</span>
+                            <input type="text" id="aff-order-affilie" class="admin-field__input" readonly>
                         </label>
                         <label class="admin-field">
-                            <span class="admin-field__label">Titre</span>
-                            <input type="text" id="aff-order-designation" class="admin-field__input" readonly>
+                            <span class="admin-field__label">Nom du Client (destinataire)</span>
+                            <input type="text" id="aff-order-client" class="admin-field__input" required placeholder="Nom du destinataire">
                         </label>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">N° Télé</span>
+                                <input type="tel" id="aff-order-contact" class="admin-field__input" required placeholder="06XXXXXXXX">
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Ville</span>
+                                <input type="text" id="aff-order-ville" class="admin-field__input" required>
+                            </label>
+                        </div>
                         <label class="admin-field">
-                            <span class="admin-field__label" id="aff-order-qte-label">Qte</span>
-                            <input type="number" id="aff-order-qte" class="admin-field__input" min="1" step="1" value="1" required>
+                            <span class="admin-field__label">Adresse</span>
+                            <input type="text" id="aff-order-adresse" class="admin-field__input" placeholder="Adresse de livraison" required>
                         </label>
-                        <fieldset class="aff-check-group">
-                            <legend class="admin-field__label">Size</legend>
-                            <div class="aff-check-list" id="aff-order-sizes"></div>
-                        </fieldset>
-                        <fieldset class="aff-check-group">
-                            <legend class="admin-field__label">Couleur</legend>
-                            <div class="aff-check-list" id="aff-order-couleurs"></div>
-                        </fieldset>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">N° Article</span>
+                                <input type="text" id="aff-order-ref" class="admin-field__input" readonly>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Couleur</span>
+                                <input type="text" id="aff-order-couleur" class="admin-field__input" list="aff-order-couleur-list" required>
+                                <datalist id="aff-order-couleur-list"></datalist>
+                            </label>
+                        </div>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Size</span>
+                                <select id="aff-order-size" class="admin-field__input" required>
+                                    <option value="">—</option>
+                                </select>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Qte</span>
+                                <input type="number" id="aff-order-qte" class="admin-field__input" min="1" step="1" value="1" required>
+                            </label>
+                        </div>
+                        <div class="aff-order-media">
+                            <div class="aff-order-media__preview" id="aff-order-media-preview"></div>
+                            <label class="aff-order-media__import admin-btn admin-btn--ghost" title="Importer une photo">
+                                <input type="file" id="aff-order-import" accept="image/*,video/mp4,video/webm,video/ogg" hidden>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.5-4.5a2 2 0 0 1 2.8 0L16 16"/><path stroke-linecap="round" d="M14 14l1.5-1.5a2 2 0 0 1 2.8 0L20 15"/><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/></svg>
+                                <span>Importer photo</span>
+                            </label>
+                            <button type="button" class="admin-btn admin-btn--ghost" id="aff-order-dl-media" title="Télécharger le média">Télécharger</button>
+                        </div>
+                        <div class="product-sheet__row">
+                            <label class="admin-field">
+                                <span class="admin-field__label">Prix (DH)</span>
+                                <input type="number" id="aff-order-prix" class="admin-field__input" min="0" step="0.01" required>
+                            </label>
+                            <label class="admin-field">
+                                <span class="admin-field__label">Sous-Total</span>
+                                <input type="text" id="aff-order-sous-total" class="admin-field__input" value="0 DH" readonly>
+                            </label>
+                        </div>
+                        <input type="hidden" id="aff-order-designation">
+                        <input type="hidden" id="aff-order-categorie">
+                        <input type="hidden" id="aff-order-famille">
                         <div class="product-sheet__footer">
                             <button type="button" class="admin-btn admin-btn--ghost" data-aff-order-close>Fermer</button>
-                            <button type="submit" class="admin-btn admin-btn--primary">Valider</button>
+                            <button type="submit" class="admin-btn admin-btn--primary" id="aff-order-submit">Envoyer</button>
                         </div>
                     </form>
                 </div>
@@ -491,13 +501,13 @@
             </div>
 
             <section class="aff-view" id="aff-view-messages" data-aff-view="messages" hidden>
-                <div class="admin-panel">
-                    <div class="admin-panel__toolbar">
+                <div class="aff-section-surface">
+                    <div class="aff-section-toolbar">
                         <div>
-                            <p class="admin-panel__eyebrow">Espace Affilié</p>
-                            <h2 class="aff-panel__title" style="margin:0.2rem 0 0">Messages</h2>
+                            <p class="aff-section-eyebrow">Espace Affilié</p>
+                            <h2 class="aff-section-title">Messages</h2>
                         </div>
-                        <div class="admin-panel__actions">
+                        <div class="aff-section-actions">
                             <button type="button" class="admin-btn admin-btn--primary" id="msg-add-btn">Ajouter</button>
                             <button type="button" class="admin-btn admin-btn--ghost" data-aff-nav="accueil">Fermer</button>
                         </div>
@@ -580,8 +590,13 @@
             </div>
 
             <section class="aff-view" id="aff-view-profil" data-aff-view="profil" hidden>
-                <div class="aff-panel">
-                    <h2 class="aff-panel__title">Mon profil</h2>
+                <div class="aff-section-surface">
+                    <div class="aff-section-toolbar">
+                        <div>
+                            <p class="aff-section-eyebrow">Espace Affilié</p>
+                            <h2 class="aff-section-title">Mon profil</h2>
+                        </div>
+                    </div>
                     <dl class="affilie-view__grid" id="aff-profil-grid"></dl>
                 </div>
             </section>
@@ -842,21 +857,32 @@
             const heroImg = @json(asset('images/hero-mouchap.png'));
 
             const saisonLabels = {
+                all: 'Tous',
                 hiver: 'Hiver',
                 automne: 'Automne',
                 printemps: 'Printemps',
                 ete: 'Été',
             };
+            const saisonLabelsAr = {
+                all: 'الكل',
+                hiver: 'الشتاء',
+                automne: 'الخريف',
+                printemps: 'الربيع',
+                ete: 'الصيف',
+            };
 
             const formatMoney = (n) => `${Number(n || 0).toLocaleString('fr-MA')} DH`;
+            const todayInput = () => new Date().toISOString().slice(0, 10);
+            const parseProductSizes = (sizeValue) => {
+                const raw = String(sizeValue || '').trim();
+                if (!raw) return [];
+                return raw.split(/[/|,;]+/).map((s) => s.trim()).filter(Boolean);
+            };
 
             const loadCatalogue = () => {
                 try {
                     const raw = localStorage.getItem(CATALOGUE_KEY);
-                    if (!raw) {
-                        localStorage.setItem(CATALOGUE_KEY, JSON.stringify([]));
-                        return [];
-                    }
+                    if (!raw) return [];
                     const parsed = JSON.parse(raw);
                     return Array.isArray(parsed) ? parsed : [];
                 } catch {
@@ -868,18 +894,19 @@
                 try {
                     const response = await fetch('/api/catalogue/products', {
                         headers: { Accept: 'application/json' },
+                        credentials: 'same-origin',
                     });
-                    if (!response.ok) throw new Error();
+                    if (!response.ok) throw new Error('catalogue');
                     const items = await response.json();
                     localStorage.setItem(
                         CATALOGUE_KEY,
                         JSON.stringify(Array.isArray(items) ? items : [])
                     );
-                    renderCatalogueTable();
-                    if (currentSaison) renderSeasonGallery(currentSaison);
                 } catch {
-                    renderCatalogueTable();
+                    // keep last cache
                 }
+                if (currentSaison) renderSeasonGallery(currentSaison);
+                return loadCatalogue();
             };
 
             const isVideoProduct = (product) =>
@@ -891,116 +918,109 @@
                     return `<span class="${className} product-thumb--empty">—</span>`;
                 }
                 const src = escapeHtml(product.photo);
-                const controls = className === 'aff-cat-item__asset' ? ' controls' : '';
+                const controls = className === 'aff-cat-item__asset' ? '' : '';
                 return isVideoProduct(product)
                     ? `<video src="${src}" class="${className}"${controls} muted playsinline preload="metadata" aria-label="Vidéo produit"></video>`
                     : `<img src="${src}" alt="${escapeHtml(product.designation || '')}" class="${className}">`;
             };
 
-            let currentSaison = null;
+            let currentSaison = 'all';
             let dlProduct = null;
+            let variantProduct = null;
+            let orderImportDataUrl = '';
 
-            const renderCatalogueTable = (saisonFilter = null) => {
-                const tbody = document.getElementById('aff-cat-tbody');
-                if (!tbody) return;
-                let items = loadCatalogue();
-                if (saisonFilter) {
-                    items = items.filter((p) => p.saison === saisonFilter);
-                }
-                if (!items.length) {
-                    tbody.innerHTML = `<tr><td colspan="10" class="admin-table__empty">Aucun produit.</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = items
-                    .map((p) => {
-                        const media = renderCatalogueMedia(p);
-                        const canOrder = Number(p.qte || 0) > 0;
-                        return `<tr data-product-id="${escapeHtml(p.id)}">
-                            <td>${escapeHtml(p.ref)}</td>
-                            <td>${escapeHtml(p.designation)}</td>
-                            <td>${escapeHtml(p.categorie)}</td>
-                            <td>${escapeHtml(p.famille)}</td>
-                            <td>${escapeHtml(saisonLabels[p.saison] || p.saison || '—')}</td>
-                            <td>${escapeHtml(p.size)}</td>
-                            <td><strong>${escapeHtml(p.qte ?? 0)}</strong></td>
-                            <td>${escapeHtml(formatMoney(p.prix))}</td>
-                            <td>${media}</td>
-                            <td>
-                                <div class="admin-actions">
-                                    <button type="button" class="admin-action-btn admin-action-btn--view" data-cat-action="view" title="Voir le média" aria-label="Voir">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>
-                                    </button>
-                                    <button type="button" class="admin-action-btn admin-action-btn--edit" data-cat-action="download" title="Télécharger" aria-label="Télécharger">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
-                                    </button>
-                                    <button type="button" class="admin-action-btn admin-action-btn--order" data-cat-action="order" title="Commander" aria-label="Commander" ${canOrder ? '' : 'disabled'}>
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path stroke-linecap="round" d="M9 12h6M9 16h4"/></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>`;
-                    })
-                    .join('');
+            const styleKey = (product) =>
+                String(product?.designation || product?.ref || '')
+                    .trim()
+                    .toLowerCase()
+                    .replace(/\s+/g, ' ');
+
+            const productsSameStyle = (product) => {
+                const key = styleKey(product);
+                if (!key) return product ? [product] : [];
+                return loadCatalogue().filter((p) => styleKey(p) === key);
             };
 
-            const renderSeasonGallery = (saison) => {
-                currentSaison = saison;
+            const renderSeasonGallery = (saison = 'all') => {
+                currentSaison = saison || 'all';
                 const gallery = document.getElementById('aff-season-gallery');
                 const grid = document.getElementById('aff-season-grid');
-                const tableWrap = document.querySelector('#aff-view-catalogue .aff-cmd-table-wrap');
-                const seasonCards = document.querySelector('.aff-season-cards');
-                document.getElementById('aff-season-gallery-title').textContent =
-                    `Saison ${saisonLabels[saison] || saison}`;
+                const hint = document.getElementById('aff-cat-hint');
+                const title = document.getElementById('aff-season-gallery-title');
 
-                const items = loadCatalogue().filter((p) => p.saison === saison);
                 if (gallery) gallery.hidden = false;
-                if (tableWrap) tableWrap.hidden = true;
-                if (seasonCards) seasonCards.hidden = true;
+                const head = document.getElementById('aff-season-gallery-head');
+                if (title) {
+                    if (currentSaison === 'all') {
+                        title.textContent = '';
+                        if (head) head.hidden = true;
+                    } else {
+                        const fr = saisonLabels[currentSaison] || currentSaison;
+                        const ar = saisonLabelsAr[currentSaison] || '';
+                        title.innerHTML = `${escapeHtml(fr)}${ar ? ` <span lang="ar" dir="rtl">${escapeHtml(ar)}</span>` : ''}`;
+                        if (head) head.hidden = false;
+                    }
+                }
 
                 document.querySelectorAll('.aff-season-card').forEach((btn) => {
-                    btn.classList.toggle('is-active', btn.dataset.saison === saison);
+                    btn.classList.toggle('is-active', btn.dataset.saison === currentSaison);
                 });
+
+                const items = loadCatalogue().filter((p) =>
+                    currentSaison === 'all' ? true : p.saison === currentSaison
+                );
 
                 if (!grid) return;
                 if (!items.length) {
-                    grid.innerHTML = `<p class="aff-panel__text">Aucun article pour cette saison.</p>`;
+                    grid.innerHTML = '';
+                    if (hint) {
+                        hint.hidden = false;
+                        hint.textContent = currentSaison === 'all'
+                            ? 'Aucun article dans le catalogue.'
+                            : 'Aucun article pour cette saison.';
+                    }
                     return;
                 }
+                if (hint) hint.hidden = true;
 
-                grid.innerHTML = items
+                // Une photo par style (variantes couleurs/sizes au clic)
+                const seenStyles = new Set();
+                const styleItems = items.filter((p) => {
+                    const key = styleKey(p);
+                    if (!key || seenStyles.has(key)) return false;
+                    seenStyles.add(key);
+                    return true;
+                });
+
+                grid.innerHTML = styleItems
                     .map((p) => {
+                        const stock = Number(p.qte ?? 0);
+                        const low = stock > 0 && stock < 5;
+                        const empty = stock <= 0;
                         const media = p.photo
                             ? renderCatalogueMedia(p, 'aff-cat-item__asset')
                             : `<img src="${escapeHtml(logoImg)}" alt="${escapeHtml(p.designation)}" class="aff-cat-item__asset">`;
                         return `<article class="aff-cat-item" data-product-id="${escapeHtml(p.id)}">
                             <div class="aff-cat-item__media">
-                                ${media}
-                            </div>
-                            <h4 class="aff-cat-item__title">${escapeHtml(p.designation)}</h4>
-                            <p class="aff-cat-item__stock">${escapeHtml(p.qte ?? 0)} disponible(s) · ${escapeHtml(formatMoney(p.prix))}</p>
-                            <div class="aff-cat-item__actions">
-                                <button type="button" class="admin-action-btn" data-cat-action="download" title="Télécharger" aria-label="Télécharger">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
-                                </button>
-                                <button type="button" class="admin-action-btn" data-cat-action="cart" title="Panier" aria-label="Panier" ${Number(p.qte || 0) < 1 ? 'disabled' : ''}>
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>
+                                <button type="button" class="aff-cat-item__preview" data-cat-action="variants" title="Voir les variantes" aria-label="Voir les variantes">
+                                    ${media}
+                                    ${isVideoProduct(p) ? '<span class="aff-cat-item__badge">Vidéo</span>' : ''}
                                 </button>
                             </div>
+                            <h4 class="aff-cat-item__title">${escapeHtml(p.designation || p.ref || 'Article')}</h4>
+                            <p class="aff-cat-item__price">${escapeHtml(formatMoney(p.prix))}</p>
+                            <p class="aff-cat-item__stock ${low ? 'is-low' : ''} ${empty ? 'is-empty' : ''}">Stock : ${escapeHtml(stock)}</p>
                         </article>`;
                     })
                     .join('');
             };
 
             const closeSeasonGallery = () => {
-                currentSaison = null;
-                const gallery = document.getElementById('aff-season-gallery');
-                const tableWrap = document.querySelector('#aff-view-catalogue .aff-cmd-table-wrap');
-                const seasonCards = document.querySelector('.aff-season-cards');
-                if (gallery) gallery.hidden = true;
-                if (tableWrap) tableWrap.hidden = false;
-                if (seasonCards) seasonCards.hidden = false;
-                document.querySelectorAll('.aff-season-card').forEach((btn) => btn.classList.remove('is-active'));
-                renderCatalogueTable();
+                currentSaison = 'all';
+                document.querySelectorAll('.aff-season-card').forEach((btn) => {
+                    btn.classList.toggle('is-active', btn.dataset.saison === 'all');
+                });
+                renderSeasonGallery('all');
             };
 
             const mediaExtension = (product, mime = '') => {
@@ -1055,33 +1075,66 @@
                 win.document.close();
             };
 
+            const updateAffOrderSousTotal = () => {
+                const prix = Number(document.getElementById('aff-order-prix')?.value || 0);
+                const qte = Number(document.getElementById('aff-order-qte')?.value || 1);
+                const el = document.getElementById('aff-order-sous-total');
+                if (el) el.value = formatMoney(Math.round(prix * qte * 100) / 100);
+            };
+
+            const fillAffOrderPreview = (product, importSrc = '') => {
+                const box = document.getElementById('aff-order-media-preview');
+                if (!box) return;
+                const src = importSrc || product?.photo || '';
+                if (!src) {
+                    box.innerHTML = `<span class="aff-order-media__empty">Aucun média</span>`;
+                    return;
+                }
+                const video = String(src).startsWith('data:video/') || isVideoProduct(product);
+                box.innerHTML = video
+                    ? `<video src="${escapeHtml(src)}" controls muted playsinline></video>`
+                    : `<img src="${escapeHtml(src)}" alt="">`;
+            };
+
             const openOrderSheet = (product) => {
                 const sheet = document.getElementById('aff-order-sheet');
                 if (!sheet || !product) return;
-                document.getElementById('aff-order-product-id').value = product.id;
+                orderImportDataUrl = '';
+                document.getElementById('aff-order-product-id').value = product.id || '';
+                document.getElementById('aff-order-date').value = todayInput();
+                document.getElementById('aff-order-id').value = 'Auto';
+                document.getElementById('aff-order-affilie').value = session?.nom_complet || '';
+                document.getElementById('aff-order-client').value = '';
+                document.getElementById('aff-order-contact').value = '';
+                document.getElementById('aff-order-ville').value = '';
+                document.getElementById('aff-order-adresse').value = '';
                 document.getElementById('aff-order-ref').value = product.ref || '';
                 document.getElementById('aff-order-designation').value = product.designation || '';
-                const availableQuantity = Number(product.qte || 0);
-                const quantityInput = document.getElementById('aff-order-qte');
-                quantityInput.value = 1;
-                quantityInput.max = String(availableQuantity);
-                document.getElementById('aff-order-qte-label').textContent =
-                    `Qte — ${availableQuantity} disponible(s)`;
+                document.getElementById('aff-order-categorie').value = product.categorie || '';
+                document.getElementById('aff-order-famille').value = product.famille || '';
+                document.getElementById('aff-order-prix').value = product.prix ?? 0;
 
-                const sizes = product.sizes || String(product.size || 'M').split(/[\/,\s]+/).filter(Boolean);
-                const couleurs = product.couleurs || ['Noir', 'Beige', 'Blanc'];
+                const stock = Math.max(0, Number(product.qte || 0));
+                const qteInput = document.getElementById('aff-order-qte');
+                qteInput.value = stock > 0 ? 1 : 0;
+                qteInput.max = String(stock);
 
-                document.getElementById('aff-order-sizes').innerHTML = sizes
-                    .map(
-                        (s, i) => `<label class="aff-check"><input type="checkbox" name="size" value="${escapeHtml(s)}" ${i === 0 ? 'checked' : ''}> <span>${escapeHtml(s)}</span></label>`
-                    )
-                    .join('');
-                document.getElementById('aff-order-couleurs').innerHTML = couleurs
-                    .map(
-                        (c, i) => `<label class="aff-check"><input type="checkbox" name="couleur" value="${escapeHtml(c)}" ${i === 0 ? 'checked' : ''}> <span>${escapeHtml(c)}</span></label>`
-                    )
-                    .join('');
+                const sizes = parseProductSizes(product.size);
+                const sizeSelect = document.getElementById('aff-order-size');
+                sizeSelect.innerHTML = sizes.length
+                    ? sizes.map((s) => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')
+                    : `<option value="U">U</option>`;
 
+                const colors = Array.isArray(product.couleurs) && product.couleurs.length
+                    ? product.couleurs
+                    : ['Noir', 'Beige', 'Blanc', 'Rouge', 'Bleu'];
+                document.getElementById('aff-order-couleur-list').innerHTML =
+                    colors.map((c) => `<option value="${escapeHtml(c)}"></option>`).join('');
+                document.getElementById('aff-order-couleur').value = colors[0] || '';
+
+                fillAffOrderPreview(product);
+                updateAffOrderSousTotal();
+                closeVariantSheet();
                 sheet.hidden = false;
                 sheet.setAttribute('aria-hidden', 'false');
                 document.body.classList.add('product-sheet-open');
@@ -1092,7 +1145,67 @@
                 if (!sheet) return;
                 sheet.hidden = true;
                 sheet.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('product-sheet-open');
+                if (document.getElementById('aff-variant-sheet')?.hidden !== false
+                    && document.getElementById('bn-sheet')?.hidden !== false
+                    && document.getElementById('msg-sheet')?.hidden !== false) {
+                    document.body.classList.remove('product-sheet-open');
+                }
+            };
+
+            const openVariantSheet = (product) => {
+                const sheet = document.getElementById('aff-variant-sheet');
+                const grid = document.getElementById('aff-variant-grid');
+                if (!sheet || !grid || !product) return;
+                const variants = productsSameStyle(product);
+                variantProduct = product;
+                document.getElementById('aff-variant-title').textContent =
+                    product.designation || product.ref || 'Variantes';
+
+                const cartIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg>';
+                const dlIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>';
+
+                grid.innerHTML = variants.map((p) => {
+                    const stock = Number(p.qte ?? 0);
+                    const low = stock > 0 && stock < 5;
+                    const empty = stock <= 0;
+                    const selected = String(p.id) === String(product.id) ? 'is-selected' : '';
+                    const media = p.photo
+                        ? renderCatalogueMedia(p, 'aff-cat-item__asset')
+                        : `<img src="${escapeHtml(logoImg)}" alt="" class="aff-cat-item__asset">`;
+                    const colorLabel = Array.isArray(p.couleurs) && p.couleurs.length
+                        ? p.couleurs[0]
+                        : (p.couleur || '');
+                    return `<article class="aff-cat-item aff-variant-card ${selected}" data-variant-id="${escapeHtml(p.id)}">
+                        <div class="aff-cat-item__media">
+                            <button type="button" class="aff-cat-item__preview" data-variant-select title="Sélectionner" aria-label="Sélectionner">
+                                ${media}
+                                ${isVideoProduct(p) ? '<span class="aff-cat-item__badge">Vidéo</span>' : ''}
+                            </button>
+                            <button type="button" class="aff-cat-item__order" data-variant-order title="Commander" aria-label="Commander" ${empty ? 'disabled' : ''}>${cartIcon}</button>
+                            <button type="button" class="aff-cat-item__dl" data-variant-download title="Télécharger" aria-label="Télécharger">${dlIcon}</button>
+                        </div>
+                        <h4 class="aff-cat-item__title">${escapeHtml(p.designation || p.ref || 'Article')}</h4>
+                        <p class="aff-cat-item__price">${escapeHtml(formatMoney(p.prix))}</p>
+                        <p class="aff-cat-item__stock ${low ? 'is-low' : ''} ${empty ? 'is-empty' : ''}">
+                            Size : ${escapeHtml(p.size || '—')}${colorLabel ? ` · ${escapeHtml(colorLabel)}` : ''} · Stock : ${escapeHtml(stock)}
+                        </p>
+                    </article>`;
+                }).join('') || `<p class="aff-panel__text">Aucune variante.</p>`;
+
+                sheet.hidden = false;
+                sheet.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('product-sheet-open');
+            };
+
+            const closeVariantSheet = () => {
+                const sheet = document.getElementById('aff-variant-sheet');
+                if (!sheet) return;
+                sheet.hidden = true;
+                sheet.setAttribute('aria-hidden', 'true');
+                if (document.getElementById('aff-order-sheet')?.hidden !== false
+                    && document.getElementById('bn-sheet')?.hidden !== false) {
+                    document.body.classList.remove('product-sheet-open');
+                }
             };
 
             const hideDlMenu = () => {
@@ -1123,9 +1236,12 @@
             };
 
             document.querySelectorAll('[data-saison]').forEach((btn) => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', async () => {
                     hideDlMenu();
-                    renderSeasonGallery(btn.dataset.saison);
+                    const saison = btn.dataset.saison || 'all';
+                    currentSaison = saison;
+                    await refreshCatalogueFromServer();
+                    renderSeasonGallery(saison);
                 });
             });
 
@@ -1135,41 +1251,48 @@
             });
 
             document.getElementById('aff-season-grid')?.addEventListener('click', (event) => {
-                const btn = event.target.closest('[data-cat-action]');
+                const btn = event.target.closest('[data-cat-action="variants"]');
                 if (!btn) return;
+                event.preventDefault();
                 const card = btn.closest('.aff-cat-item');
                 const id = card?.dataset.productId;
-                const product = loadCatalogue().find((p) => p.id === id);
-                if (!product) return;
-
-                if (btn.dataset.catAction === 'cart') {
-                    hideDlMenu();
-                    openBonFromProduct(product);
+                const product = loadCatalogue().find((p) => String(p.id) === String(id));
+                if (!product) {
+                    alert('Produit introuvable. Rechargez le catalogue.');
                     return;
                 }
-
-                if (btn.dataset.catAction === 'download') {
-                    showDownloadMenu(product, btn);
-                }
+                hideDlMenu();
+                openVariantSheet(product);
             });
 
-            document.getElementById('aff-cat-tbody')?.addEventListener('click', (event) => {
-                const btn = event.target.closest('[data-cat-action]');
-                if (!btn) return;
-                const id = btn.closest('tr')?.dataset.productId;
-                const product = loadCatalogue().find((p) => String(p.id) === String(id));
+            document.getElementById('aff-variant-grid')?.addEventListener('click', (event) => {
+                const orderBtn = event.target.closest('[data-variant-order]');
+                if (orderBtn) {
+                    if (orderBtn.disabled) return;
+                    const id = orderBtn.closest('[data-variant-id]')?.dataset.variantId;
+                    const product = loadCatalogue().find((p) => String(p.id) === String(id));
+                    if (product) openOrderSheet(product);
+                    return;
+                }
+                const dlBtn = event.target.closest('[data-variant-download]');
+                if (dlBtn) {
+                    const id = dlBtn.closest('[data-variant-id]')?.dataset.variantId;
+                    const product = loadCatalogue().find((p) => String(p.id) === String(id));
+                    if (product) showDownloadMenu(product, dlBtn);
+                    return;
+                }
+                const card = event.target.closest('[data-variant-id]');
+                if (!card) return;
+                const product = loadCatalogue().find((p) => String(p.id) === String(card.dataset.variantId));
                 if (!product) return;
+                variantProduct = product;
+                document.querySelectorAll('#aff-variant-grid .aff-variant-card').forEach((el) => {
+                    el.classList.toggle('is-selected', el === card);
+                });
+            });
 
-                if (btn.dataset.catAction === 'view' && product.photo) {
-                    window.open(product.photo, '_blank', 'noopener');
-                }
-                if (btn.dataset.catAction === 'download') {
-                    showDownloadMenu(product, btn);
-                }
-                if (btn.dataset.catAction === 'order') {
-                    hideDlMenu();
-                    openBonFromProduct(product);
-                }
+            document.querySelectorAll('[data-aff-variant-close]').forEach((el) => {
+                el.addEventListener('click', closeVariantSheet);
             });
 
             document.getElementById('aff-dl-menu')?.addEventListener('click', (event) => {
@@ -1183,7 +1306,7 @@
             document.addEventListener('click', (event) => {
                 const menu = document.getElementById('aff-dl-menu');
                 if (!menu || menu.hidden) return;
-                if (menu.contains(event.target) || event.target.closest('[data-cat-action="download"]')) return;
+                if (menu.contains(event.target) || event.target.closest('[data-variant-download]')) return;
                 hideDlMenu();
             });
 
@@ -1191,57 +1314,91 @@
                 el.addEventListener('click', closeOrderSheet);
             });
 
+            document.getElementById('aff-order-qte')?.addEventListener('input', updateAffOrderSousTotal);
+            document.getElementById('aff-order-prix')?.addEventListener('input', updateAffOrderSousTotal);
+
+            document.getElementById('aff-order-import')?.addEventListener('change', (event) => {
+                const file = event.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    orderImportDataUrl = String(reader.result || '');
+                    fillAffOrderPreview(
+                        { photo: orderImportDataUrl, media_type: file.type.startsWith('video/') ? 'video' : 'image' },
+                        orderImportDataUrl
+                    );
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('aff-order-dl-media')?.addEventListener('click', () => {
+                const productId = document.getElementById('aff-order-product-id')?.value;
+                const product = loadCatalogue().find((p) => String(p.id) === String(productId));
+                if (orderImportDataUrl) {
+                    const a = document.createElement('a');
+                    a.href = orderImportDataUrl;
+                    a.download = `import-${Date.now()}`;
+                    a.click();
+                    return;
+                }
+                if (product) downloadOriginalMedia(product);
+            });
+
             document.getElementById('aff-order-form')?.addEventListener('submit', async (event) => {
                 event.preventDefault();
+                const form = event.target;
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
                 const productId = document.getElementById('aff-order-product-id').value;
-                const product = loadCatalogue().find((p) => p.id === productId);
-                const sizes = [...document.querySelectorAll('#aff-order-sizes input:checked')].map((i) => i.value);
-                const couleurs = [...document.querySelectorAll('#aff-order-couleurs input:checked')].map((i) => i.value);
+                const product = loadCatalogue().find((p) => String(p.id) === String(productId));
                 const qte = Number(document.getElementById('aff-order-qte').value || 1);
-
-                if (!product || qte < 1 || qte > Number(product.qte || 0)) {
-                    alert(`Quantité indisponible. Stock actuel : ${Number(product?.qte || 0)}.`);
+                const stock = Number(product?.qte || 0);
+                if (!product || qte < 1 || qte > stock) {
+                    alert(`Quantité indisponible. Stock actuel : ${stock}.`);
                     return;
                 }
 
-                if (!sizes.length) {
-                    alert('Choisissez au moins une taille.');
-                    return;
+                const submitButton = document.getElementById('aff-order-submit');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Envoi…';
                 }
-                if (!couleurs.length) {
-                    alert('Choisissez au moins une couleur.');
-                    return;
-                }
-
-                const submitButton = event.currentTarget.querySelector('[type="submit"]');
-                submitButton.disabled = true;
-                submitButton.textContent = 'Validation…';
 
                 try {
-                    const result = await api(`/api/catalogue/products/${product.id}/order`, {
+                    await api('/api/affilie/orders', {
                         method: 'POST',
-                        body: { qte, sizes, couleurs },
+                        body: {
+                            date: document.getElementById('aff-order-date').value || todayInput(),
+                            product_id: product.id,
+                            ref_prod: document.getElementById('aff-order-ref').value.trim(),
+                            designation: document.getElementById('aff-order-designation').value.trim(),
+                            categorie: document.getElementById('aff-order-categorie').value.trim(),
+                            famille: document.getElementById('aff-order-famille').value.trim(),
+                            nom_client: document.getElementById('aff-order-client').value.trim(),
+                            contact: document.getElementById('aff-order-contact').value.trim(),
+                            ville: document.getElementById('aff-order-ville').value.trim(),
+                            adresse: document.getElementById('aff-order-adresse').value.trim(),
+                            size: document.getElementById('aff-order-size').value,
+                            couleur: document.getElementById('aff-order-couleur').value.trim(),
+                            qte,
+                            prix_u: Number(document.getElementById('aff-order-prix').value || 0),
+                            remarque: orderImportDataUrl ? 'Photo importée jointe à la commande (local).' : '',
+                        },
                     });
-                    const updatedProduct = result.product;
-                    const catalogue = loadCatalogue().map((item) =>
-                        String(item.id) === String(updatedProduct.id) ? updatedProduct : item
-                    );
-                    localStorage.setItem(CATALOGUE_KEY, JSON.stringify(catalogue));
+                    closeOrderSheet();
+                    await refreshCatalogueFromServer();
                     try { ordersCache = await api('/api/affilie/orders'); } catch {}
+                    alert('Commande envoyée. Statut : En Attente.');
                 } catch (error) {
                     alert(error.message || 'Commande impossible.');
-                    await refreshCatalogueFromServer();
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Valider';
-                    return;
+                } finally {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Envoyer';
+                    }
                 }
-
-                submitButton.disabled = false;
-                submitButton.textContent = 'Valider';
-                closeOrderSheet();
-                renderCatalogueTable();
-                if (currentSaison) renderSeasonGallery(currentSaison);
-                alert('Commande envoyée. Statut : En Attente (administration).');
             });
 
             const statueLabel = {
@@ -1271,8 +1428,6 @@
                 const d = new Date(value);
                 return Number.isNaN(d.getTime()) ? value : d.toLocaleDateString('fr-FR');
             };
-
-            const todayInput = () => new Date().toISOString().slice(0, 10);
 
             const actionIconsBn = {
                 view: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.5"/></svg>',
@@ -1375,12 +1530,6 @@
                 return items.find((p) => String(p.ref) === String(ref)) || null;
             };
 
-            const parseProductSizes = (sizeValue) => {
-                const raw = String(sizeValue || '').trim();
-                if (!raw) return [];
-                return raw.split(/[/|,;]+/).map((s) => s.trim()).filter(Boolean);
-            };
-
             const fillBnSizeOptions = (sizeValue, preferred = '') => {
                 const select = document.getElementById('bn-size');
                 if (!select) return;
@@ -1473,9 +1622,7 @@
             };
 
             const openBonFromProduct = (product) => {
-                showView('bon-commande');
-                document.querySelector('#aff-menu-commande')?.classList.add('is-open');
-                openBnSheet(null, product);
+                if (product) openOrderSheet(product);
             };
 
             const orderSizeLabel = (o) => o.size || (Array.isArray(o.sizes) && o.sizes.length ? o.sizes[0] : '—');
@@ -1674,7 +1821,7 @@
                     link.classList.toggle('is-active', link.dataset.affNav === viewId);
                 });
 
-                const commandeViews = ['bon-commande', 'balance-commande', 'balance-paiement'];
+                const commandeViews = ['balance-commande', 'balance-paiement'];
                 const menu = document.getElementById('aff-menu-commande');
                 if (menu) {
                     const open = commandeViews.includes(viewId);
@@ -1685,7 +1832,6 @@
                 const titles = {
                     accueil: 'Espace Affilié',
                     catalogue: 'Catalogue',
-                    'bon-commande': 'Bon de Commande',
                     'balance-commande': 'Balance Commande',
                     'balance-paiement': 'Balance Paiement',
                     messages: 'Messages',
@@ -1706,10 +1852,11 @@
                 if (viewId === 'accueil') renderCommandes();
                 if (viewId === 'catalogue') {
                     hideDlMenu();
-                    closeSeasonGallery();
-                    refreshCatalogueFromServer();
+                    (async () => {
+                        await refreshCatalogueFromServer();
+                        renderSeasonGallery('all');
+                    })();
                 }
-                if (viewId === 'bon-commande') renderBonCommande();
                 if (viewId === 'balance-commande') renderBalanceCommande();
                 if (viewId === 'balance-paiement') renderBalancePaiement();
             };

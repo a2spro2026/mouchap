@@ -53,13 +53,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="mouchap-nav__link" data-nav data-affilie-login>
+                    <a href="#" class="mouchap-nav__link mouchap-nav__link--affilie" data-nav data-affilie-login>
                         <span class="mouchap-nav__link-label">Affiliation</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="mouchap-nav__link mouchap-nav__link--admin" id="open-admin-login" data-nav data-admin-login>
-                        <span class="mouchap-nav__link-label">Admin</span>
                     </a>
                 </li>
             </ul>
@@ -99,15 +94,16 @@
 
                 <button
                     type="button"
-                    class="hero-cta"
-                    dir="ltr"
+                    class="hero-cta hero-cta--ar"
+                    dir="rtl"
+                    lang="ar"
                     data-affilie-register
-                    aria-label="Clique ICI pour votre inscription affiliation"
+                    aria-label="كليكي هنا — inscription affiliation"
                 >
                     <span class="hero-cta__halo" aria-hidden="true"></span>
-                    <span class="hero-cta__label">Clique ICI</span>
+                    <span class="hero-cta__label">كليكي هنا</span>
                     <svg class="hero-cta__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h13M12 5l7 7-7 7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H6M12 5l-7 7 7 7"/>
                     </svg>
                 </button>
             </div>
@@ -198,6 +194,52 @@
                         <p class="why-card__text">فريق كيوقف معاك، خدمة محترفة وثقة كبيرة من البداية حتى للتوصيل.</p>
                     </article>
                 </div>
+
+                <div class="wa-proof" id="wa-proof" aria-label="شهادات الزبناء">
+                    <header class="wa-proof__head">
+                        <p class="wa-proof__eyebrow">شهادات حقيقية</p>
+                        <h3 class="wa-proof__title">شوف شنو كيقولو اللي خداو الخدمة</h3>
+                        <p class="wa-proof__subtitle">مقتطفات من رسائل واتساب ديال الزبناء</p>
+                    </header>
+
+                    <div class="wa-chat" role="list">
+                        <article class="wa-bubble" role="listitem" style="--i:0">
+                            <p class="wa-bubble__name">سعاد · الدار البيضاء</p>
+                            <p class="wa-bubble__text">والله الخدمة زوينة بزاف 😍 السلعة وصلتني نقية والتوصيل كان سريع. شكرا موشاب</p>
+                            <span class="wa-bubble__meta">14:22 <span class="wa-bubble__ticks" aria-hidden="true">✓✓</span></span>
+                        </article>
+
+                        <article class="wa-bubble" role="listitem" style="--i:1">
+                            <p class="wa-bubble__name">يوسف · مراكش</p>
+                            <p class="wa-bubble__text">بديت بـ 0 درهم ودرت أول أرباح فالأسبوع الأول. كلشي واضح فاللوحة</p>
+                            <span class="wa-bubble__meta">09:41 <span class="wa-bubble__ticks" aria-hidden="true">✓✓</span></span>
+                        </article>
+
+                        <article class="wa-bubble" role="listitem" style="--i:2">
+                            <p class="wa-bubble__name">إيمان · فاس</p>
+                            <p class="wa-bubble__text">الهامش مزيان والتواصل مع الفريق سهل. كننصح أي واحد يبغي يبدا التجارة أونلاين</p>
+                            <span class="wa-bubble__meta">18:05 <span class="wa-bubble__ticks" aria-hidden="true">✓✓</span></span>
+                        </article>
+
+                        <article class="wa-bubble" role="listitem" style="--i:3">
+                            <p class="wa-bubble__name">كريم · طنجة</p>
+                            <p class="wa-bubble__text">ما كنتش متوقع التوصيل بهاد السرعة 🔥 والزبون ديالي فرحان. غادي نكمل معاكم</p>
+                            <span class="wa-bubble__meta">11:17 <span class="wa-bubble__ticks" aria-hidden="true">✓✓</span></span>
+                        </article>
+
+                        <article class="wa-bubble" role="listitem" style="--i:4">
+                            <p class="wa-bubble__name">نادية · الرباط</p>
+                            <p class="wa-bubble__text">التسجيل سهل والفلوس وصلوني للحساب البنكي بلا مشاكل. ثقة كبيرة بصراحة</p>
+                            <span class="wa-bubble__meta">21:33 <span class="wa-bubble__ticks" aria-hidden="true">✓✓</span></span>
+                        </article>
+
+                        <article class="wa-bubble" role="listitem" style="--i:5">
+                            <p class="wa-bubble__name">حمزة · أكادير</p>
+                            <p class="wa-bubble__text">المنتجات ممتازة والثمن مناسب باش تربح. موشاب فرصة العمر فعلا 👌</p>
+                            <span class="wa-bubble__meta">16:58 <span class="wa-bubble__ticks" aria-hidden="true">✓✓</span></span>
+                        </article>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -209,16 +251,25 @@
                 <button type="button" class="admin-open-btn" data-affilie-login>Espace affilié</button>
             </div>
         </section>
-
-        <section id="admin" class="content-panel content-panel--admin">
-            <div class="content-panel__inner">
-                <p class="content-panel__eyebrow">Espace privé</p>
-                <h2 class="content-panel__title">Admin</h2>
-                <p class="content-panel__text">Gestion des campagnes, affiliés et paiements — accès réservé.</p>
-                <button type="button" class="admin-open-btn" data-admin-login>Ouvrir la connexion</button>
-            </div>
-        </section>
     </main>
+
+    {{-- Accès admin isolé : hors menu client --}}
+    <button
+        type="button"
+        class="admin-private-entry"
+        id="open-admin-login"
+        data-admin-login
+        title="Espace privé"
+        aria-label="Espace privé — connexion administration"
+    >
+        <span class="admin-private-entry__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="4" y="10" width="16" height="10" rx="2"/>
+                <path stroke-linecap="round" d="M8 10V7a4 4 0 0 1 8 0v3"/>
+            </svg>
+        </span>
+        <span class="admin-private-entry__label">Espace privé</span>
+    </button>
 
     {{-- Panneau connexion Admin --}}
     <div class="admin-modal" id="admin-login-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
@@ -377,34 +428,49 @@
 
             <div class="admin-modal__header">
                 <img src="{{ asset('images/mouchap-logo.png') }}?v={{ filemtime(public_path('images/mouchap-logo.png')) }}" alt="" class="admin-modal__logo">
-                <p class="admin-modal__eyebrow">Nouvelle demande</p>
-                <h2 id="affilie-register-title" class="admin-modal__title">S'inscrire</h2>
-                <p class="admin-modal__subtitle">Remplissez vos informations d'affiliation</p>
+                <p class="admin-modal__eyebrow">Nouvelle demande <span class="label-ar" lang="ar" dir="rtl">طلب جديد</span></p>
+                <h2 id="affilie-register-title" class="admin-modal__title">S'inscrire <span class="label-ar" lang="ar" dir="rtl">سجّل معانا</span></h2>
+                <p class="admin-modal__subtitle">Remplissez vos informations d'affiliation<br><span class="label-ar" lang="ar" dir="rtl">عمّر المعلومات ديالك باش تسجّل</span></p>
             </div>
 
             <form class="admin-modal__form" id="affilie-register-form" action="#" method="post" novalidate>
                 <label class="admin-field">
-                    <span class="admin-field__label">ID</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">ID</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">الرقم</span>
+                    </span>
                     <input type="text" name="id" id="affilie-id" class="admin-field__input" readonly>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">Nom Complet</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">Nom Complet</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">الاسم الكامل</span>
+                    </span>
                     <input type="text" name="nom_complet" class="admin-field__input" required>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">Titre</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">Titre</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">الصفة</span>
+                    </span>
                     <input type="text" name="titre" class="admin-field__input" required>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">CIN</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">CIN</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">البطاقة الوطنية</span>
+                    </span>
                     <input type="text" name="cin" class="admin-field__input" required>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">Contact</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">Contact</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">رقم الهاتف</span>
+                    </span>
                     <input
                         type="tel"
                         name="contact"
@@ -413,19 +479,25 @@
                         pattern="[0-9]{10}"
                         maxlength="10"
                         placeholder="0612345678"
-                        title="Exactement 10 chiffres"
+                        title="Exactement 10 chiffres — خاصو يكون 10 أرقام"
                         required
                     >
-                    <span class="admin-field__hint">Exactement 10 chiffres</span>
+                    <span class="admin-field__hint">Exactement 10 chiffres <span class="label-ar" lang="ar" dir="rtl">خاصو يكون 10 أرقام</span></span>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">Ville</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">Ville</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">المدينة</span>
+                    </span>
                     <input type="text" name="ville" class="admin-field__input" required>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">RIB</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">RIB</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">رقم الحساب البنكي</span>
+                    </span>
                     <input
                         type="text"
                         name="rib"
@@ -434,25 +506,34 @@
                         pattern="[0-9]{24}"
                         maxlength="24"
                         placeholder="24 chiffres"
-                        title="Exactement 24 chiffres"
+                        title="Exactement 24 chiffres — خاصو يكون 24 رقم"
                         required
                     >
-                    <span class="admin-field__hint">Exactement 24 chiffres</span>
+                    <span class="admin-field__hint">Exactement 24 chiffres <span class="label-ar" lang="ar" dir="rtl">خاصو يكون 24 رقم</span></span>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">Banque</span>
+                    <span class="admin-field__label">
+                        <span class="admin-field__label-fr">Banque</span>
+                        <span class="admin-field__label-ar" lang="ar" dir="rtl">البنك</span>
+                    </span>
                     <input type="text" name="banque" class="admin-field__input" required>
                 </label>
 
-                <button type="submit" class="admin-modal__submit">Envoyer</button>
+                <button type="submit" class="admin-modal__submit">
+                    Envoyer
+                    <span class="admin-modal__submit-ar" lang="ar" dir="rtl">صيفط</span>
+                </button>
 
                 <div class="affilie-success" id="affilie-success" hidden role="status">
                     <p class="affilie-success__text">
                         Merci pour votre demande d'affiliation. Un(e) de nos commerciaux vous contactera dans les brefs délais.
                     </p>
+                    <p class="affilie-success__text affilie-success__text--ar" lang="ar" dir="rtl">
+                        شكراً على الطلب ديالك. واحد من التجاريين ديالنا غادي يتصل بيك قريب.
+                    </p>
                     <button type="button" class="affilie-success__close" id="affilie-success-close" data-affilie-register-close>
-                        Fermer
+                        Fermer <span class="label-ar" lang="ar" dir="rtl">سدّ</span>
                     </button>
                 </div>
             </form>
