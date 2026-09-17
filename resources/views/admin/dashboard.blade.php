@@ -538,30 +538,9 @@
                         </div>
                     </div>
 
-                    <div class="admin-table-wrap admin-table-wrap--panel">
-                        <div class="admin-table-scroll">
-                            <table class="admin-table admin-table--products">
-                                <thead>
-                                    <tr>
-                                        <th>Réf</th>
-                                        <th>Désignation</th>
-                                        <th>Catégorie</th>
-                                        <th>Famille</th>
-                                        <th>Saison</th>
-                                        <th>Size</th>
-                                        <th>Qte</th>
-                                        <th>Prix/U</th>
-                                        <th>Photo</th>
-                                        <th>Actions</th>
-                                        <th>Statue</th>
-                                        <th>Etat</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="products-tbody">
-                                    {{-- rempli en JS --}}
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="admin-cat-wrap">
+                        <div class="admin-cat-grid" id="products-catalogue" aria-label="Catalogue produits"></div>
+                        <p class="admin-cat-empty" id="products-catalogue-empty" hidden>Aucun produit. Cliquez sur Ajouter.</p>
                     </div>
                 </div>
             </section>
@@ -820,12 +799,13 @@
                 <label class="admin-field">
                     <span class="admin-field__label">Réf</span>
                     <input type="text" name="ref" id="product-ref" class="admin-field__input" required readonly>
-                    <span class="admin-field__hint">Référence attribuée automatiquement.</span>
+                    <span class="admin-field__hint" id="product-ref-hint">Référence attribuée automatiquement (une par photo).</span>
                 </label>
 
                 <label class="admin-field">
-                    <span class="admin-field__label">Désignation</span>
-                    <input type="text" name="designation" id="product-designation" class="admin-field__input" required placeholder="Nom du produit">
+                    <span class="admin-field__label">Désignation (style)</span>
+                    <input type="text" name="designation" id="product-designation" class="admin-field__input" required placeholder="Ex. Robe Élégance">
+                    <span class="admin-field__hint">Même nom = même style (variantes couleurs / sizes).</span>
                 </label>
 
                 <div class="product-sheet__row">
@@ -850,38 +830,54 @@
                     </select>
                 </label>
 
-                <div class="product-sheet__row">
-                    <label class="admin-field">
-                        <span class="admin-field__label">Size</span>
-                        <input type="text" name="size" id="product-size" class="admin-field__input" required placeholder="ex. S / M / L">
-                    </label>
-                    <label class="admin-field">
-                        <span class="admin-field__label">Qte</span>
-                        <input type="number" name="qte" id="product-qte" class="admin-field__input" required min="0" step="1" placeholder="0">
-                    </label>
-                </div>
-
                 <label class="admin-field">
                     <span class="admin-field__label">Prix/U (DH)</span>
                     <input type="number" name="prix" id="product-prix" class="admin-field__input" required min="0" step="0.01" placeholder="0">
                 </label>
 
-                <label class="admin-field">
-                    <span class="admin-field__label">Photo ou vidéo</span>
-                    <input
-                        type="file"
-                        name="media"
-                        id="product-photo"
-                        class="admin-field__input admin-field__input--file"
-                        accept=".jpg,.jpeg,.png,.webp,.gif,.mp4,.webm,.ogg"
-                    >
-                    <span class="admin-field__hint">JPG, PNG, WebP, GIF, MP4, WebM ou OGG — 10 Mo maximum</span>
-                    <span class="admin-field__error" id="product-media-error" hidden></span>
-                    <div class="product-sheet__preview" id="product-photo-preview" hidden>
-                        <img src="" alt="Aperçu du produit" id="product-photo-img" hidden>
-                        <video id="product-photo-video" controls muted playsinline preload="metadata" hidden></video>
+                {{-- Une seule variante (édition / ajout rapide) --}}
+                <div id="product-single-variant">
+                    <div class="product-sheet__row">
+                        <label class="admin-field">
+                            <span class="admin-field__label">Couleur</span>
+                            <input type="text" name="couleur" id="product-couleur" class="admin-field__input" placeholder="ex. Noir">
+                        </label>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Size</span>
+                            <input type="text" name="size" id="product-size" class="admin-field__input" required placeholder="ex. S / M / L">
+                        </label>
                     </div>
-                </label>
+                    <label class="admin-field">
+                        <span class="admin-field__label">Qte</span>
+                        <input type="number" name="qte" id="product-qte" class="admin-field__input" required min="0" step="1" placeholder="0">
+                    </label>
+                    <label class="admin-field">
+                        <span class="admin-field__label">Photo ou vidéo</span>
+                        <input
+                            type="file"
+                            name="media"
+                            id="product-photo"
+                            class="admin-field__input admin-field__input--file"
+                            accept=".jpg,.jpeg,.png,.webp,.gif,.mp4,.webm,.ogg"
+                        >
+                        <span class="admin-field__hint">JPG, PNG, WebP, GIF, MP4, WebM ou OGG — 10 Mo maximum</span>
+                        <span class="admin-field__error" id="product-media-error" hidden></span>
+                        <div class="product-sheet__preview" id="product-photo-preview" hidden>
+                            <img src="" alt="Aperçu du produit" id="product-photo-img" hidden>
+                            <video id="product-photo-video" controls muted playsinline preload="metadata" hidden></video>
+                        </div>
+                    </label>
+                </div>
+
+                {{-- Multi-variantes à la création --}}
+                <div id="product-multi-variants" hidden>
+                    <div class="product-variants-head">
+                        <p class="admin-field__label" style="margin:0">Photos du style (variantes)</p>
+                        <button type="button" class="admin-btn admin-btn--ghost" id="product-add-variant-row">+ Photo</button>
+                    </div>
+                    <div class="product-variants" id="product-variants-list"></div>
+                    <span class="admin-field__error" id="product-variants-error" hidden></span>
+                </div>
 
                 <div class="product-sheet__row">
                     <label class="admin-field">
@@ -906,6 +902,23 @@
                     <button type="submit" class="admin-btn admin-btn--primary" id="product-save-btn">Enregistrer</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div class="product-sheet" id="admin-variant-sheet" hidden aria-hidden="true">
+        <div class="product-sheet__backdrop" data-admin-variant-close></div>
+        <div class="product-sheet__panel product-sheet__panel--wide" role="dialog" aria-modal="true" aria-labelledby="admin-variant-title">
+            <div class="product-sheet__header">
+                <div>
+                    <p class="product-sheet__eyebrow">Fiche Produit · Variantes</p>
+                    <h3 class="product-sheet__title" id="admin-variant-title">Variantes</h3>
+                </div>
+                <button type="button" class="product-sheet__x" data-admin-variant-close aria-label="Fermer">×</button>
+            </div>
+            <div class="admin-variant-toolbar">
+                <button type="button" class="admin-btn admin-btn--primary" id="admin-variant-add">Ajouter une photo</button>
+            </div>
+            <div class="admin-variant-grid" id="admin-variant-grid"></div>
         </div>
     </div>
 
@@ -1873,9 +1886,10 @@
             });
         });
 
-        /* ——— Fiche Produit CRUD (localStorage) ——— */
+        /* ——— Fiche Produit CRUD (catalogue photos) ——— */
         const PRODUCTS_KEY = 'mouchap_products';
-        const productsTbody = document.getElementById('products-tbody');
+        const productsCatalogue = document.getElementById('products-catalogue');
+        const productsCatalogueEmpty = document.getElementById('products-catalogue-empty');
         const productSheet = document.getElementById('product-sheet');
         const productForm = document.getElementById('product-form');
         const productPhotoInput = document.getElementById('product-photo');
@@ -1884,11 +1898,20 @@
         const productPhotoVideo = document.getElementById('product-photo-video');
         const productMediaError = document.getElementById('product-media-error');
         const productSaveButton = document.getElementById('product-save-btn');
+        const productSingleVariant = document.getElementById('product-single-variant');
+        const productMultiVariants = document.getElementById('product-multi-variants');
+        const productVariantsList = document.getElementById('product-variants-list');
+        const productVariantsError = document.getElementById('product-variants-error');
+        const adminVariantSheet = document.getElementById('admin-variant-sheet');
+        const adminVariantGrid = document.getElementById('admin-variant-grid');
         const MAX_PRODUCT_MEDIA_SIZE = 10 * 1024 * 1024;
         let productPhotoData = '';
         let productMediaType = 'image';
         let productIsSaving = false;
         let productPreviewUrl = '';
+        let productFormMode = 'create';
+        let adminStyleKey = '';
+        let variantRowSeq = 0;
 
         const trackPreviewUrl = (url = '') => {
             if (productPreviewUrl) URL.revokeObjectURL(productPreviewUrl);
@@ -1986,9 +2009,96 @@
         const productPayload = (product) => {
             const data = new FormData();
             data.append('_token', productForm.querySelector('input[name="_token"]')?.value || '');
-            ['ref', 'designation', 'categorie', 'famille', 'saison', 'size', 'qte', 'prix', 'statue', 'etat']
+            ['ref', 'designation', 'categorie', 'famille', 'saison', 'size', 'couleur', 'qte', 'prix', 'statue', 'etat']
                 .forEach((key) => data.append(key, product[key] ?? ''));
             return data;
+        };
+
+        const productStyleKey = (product) =>
+            String(product?.designation || product?.ref || '')
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, ' ');
+
+        const productsSameStyle = (product) => {
+            const key = productStyleKey(product);
+            if (!key) return product ? [product] : [];
+            return loadProducts().filter((p) => productStyleKey(p) === key);
+        };
+
+        const setVariantsError = (message = '') => {
+            if (!productVariantsError) return;
+            productVariantsError.textContent = message;
+            productVariantsError.hidden = !message;
+        };
+
+        const addVariantRow = (data = {}) => {
+            if (!productVariantsList) return;
+            const id = `vr-${++variantRowSeq}`;
+            const row = document.createElement('article');
+            row.className = 'product-variant-row';
+            row.dataset.variantRow = id;
+            row.innerHTML = `
+                <div class="product-variant-row__preview" data-variant-preview>
+                    <span class="product-variant-row__empty">Photo</span>
+                </div>
+                <div class="product-variant-row__fields">
+                    <label class="admin-field">
+                        <span class="admin-field__label">Photo</span>
+                        <input type="file" class="admin-field__input admin-field__input--file" data-variant-file accept=".jpg,.jpeg,.png,.webp,.gif,.mp4,.webm,.ogg" required>
+                    </label>
+                    <div class="product-sheet__row">
+                        <label class="admin-field">
+                            <span class="admin-field__label">Couleur</span>
+                            <input type="text" class="admin-field__input" data-variant-couleur placeholder="ex. Noir" value="${escapeHtml(data.couleur || '')}">
+                        </label>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Size</span>
+                            <input type="text" class="admin-field__input" data-variant-size required placeholder="S / M / L" value="${escapeHtml(data.size || '')}">
+                        </label>
+                        <label class="admin-field">
+                            <span class="admin-field__label">Qte</span>
+                            <input type="number" class="admin-field__input" data-variant-qte required min="0" step="1" value="${escapeHtml(data.qte ?? 1)}">
+                        </label>
+                    </div>
+                </div>
+                <button type="button" class="admin-action-btn admin-action-btn--danger" data-variant-remove title="Retirer" aria-label="Retirer">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6.5 7l.8 12.2A1.5 1.5 0 0 0 8.8 20.5h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7"/><path d="M10 11v6M14 11v6"/></svg>
+                </button>
+            `;
+            productVariantsList.appendChild(row);
+        };
+
+        const resetVariantRows = () => {
+            if (productVariantsList) productVariantsList.innerHTML = '';
+            variantRowSeq = 0;
+            setVariantsError();
+            addVariantRow({ qte: 1 });
+        };
+
+        const collectVariantRows = () => {
+            const rows = [...(productVariantsList?.querySelectorAll('[data-variant-row]') || [])];
+            return rows.map((row) => {
+                const file = row.querySelector('[data-variant-file]')?.files?.[0] || null;
+                return {
+                    file,
+                    couleur: row.querySelector('[data-variant-couleur]')?.value.trim() || '',
+                    size: row.querySelector('[data-variant-size]')?.value.trim() || '',
+                    qte: Number(row.querySelector('[data-variant-qte]')?.value || 0),
+                };
+            });
+        };
+
+        const setProductFormLayout = (mode) => {
+            const multi = mode === 'create';
+            if (productSingleVariant) productSingleVariant.hidden = multi;
+            if (productMultiVariants) productMultiVariants.hidden = !multi;
+            const sizeInput = document.getElementById('product-size');
+            const qteInput = document.getElementById('product-qte');
+            if (sizeInput) sizeInput.required = !multi;
+            if (qteInput) qteInput.required = !multi;
+            if (productPhotoInput) productPhotoInput.required = false;
+            if (multi) resetVariantRows();
         };
 
         const MAX_IMAGE_EDGE = 1600;
@@ -2099,12 +2209,12 @@
             del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6.5 7l.8 12.2A1.5 1.5 0 0 0 8.8 20.5h6.4a1.5 1.5 0 0 0 1.5-1.3L17.5 7"/><path d="M10 11v6M14 11v6"/></svg>',
         };
 
-        const bindRowSelects = (root = productsTbody) => {
+        const bindRowSelects = (root = productsCatalogue) => {
             root?.querySelectorAll('[data-product-statue]').forEach((select) => {
                 syncSelectClass(select, stockClassMap);
                 select.addEventListener('change', async () => {
                     syncSelectClass(select, stockClassMap);
-                    const id = select.closest('tr')?.dataset.id;
+                    const id = select.closest('[data-id]')?.dataset.id;
                     const items = loadProducts().map((item) =>
                         item.id === id ? { ...item, statue: select.value } : item
                     );
@@ -2125,7 +2235,7 @@
                 syncSelectClass(select, etatClassMap);
                 select.addEventListener('change', async () => {
                     syncSelectClass(select, etatClassMap);
-                    const id = select.closest('tr')?.dataset.id;
+                    const id = select.closest('[data-id]')?.dataset.id;
                     const items = loadProducts().map((item) =>
                         item.id === id ? { ...item, etat: select.value } : item
                     );
@@ -2144,60 +2254,112 @@
         };
 
         const renderProducts = () => {
-            if (!productsTbody) return;
+            if (!productsCatalogue) return;
             const allItems = loadProducts();
             const filters = getProductFilters();
             const items = allItems.filter((item) => matchProductFilters(item, filters));
 
             if (!allItems.length) {
-                productsTbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucun produit. Cliquez sur Ajouter.</td></tr>`;
+                productsCatalogue.innerHTML = '';
+                if (productsCatalogueEmpty) {
+                    productsCatalogueEmpty.hidden = false;
+                    productsCatalogueEmpty.textContent = 'Aucun produit. Cliquez sur Ajouter.';
+                }
                 return;
             }
 
             if (!items.length) {
-                productsTbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucun produit ne correspond aux filtres.</td></tr>`;
+                productsCatalogue.innerHTML = '';
+                if (productsCatalogueEmpty) {
+                    productsCatalogueEmpty.hidden = false;
+                    productsCatalogueEmpty.textContent = 'Aucun produit ne correspond aux filtres.';
+                }
                 return;
             }
 
-            productsTbody.innerHTML = items
-                .map((item) => {
-                    const media = renderProductMedia(item);
+            if (productsCatalogueEmpty) productsCatalogueEmpty.hidden = true;
 
-                    return `<tr data-id="${escapeHtml(item.id)}">
-                        <td>${escapeHtml(item.ref)}</td>
-                        <td>${escapeHtml(item.designation)}</td>
-                        <td>${escapeHtml(item.categorie)}</td>
-                        <td>${escapeHtml(item.famille)}</td>
-                        <td>${escapeHtml(saisonLabels[item.saison] || item.saison || '—')}</td>
-                        <td>${escapeHtml(item.size)}</td>
-                        <td>${escapeHtml(item.qte ?? 0)}</td>
-                        <td>${formatPrix(item.prix)}</td>
-                        <td>${media}</td>
-                        <td>
-                            <div class="admin-actions">
-                                <button type="button" class="admin-action-btn admin-action-btn--view" data-product-action="view" title="Voir" aria-label="Voir">${actionIcons.view}</button>
-                                <button type="button" class="admin-action-btn admin-action-btn--edit" data-product-action="edit" title="Modifier" aria-label="Modifier">${actionIcons.edit}</button>
-                                <button type="button" class="admin-action-btn admin-action-btn--danger" data-product-action="delete" title="Supprimer" aria-label="Supprimer">${actionIcons.del}</button>
-                            </div>
-                        </td>
-                        <td>
-                            <select class="stock-select stock-select--${escapeHtml(item.statue)}" data-product-statue>
-                                <option value="dispo" ${item.statue === 'dispo' ? 'selected' : ''}>Dispo</option>
-                                <option value="faible" ${item.statue === 'faible' ? 'selected' : ''}>Faible</option>
-                                <option value="rupture" ${item.statue === 'rupture' ? 'selected' : ''}>Rupture</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="etat-select etat-select--${escapeHtml(item.etat)}" data-product-etat>
-                                <option value="actif" ${item.etat === 'actif' ? 'selected' : ''}>Actif</option>
-                                <option value="inactif" ${item.etat === 'inactif' ? 'selected' : ''}>Inactif</option>
-                            </select>
-                        </td>
-                    </tr>`;
-                })
-                .join('');
+            const seen = new Set();
+            const styles = items.filter((p) => {
+                const key = productStyleKey(p);
+                if (!key || seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+
+            productsCatalogue.innerHTML = styles.map((cover) => {
+                const variants = productsSameStyle(cover).filter((p) => matchProductFilters(p, filters));
+                const stock = variants.reduce((sum, p) => sum + Number(p.qte || 0), 0);
+                const mediaHtml = cover.photo
+                    ? (detectProductMediaType(cover.photo, cover.media_type) === 'video'
+                        ? `<video src="${escapeHtml(cover.photo)}" class="admin-cat-card__asset" muted playsinline preload="metadata"></video>`
+                        : `<img src="${escapeHtml(cover.photo)}" alt="" class="admin-cat-card__asset">`)
+                    : `<span class="admin-cat-card__empty">Sans photo</span>`;
+                return `<article class="admin-cat-card" data-style-key="${escapeHtml(productStyleKey(cover))}" data-id="${escapeHtml(cover.id)}">
+                    <button type="button" class="admin-cat-card__preview" data-product-action="variants" title="Voir les variantes">
+                        ${mediaHtml}
+                        <span class="admin-cat-card__count">${variants.length} photo${variants.length > 1 ? 's' : ''}</span>
+                    </button>
+                    <h4 class="admin-cat-card__title">${escapeHtml(cover.designation || cover.ref || 'Article')}</h4>
+                    <p class="admin-cat-card__meta">${escapeHtml(saisonLabels[cover.saison] || cover.saison || '—')} · ${formatPrix(cover.prix)}</p>
+                    <p class="admin-cat-card__stock">Stock : ${escapeHtml(stock)}</p>
+                    <div class="admin-cat-card__actions">
+                        <button type="button" class="admin-action-btn admin-action-btn--edit" data-product-action="edit" title="Modifier" aria-label="Modifier">${actionIcons.edit}</button>
+                        <button type="button" class="admin-action-btn admin-action-btn--danger" data-product-action="delete-style" title="Supprimer le style" aria-label="Supprimer">${actionIcons.del}</button>
+                        <select class="stock-select stock-select--${escapeHtml(cover.statue)}" data-product-statue title="Statue">
+                            <option value="dispo" ${cover.statue === 'dispo' ? 'selected' : ''}>Dispo</option>
+                            <option value="faible" ${cover.statue === 'faible' ? 'selected' : ''}>Faible</option>
+                            <option value="rupture" ${cover.statue === 'rupture' ? 'selected' : ''}>Rupture</option>
+                        </select>
+                        <select class="etat-select etat-select--${escapeHtml(cover.etat)}" data-product-etat title="État">
+                            <option value="actif" ${cover.etat === 'actif' ? 'selected' : ''}>Actif</option>
+                            <option value="inactif" ${cover.etat === 'inactif' ? 'selected' : ''}>Inactif</option>
+                        </select>
+                    </div>
+                </article>`;
+            }).join('');
 
             bindRowSelects();
+        };
+
+        const openAdminVariantSheet = (product) => {
+            if (!adminVariantSheet || !adminVariantGrid || !product) return;
+            adminStyleKey = productStyleKey(product);
+            document.getElementById('admin-variant-title').textContent =
+                product.designation || product.ref || 'Variantes';
+            const variants = productsSameStyle(product);
+            adminVariantGrid.innerHTML = variants.map((p) => {
+                const media = p.photo
+                    ? (detectProductMediaType(p.photo, p.media_type) === 'video'
+                        ? `<video src="${escapeHtml(p.photo)}" class="admin-variant-card__asset" muted playsinline preload="metadata"></video>`
+                        : `<img src="${escapeHtml(p.photo)}" alt="" class="admin-variant-card__asset">`)
+                    : `<span class="admin-cat-card__empty">—</span>`;
+                return `<article class="admin-variant-card" data-id="${escapeHtml(p.id)}">
+                    <div class="admin-variant-card__media">${media}</div>
+                    <div class="admin-variant-card__body">
+                        <strong>${escapeHtml(p.ref || '')}</strong>
+                        <span>${escapeHtml(p.couleur || '—')} · Size ${escapeHtml(p.size || '—')}</span>
+                        <span>Stock ${escapeHtml(p.qte ?? 0)} · ${formatPrix(p.prix)}</span>
+                        <div class="admin-actions">
+                            <button type="button" class="admin-action-btn admin-action-btn--edit" data-product-action="edit" title="Modifier">${actionIcons.edit}</button>
+                            <button type="button" class="admin-action-btn admin-action-btn--danger" data-product-action="delete" title="Supprimer">${actionIcons.del}</button>
+                        </div>
+                    </div>
+                </article>`;
+            }).join('') || `<p class="aff-panel__text">Aucune variante.</p>`;
+
+            adminVariantSheet.hidden = false;
+            adminVariantSheet.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('product-sheet-open');
+        };
+
+        const closeAdminVariantSheet = () => {
+            if (!adminVariantSheet) return;
+            adminVariantSheet.hidden = true;
+            adminVariantSheet.setAttribute('aria-hidden', 'true');
+            if (productSheet?.hidden !== false) {
+                document.body.classList.remove('product-sheet-open');
+            }
         };
 
         const getProductFilters = () => ({
@@ -2241,27 +2403,43 @@
         const openProductSheet = (mode = 'create', product = null) => {
             if (!productSheet || !productForm) return;
 
+            productFormMode = mode;
             productForm.reset();
             setProductSaving(false);
             trackPreviewUrl('');
             productPhotoData = product?.photo || '';
             productMediaType = detectProductMediaType(productPhotoData, product?.media_type);
             setProductMediaError();
+            setVariantsError();
             document.getElementById('product-id').value = product?.id || '';
             document.getElementById('product-sheet-title').textContent =
-                mode === 'edit' ? 'Modifier le produit' : mode === 'view' ? 'Détail produit' : 'Nouveau produit';
+                mode === 'edit' ? 'Modifier la photo' : mode === 'view' ? 'Détail produit' : mode === 'add-variant'
+                    ? 'Ajouter une photo au style'
+                    : 'Nouveau style (plusieurs photos)';
+
+            setProductFormLayout(mode === 'create' ? 'create' : 'single');
 
             if (product) {
-                document.getElementById('product-ref').value = product.ref || '';
+                document.getElementById('product-ref').value = product.ref || (mode === 'add-variant' ? nextProductReference() : '');
                 document.getElementById('product-designation').value = product.designation || '';
                 document.getElementById('product-categorie').value = product.categorie || '';
                 document.getElementById('product-famille').value = product.famille || '';
                 document.getElementById('product-saison').value = product.saison || '';
                 document.getElementById('product-size').value = product.size || '';
+                document.getElementById('product-couleur').value = product.couleur || '';
                 document.getElementById('product-qte').value = product.qte ?? 0;
                 document.getElementById('product-prix').value = product.prix ?? '';
                 document.getElementById('product-statue').value = product.statue || 'dispo';
                 document.getElementById('product-etat').value = product.etat || 'actif';
+                if (mode === 'add-variant') {
+                    document.getElementById('product-id').value = '';
+                    document.getElementById('product-ref').value = nextProductReference();
+                    document.getElementById('product-couleur').value = '';
+                    document.getElementById('product-size').value = product.size || '';
+                    document.getElementById('product-qte').value = 1;
+                    productPhotoData = '';
+                    productMediaType = 'image';
+                }
             } else {
                 document.getElementById('product-ref').value = nextProductReference();
             }
@@ -2269,11 +2447,20 @@
             renderProductPreview(productPhotoData, productMediaType);
 
             const readOnly = mode === 'view';
-            productForm.querySelectorAll('input, select').forEach((field) => {
-                if (field.type === 'hidden') return;
+            productForm.querySelectorAll('input, select, button').forEach((field) => {
+                if (field.type === 'hidden' || field.id === 'product-save-btn') return;
+                if (field.hasAttribute('data-product-sheet-close') || field.id === 'product-add-variant-row') {
+                    field.disabled = readOnly;
+                    return;
+                }
                 field.disabled = readOnly;
             });
             document.getElementById('product-save-btn').hidden = readOnly;
+            if (mode === 'add-variant') {
+                document.getElementById('product-designation').readOnly = true;
+            } else {
+                document.getElementById('product-designation').readOnly = false;
+            }
 
             productSheet.hidden = false;
             productSheet.setAttribute('aria-hidden', 'false');
@@ -2287,24 +2474,77 @@
             if (!productSheet) return;
             productSheet.hidden = true;
             productSheet.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('product-sheet-open');
+            if (adminVariantSheet?.hidden !== false) {
+                document.body.classList.remove('product-sheet-open');
+            }
             productForm?.reset();
             setProductSaving(false);
             trackPreviewUrl('');
             productPhotoData = '';
             productMediaType = 'image';
+            productFormMode = 'create';
             setProductMediaError();
+            setVariantsError();
             renderProductPreview('', 'image');
-            productForm?.querySelectorAll('input, select').forEach((field) => {
+            productForm?.querySelectorAll('input, select, button').forEach((field) => {
                 field.disabled = false;
             });
+            const designation = document.getElementById('product-designation');
+            if (designation) designation.readOnly = false;
             document.getElementById('product-save-btn').hidden = false;
+            setProductFormLayout('create');
         };
 
         document.getElementById('product-add-btn')?.addEventListener('click', () => openProductSheet('create'));
 
         document.querySelectorAll('[data-product-sheet-close]').forEach((el) => {
             el.addEventListener('click', closeProductSheet);
+        });
+
+        document.querySelectorAll('[data-admin-variant-close]').forEach((el) => {
+            el.addEventListener('click', closeAdminVariantSheet);
+        });
+
+        document.getElementById('admin-variant-add')?.addEventListener('click', () => {
+            const cover = loadProducts().find((p) => productStyleKey(p) === adminStyleKey);
+            if (!cover) return;
+            closeAdminVariantSheet();
+            openProductSheet('add-variant', cover);
+        });
+
+        document.getElementById('product-add-variant-row')?.addEventListener('click', () => addVariantRow({ qte: 1 }));
+
+        productVariantsList?.addEventListener('click', (event) => {
+            const removeBtn = event.target.closest('[data-variant-remove]');
+            if (!removeBtn) return;
+            const rows = productVariantsList.querySelectorAll('[data-variant-row]');
+            if (rows.length <= 1) {
+                setVariantsError('Ajoutez au moins une photo.');
+                return;
+            }
+            removeBtn.closest('[data-variant-row]')?.remove();
+        });
+
+        productVariantsList?.addEventListener('change', (event) => {
+            const input = event.target.closest('[data-variant-file]');
+            if (!input) return;
+            const row = input.closest('[data-variant-row]');
+            const preview = row?.querySelector('[data-variant-preview]');
+            const file = input.files?.[0];
+            if (!preview) return;
+            if (!file) {
+                preview.innerHTML = `<span class="product-variant-row__empty">Photo</span>`;
+                return;
+            }
+            if (file.size > MAX_PRODUCT_MEDIA_SIZE) {
+                input.value = '';
+                setVariantsError('Une photo dépasse 10 Mo.');
+                return;
+            }
+            const url = URL.createObjectURL(file);
+            preview.innerHTML = file.type.startsWith('video/')
+                ? `<video src="${url}" muted playsinline></video>`
+                : `<img src="${url}" alt="">`;
         });
 
         productPhotoInput?.addEventListener('change', () => {
@@ -2349,13 +2589,65 @@
             if (productIsSaving) return;
 
             setProductMediaError();
+            setVariantsError();
+
+            const id = document.getElementById('product-id').value;
+            const isMultiCreate = productFormMode === 'create' && !id;
+
+            if (isMultiCreate) {
+                const sharedOk = ['product-designation', 'product-categorie', 'product-famille', 'product-saison', 'product-prix']
+                    .every((fid) => document.getElementById(fid)?.checkValidity());
+                if (!sharedOk) {
+                    productForm.reportValidity();
+                    return;
+                }
+                const variants = collectVariantRows();
+                if (!variants.length || variants.some((v) => !v.file || !v.size)) {
+                    setVariantsError('Chaque variante doit avoir une photo et une size.');
+                    return;
+                }
+                setProductSaving(true);
+                const token = productForm.querySelector('input[name="_token"]')?.value || '';
+                const base = {
+                    designation: document.getElementById('product-designation').value.trim(),
+                    categorie: document.getElementById('product-categorie').value.trim(),
+                    famille: document.getElementById('product-famille').value.trim(),
+                    saison: document.getElementById('product-saison').value,
+                    prix: document.getElementById('product-prix').value,
+                    statue: document.getElementById('product-statue').value,
+                    etat: document.getElementById('product-etat').value,
+                };
+                try {
+                    const savedItems = [];
+                    for (const variant of variants) {
+                        const data = new FormData();
+                        data.append('_token', token);
+                        Object.entries(base).forEach(([k, v]) => data.append(k, v ?? ''));
+                        data.append('couleur', variant.couleur);
+                        data.append('size', variant.size);
+                        data.append('qte', String(variant.qte));
+                        data.append('media', await compressImage(variant.file));
+                        const result = await uploadProduct('/api/admin/products', data);
+                        savedItems.push(result);
+                    }
+                    const items = [...savedItems, ...loadProducts()];
+                    saveProducts(items);
+                    renderProducts();
+                    closeProductSheet();
+                } catch (error) {
+                    setVariantsError(error.message || 'Enregistrement impossible.');
+                    setProductSaving(false);
+                    await refreshProductsFromServer();
+                }
+                return;
+            }
+
             if (!productForm.checkValidity()) {
                 productForm.reportValidity();
                 return;
             }
             setProductSaving(true);
 
-            const id = document.getElementById('product-id').value;
             const data = new FormData(productForm);
             data.delete('id');
             const file = productPhotoInput.files?.[0];
@@ -2386,22 +2678,28 @@
             }
             renderProducts();
             closeProductSheet();
+            if (adminStyleKey) {
+                const cover = loadProducts().find((p) => productStyleKey(p) === adminStyleKey);
+                if (cover) openAdminVariantSheet(cover);
+            }
         });
 
-        productsTbody?.addEventListener('click', async (event) => {
-            const btn = event.target.closest('[data-product-action]');
-            if (!btn) return;
-            const row = btn.closest('tr');
-            const id = row?.dataset.id;
+        const handleProductAction = async (btn) => {
+            const card = btn.closest('[data-id]');
+            const id = card?.dataset.id;
             const items = loadProducts();
             const product = items.find((item) => item.id === id);
-            if (!product) return;
+            if (!product && btn.getAttribute('data-product-action') !== 'variants') return;
 
             const action = btn.getAttribute('data-product-action');
+            if (action === 'variants') {
+                openAdminVariantSheet(product);
+                return;
+            }
             if (action === 'view') openProductSheet('view', product);
             if (action === 'edit') openProductSheet('edit', product);
             if (action === 'delete') {
-                if (confirm(`Supprimer le produit ${product.ref} ?`)) {
+                if (confirm(`Supprimer la photo ${product.ref} ?`)) {
                     try {
                         const token = productForm.querySelector('input[name="_token"]')?.value || '';
                         const response = await fetch(`/api/admin/products/${id}`, {
@@ -2414,11 +2712,50 @@
                         if (!response.ok) throw new Error();
                         saveProducts(items.filter((item) => item.id !== id));
                         renderProducts();
+                        if (!adminVariantSheet?.hidden) {
+                            const cover = loadProducts().find((p) => productStyleKey(p) === adminStyleKey);
+                            if (cover) openAdminVariantSheet(cover);
+                            else closeAdminVariantSheet();
+                        }
                     } catch {
                         alert('Suppression impossible. Réessayez.');
                     }
                 }
             }
+            if (action === 'delete-style') {
+                const styleProducts = productsSameStyle(product);
+                if (!confirm(`Supprimer le style « ${product.designation} » (${styleProducts.length} photo(s)) ?`)) return;
+                try {
+                    const token = productForm.querySelector('input[name="_token"]')?.value || '';
+                    for (const p of styleProducts) {
+                        await fetch(`/api/admin/products/${p.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                Accept: 'application/json',
+                                'X-CSRF-TOKEN': token,
+                            },
+                        });
+                    }
+                    const ids = new Set(styleProducts.map((p) => p.id));
+                    saveProducts(items.filter((item) => !ids.has(item.id)));
+                    renderProducts();
+                } catch {
+                    alert('Suppression impossible. Réessayez.');
+                    await refreshProductsFromServer();
+                }
+            }
+        };
+
+        productsCatalogue?.addEventListener('click', async (event) => {
+            const btn = event.target.closest('[data-product-action]');
+            if (!btn) return;
+            await handleProductAction(btn);
+        });
+
+        adminVariantGrid?.addEventListener('click', async (event) => {
+            const btn = event.target.closest('[data-product-action]');
+            if (!btn) return;
+            await handleProductAction(btn);
         });
 
         refreshProductsFromServer();

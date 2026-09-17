@@ -13,6 +13,7 @@ class Product extends Model
         'famille',
         'saison',
         'size',
+        'couleur',
         'qte',
         'prix',
         'media_path',

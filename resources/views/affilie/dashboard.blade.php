@@ -1125,12 +1125,18 @@
                     ? sizes.map((s) => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')
                     : `<option value="U">U</option>`;
 
-                const colors = Array.isArray(product.couleurs) && product.couleurs.length
-                    ? product.couleurs
-                    : ['Noir', 'Beige', 'Blanc', 'Rouge', 'Bleu'];
+                const colors = (() => {
+                    const fromStyle = productsSameStyle(product)
+                        .map((p) => p.couleur)
+                        .filter(Boolean);
+                    if (fromStyle.length) return [...new Set(fromStyle)];
+                    if (Array.isArray(product.couleurs) && product.couleurs.length) return product.couleurs;
+                    if (product.couleur) return [product.couleur];
+                    return ['Noir', 'Beige', 'Blanc', 'Rouge', 'Bleu'];
+                })();
                 document.getElementById('aff-order-couleur-list').innerHTML =
                     colors.map((c) => `<option value="${escapeHtml(c)}"></option>`).join('');
-                document.getElementById('aff-order-couleur').value = colors[0] || '';
+                document.getElementById('aff-order-couleur').value = product.couleur || colors[0] || '';
 
                 fillAffOrderPreview(product);
                 updateAffOrderSousTotal();

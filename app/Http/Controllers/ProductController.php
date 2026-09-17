@@ -73,6 +73,7 @@ class ProductController extends Controller
             'famille' => ['nullable', 'string', 'max:120'],
             'saison' => ['required', Rule::in(['ete', 'printemps', 'automne', 'hiver'])],
             'size' => ['nullable', 'string', 'max:120'],
+            'couleur' => ['nullable', 'string', 'max:80'],
             'qte' => ['required', 'integer', 'min:0'],
             'prix' => ['required', 'numeric', 'min:0'],
             'statue' => ['required', Rule::in(['dispo', 'faible', 'rupture'])],
@@ -140,6 +141,8 @@ class ProductController extends Controller
             'famille' => $product->famille ?? '',
             'saison' => $product->saison ?? '',
             'size' => $product->size ?? '',
+            'couleur' => $product->couleur ?? '',
+            'couleurs' => $product->couleur ? [$product->couleur] : [],
             'qte' => $product->qte,
             'prix' => (float) $product->prix,
             'photo' => $product->media_path
