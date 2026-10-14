@@ -384,6 +384,10 @@
                                         <th>Date</th>
                                         <th>N° Bn</th>
                                         <th>Affilié</th>
+                                        <th>Client</th>
+                                        <th>N° Télé</th>
+                                        <th>Ville</th>
+                                        <th>Adresse</th>
                                         <th>Réf</th>
                                         <th>Désignation</th>
                                         <th>Catégorie</th>
@@ -1111,6 +1115,23 @@
         </div>
     </div>
 
+    <div class="product-sheet" id="order-view-sheet" hidden aria-hidden="true">
+        <div class="product-sheet__backdrop" data-order-view-close></div>
+        <div class="product-sheet__panel product-sheet__panel--view" role="dialog" aria-modal="true" aria-labelledby="order-view-title">
+            <div class="product-sheet__header">
+                <div>
+                    <p class="product-sheet__eyebrow">Commandes · Détail</p>
+                    <h3 class="product-sheet__title" id="order-view-title">Commande</h3>
+                </div>
+                <button type="button" class="product-sheet__x" data-order-view-close aria-label="Fermer">×</button>
+            </div>
+            <div class="affilie-view" id="order-view-body"></div>
+            <div class="product-sheet__footer">
+                <button type="button" class="admin-btn admin-btn--ghost" data-order-view-close>Fermer</button>
+            </div>
+        </div>
+    </div>
+
     {{-- Feuille de saisie fournisseur --}}
     <div class="product-sheet" id="fournisseur-sheet" hidden aria-hidden="true">
         <div class="product-sheet__backdrop" data-fournisseur-sheet-close></div>
@@ -1570,6 +1591,47 @@
             } catch {}
         };
 
+        const orderViewSheet = document.getElementById('order-view-sheet');
+
+        const openOrderView = (order) => {
+            const body = document.getElementById('order-view-body');
+            if (!orderViewSheet || !body) return;
+            const size = order.size || (Array.isArray(order.sizes) && order.sizes[0]) || '—';
+            const couleur = order.couleur || (Array.isArray(order.couleurs) && order.couleurs[0]) || '—';
+            const field = (label, value, full = false) =>
+                `<div class="affilie-view__item${full ? ' affilie-view__item--full' : ''}"><dt>${label}</dt><dd>${value}</dd></div>`;
+            document.getElementById('order-view-title').textContent = order.n_cmd || 'Commande';
+            body.innerHTML = `<dl class="affilie-view__grid">
+                ${field('Date', escapeHtml(formatOrderDate(order.date)))}
+                ${field('Affilié', escapeHtml(order.affilie_nom || '—'))}
+                ${field('Nom du client', escapeHtml(order.nom_client || '—'))}
+                ${field('N° Télé', order.contact ? `<a href="tel:${escapeHtml(order.contact)}">${escapeHtml(order.contact)}</a>` : '—')}
+                ${field('Ville', escapeHtml(order.ville || '—'))}
+                ${field('Adresse', escapeHtml(order.adresse || '—'), true)}
+                ${field('Réf', escapeHtml(order.ref_prod || '—'))}
+                ${field('Désignation', escapeHtml(order.designation || '—'))}
+                ${field('Couleur', escapeHtml(couleur))}
+                ${field('Size', escapeHtml(size))}
+                ${field('Qte', escapeHtml(order.qte ?? 0))}
+                ${field('Sous-Total', escapeHtml(formatMoney(order.montant)))}
+                ${order.remarque ? field('Remarque', escapeHtml(order.remarque), true) : ''}
+            </dl>`;
+            orderViewSheet.hidden = false;
+            orderViewSheet.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('product-sheet-open');
+        };
+
+        const closeOrderView = () => {
+            if (!orderViewSheet) return;
+            orderViewSheet.hidden = true;
+            orderViewSheet.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('product-sheet-open');
+        };
+
+        document.querySelectorAll('[data-order-view-close]').forEach((el) => {
+            el.addEventListener('click', closeOrderView);
+        });
+
         const renderOrders = async () => {
             await renderKpis();
             if (!ordersTbody) return;
@@ -1588,7 +1650,7 @@
                         <td>${item.qte ?? 0}</td>
                         <td>${formatMoney(item.prix_u)}</td>
                         <td>${formatMoney(item.montant)}</td>
-                        <td><button type="button" class="admin-action-btn" title="Voir" aria-label="Voir">${eye}</button></td>
+                        <td><button type="button" class="admin-action-btn" data-order-view title="Voir" aria-label="Voir">${eye}</button></td>
                         <td>
                             <select class="status-select status-select--${item.statue || 'en_attente'}" data-status data-order-field="statue">
                                 <option value="en_attente" ${item.statue === 'en_attente' || !item.statue ? 'selected' : ''}>En Attente</option>
@@ -1618,6 +1680,14 @@
                         await api(`/api/admin/orders/${id}`, { method: 'PATCH', body: { statue: select.value } });
                         await renderKpis();
                     } catch (e) { alert(e.message || 'Erreur'); }
+                });
+            });
+
+            ordersTbody.querySelectorAll('[data-order-view]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const id = btn.closest('tr')?.dataset.orderId;
+                    const order = loadOrders().find((o) => String(o.id) === String(id));
+                    if (order) openOrderView(order);
                 });
             });
 
@@ -1657,7 +1727,7 @@
             try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
             const items = loadOrders();
             if (!items.length) {
-                tbody.innerHTML = `<tr><td colspan="12" class="admin-table__empty">Aucune commande affilié pour le moment.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="16" class="admin-table__empty">Aucune commande affilié pour le moment.</td></tr>`;
                 return;
             }
             tbody.innerHTML = items.map((item) => {
@@ -1667,6 +1737,10 @@
                     <td>${escapeHtml(formatOrderDate(item.date))}</td>
                     <td>${escapeHtml(item.n_cmd || '—')}</td>
                     <td>${escapeHtml(item.affilie_nom || '—')}</td>
+                    <td>${escapeHtml(item.nom_client || '—')}</td>
+                    <td>${item.contact ? `<a href="tel:${escapeHtml(item.contact)}">${escapeHtml(item.contact)}</a>` : '—'}</td>
+                    <td>${escapeHtml(item.ville || '—')}</td>
+                    <td>${escapeHtml(item.adresse || '—')}</td>
                     <td>${escapeHtml(item.ref_prod || '—')}</td>
                     <td>${escapeHtml(item.designation || '—')}</td>
                     <td>${escapeHtml(item.categorie || '—')}</td>
