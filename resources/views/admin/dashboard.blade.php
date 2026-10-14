@@ -182,11 +182,11 @@
                         <span class="admin-menu__chevron" aria-hidden="true"></span>
                     </button>
                     <div class="admin-submenu">
-                        <a href="#fiche-client" class="admin-sublink">
+                        <a href="#fiche-client" class="admin-sublink" data-admin-view="fiche-client">
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" d="M19 8v6M16 11h6"/></svg></span>
                             <span>Fiche Client</span>
                         </a>
-                        <a href="#reglements-ventes" class="admin-sublink">
+                        <a href="#reglements-ventes" class="admin-sublink" data-admin-view="reglements-ventes">
                             <span class="admin-sublink__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
                             <span>Règlements Ventes</span>
                         </a>
@@ -498,6 +498,78 @@
                                     </tr>
                                 </thead>
                                 <tbody id="admin-paie-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Client · Fiche Client --}}
+            <section class="admin-view" id="admin-view-fiche-client" data-view="fiche-client" hidden aria-label="Fiche Client">
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Client</p>
+                            <h2 class="admin-panel__title">Fiche Client</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--ghost" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--clients">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom Client</th>
+                                        <th>Numéro</th>
+                                        <th>Ville</th>
+                                        <th>Adresse</th>
+                                        <th>Nom Affilié</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clients-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- Client · Règlements Ventes --}}
+            <section class="admin-view" id="admin-view-reglements-ventes" data-view="reglements-ventes" hidden aria-label="Règlements Ventes">
+                <div class="admin-panel">
+                    <div class="admin-panel__toolbar">
+                        <div>
+                            <p class="admin-panel__eyebrow">Client</p>
+                            <h2 class="admin-panel__title">Règlements Ventes</h2>
+                        </div>
+                        <div class="admin-panel__actions">
+                            <button type="button" class="admin-btn admin-btn--ghost" data-admin-view="commandes">Fermer</button>
+                        </div>
+                    </div>
+                    <div class="admin-reglement-kpi">
+                        <article class="kpi-card kpi-card--sales" aria-disabled="true">
+                            <div class="kpi-card__glow" aria-hidden="true"></div>
+                            <p class="kpi-card__label">Total Montant</p>
+                            <p class="kpi-card__value" id="reglement-total">0 DH</p>
+                            <p class="kpi-card__meta" id="reglement-count">0 commande</p>
+                        </article>
+                    </div>
+                    <div class="admin-table-wrap admin-table-wrap--panel">
+                        <div class="admin-table-scroll">
+                            <table class="admin-table admin-table--reglements">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom Client</th>
+                                        <th>Ville</th>
+                                        <th>N° Commande</th>
+                                        <th>Nom Affilié</th>
+                                        <th>Montant Cmd</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reglements-tbody"></tbody>
                             </table>
                         </div>
                     </div>
@@ -1837,6 +1909,89 @@
             });
         };
 
+        const clientKey = (order) => {
+            const phone = String(order.contact || '').replace(/\D+/g, '');
+            if (phone) return `tel:${phone}`;
+            const name = String(order.nom_client || '').trim().toLowerCase();
+            return name ? `nom:${name}` : '';
+        };
+
+        /* Pas de table clients : chaque client est déduit des commandes, regroupé par numéro. */
+        const buildClients = (orders) => {
+            const sorted = [...orders].sort((a, b) =>
+                String(a.date || '').localeCompare(String(b.date || '')) || Number(a.id) - Number(b.id)
+            );
+            const clients = new Map();
+            sorted.forEach((order) => {
+                const key = clientKey(order);
+                if (!key) return;
+                if (!clients.has(key)) {
+                    clients.set(key, {
+                        id: `CLT${String(clients.size + 1).padStart(4, '0')}`,
+                        nom: '',
+                        contact: '',
+                        ville: '',
+                        adresse: '',
+                        affilies: new Set(),
+                    });
+                }
+                const client = clients.get(key);
+                client.nom = order.nom_client || client.nom;
+                client.contact = order.contact || client.contact;
+                client.ville = order.ville || client.ville;
+                client.adresse = order.adresse || client.adresse;
+                if (order.affilie_nom) client.affilies.add(order.affilie_nom);
+            });
+            return clients;
+        };
+
+        const renderClients = async () => {
+            const tbody = document.getElementById('clients-tbody');
+            if (!tbody) return;
+            try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
+            const clients = [...buildClients(loadOrders()).values()];
+            if (!clients.length) {
+                tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">Aucun client pour le moment.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = clients.map((c) => `<tr>
+                <td>${escapeHtml(c.id)}</td>
+                <td>${escapeHtml(c.nom || '—')}</td>
+                <td>${c.contact ? `<a href="tel:${escapeHtml(c.contact)}">${escapeHtml(c.contact)}</a>` : '—'}</td>
+                <td>${escapeHtml(c.ville || '—')}</td>
+                <td>${escapeHtml(c.adresse || '—')}</td>
+                <td>${escapeHtml([...c.affilies].join(', ') || '—')}</td>
+            </tr>`).join('');
+        };
+
+        const renderReglementsVentes = async () => {
+            const tbody = document.getElementById('reglements-tbody');
+            if (!tbody) return;
+            try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
+            const allOrders = loadOrders();
+            const clients = buildClients(allOrders);
+            const ventes = allOrders.filter((o) => !['annulee', 'retour'].includes(normalizeOrderStatue(o.statue)));
+            const total = ventes.reduce((sum, o) => sum + Number(o.montant || 0), 0);
+
+            const totalEl = document.getElementById('reglement-total');
+            const countEl = document.getElementById('reglement-count');
+            if (totalEl) totalEl.textContent = formatMoney(total);
+            if (countEl) countEl.textContent = `${ventes.length} commande${ventes.length > 1 ? 's' : ''}`;
+
+            if (!ventes.length) {
+                tbody.innerHTML = `<tr><td colspan="6" class="admin-table__empty">Aucune vente pour le moment.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = ventes.map((o) => `<tr>
+                <td>${escapeHtml(clients.get(clientKey(o))?.id || '—')}</td>
+                <td>${escapeHtml(o.nom_client || '—')}</td>
+                <td>${escapeHtml(o.ville || '—')}</td>
+                <td>${escapeHtml(o.n_cmd || '—')}</td>
+                <td>${escapeHtml(o.affilie_nom || '—')}</td>
+                <td>${escapeHtml(formatMoney(o.montant))}</td>
+            </tr>`).join('');
+        };
+
         document.getElementById('admin-bn-filters')?.addEventListener('input', (event) => {
             if (!event.target.matches('[data-admin-bn-filter]')) return;
             renderAdminBonCommande({ refresh: false });
@@ -1987,6 +2142,14 @@
                 document.querySelector('.admin-topbar__title').textContent = 'Paiement';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Commandes';
                 renderAdminPaiementCommande();
+            } else if (viewId === 'fiche-client') {
+                document.querySelector('.admin-topbar__title').textContent = 'Fiche Client';
+                document.querySelector('.admin-topbar__eyebrow').textContent = 'Client';
+                renderClients();
+            } else if (viewId === 'reglements-ventes') {
+                document.querySelector('.admin-topbar__title').textContent = 'Règlements Ventes';
+                document.querySelector('.admin-topbar__eyebrow').textContent = 'Client';
+                renderReglementsVentes();
             } else if (viewId === 'fiche-affilie') {
                 document.querySelector('.admin-topbar__title').textContent = 'Fiche Affilié';
                 document.querySelector('.admin-topbar__eyebrow').textContent = 'Affiliés';

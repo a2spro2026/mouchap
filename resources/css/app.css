@@ -2221,6 +2221,12 @@ html {
 }
 
 /* KPI cards — verrouillées, ne défilent pas */
+.admin-reglement-kpi {
+    display: grid;
+    grid-template-columns: minmax(0, 18rem);
+    margin: 0.25rem 0 1rem;
+}
+
 .admin-kpi {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
