@@ -376,6 +376,38 @@
                             <button type="button" class="admin-btn admin-btn--ghost" data-admin-view="commandes">Fermer</button>
                         </div>
                     </div>
+
+                    <div class="product-filters" id="admin-bn-filters" aria-label="Filtres bon de commande">
+                        <div class="product-filters__rail">
+                            <div class="product-filters__brand">
+                                <span class="product-filters__eyebrow">Recherche</span>
+                                <strong class="product-filters__title">Filtres commandes</strong>
+                            </div>
+
+                            <label class="product-filter">
+                                <span class="product-filter__label">Mois</span>
+                                <input type="month" class="product-filter__input" id="admin-bn-filter-mois" data-admin-bn-filter autocomplete="off">
+                            </label>
+                            <label class="product-filter product-filter--wide">
+                                <span class="product-filter__label">Nom affilié</span>
+                                <input type="search" class="product-filter__input" id="admin-bn-filter-affilie" data-admin-bn-filter list="admin-bn-affilie-list" placeholder="Nom affilié…" autocomplete="off">
+                                <datalist id="admin-bn-affilie-list"></datalist>
+                            </label>
+                            <label class="product-filter">
+                                <span class="product-filter__label">Ville</span>
+                                <input type="search" class="product-filter__input" id="admin-bn-filter-ville" data-admin-bn-filter list="admin-bn-ville-list" placeholder="Ville…" autocomplete="off">
+                                <datalist id="admin-bn-ville-list"></datalist>
+                            </label>
+
+                            <button type="button" class="product-filters__reset" id="admin-bn-filters-reset" title="Réinitialiser les filtres">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>
+                                </svg>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="admin-table-wrap admin-table-wrap--panel">
                         <div class="admin-table-scroll">
                             <table class="admin-table admin-table--admin-bn">
@@ -1721,13 +1753,44 @@
             return updated;
         };
 
-        const renderAdminBonCommande = async () => {
+        const fillAdminBnSuggestions = (items) => {
+            const uniqueSorted = (values) =>
+                [...new Set(values.map((v) => String(v || '').trim()).filter(Boolean))]
+                    .sort((a, b) => a.localeCompare(b, 'fr'));
+            const toOptions = (values) =>
+                values.map((v) => `<option value="${escapeHtml(v)}"></option>`).join('');
+            const affilieList = document.getElementById('admin-bn-affilie-list');
+            const villeList = document.getElementById('admin-bn-ville-list');
+            if (affilieList) affilieList.innerHTML = toOptions(uniqueSorted(items.map((o) => o.affilie_nom)));
+            if (villeList) villeList.innerHTML = toOptions(uniqueSorted(items.map((o) => o.ville)));
+        };
+
+        const filterAdminBnOrders = (items) => {
+            const mois = document.getElementById('admin-bn-filter-mois')?.value || '';
+            const affilie = document.getElementById('admin-bn-filter-affilie')?.value.trim().toLowerCase() || '';
+            const ville = document.getElementById('admin-bn-filter-ville')?.value.trim().toLowerCase() || '';
+            return items.filter((o) =>
+                (!mois || String(o.date || '').startsWith(mois)) &&
+                (!affilie || String(o.affilie_nom || '').toLowerCase().includes(affilie)) &&
+                (!ville || String(o.ville || '').toLowerCase().includes(ville))
+            );
+        };
+
+        const renderAdminBonCommande = async ({ refresh = true } = {}) => {
             const tbody = document.getElementById('admin-bn-tbody');
             if (!tbody) return;
-            try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
-            const items = loadOrders();
-            if (!items.length) {
+            if (refresh) {
+                try { await refreshOrdersFromServer(); } catch { ordersCache = []; }
+            }
+            const allItems = loadOrders();
+            fillAdminBnSuggestions(allItems);
+            if (!allItems.length) {
                 tbody.innerHTML = `<tr><td colspan="16" class="admin-table__empty">Aucune commande affilié pour le moment.</td></tr>`;
+                return;
+            }
+            const items = filterAdminBnOrders(allItems);
+            if (!items.length) {
+                tbody.innerHTML = `<tr><td colspan="16" class="admin-table__empty">Aucune commande ne correspond aux filtres.</td></tr>`;
                 return;
             }
             tbody.innerHTML = items.map((item) => {
@@ -1773,6 +1836,17 @@
                 };
             });
         };
+
+        document.getElementById('admin-bn-filters')?.addEventListener('input', (event) => {
+            if (!event.target.matches('[data-admin-bn-filter]')) return;
+            renderAdminBonCommande({ refresh: false });
+        });
+        document.getElementById('admin-bn-filters-reset')?.addEventListener('click', () => {
+            document.querySelectorAll('[data-admin-bn-filter]').forEach((field) => {
+                field.value = '';
+            });
+            renderAdminBonCommande({ refresh: false });
+        });
 
         const renderAdminBalanceCommande = async () => {
             const tbody = document.getElementById('admin-bal-tbody');
