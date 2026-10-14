@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="admin-dashboard-body">
-    <div class="admin-shell">
+    <div class="admin-shell is-sidebar-collapsed">
         {{-- Sidebar --}}
         <aside class="admin-sidebar" aria-label="Menu administration">
             <div class="admin-sidebar__brand">
@@ -29,6 +29,7 @@
                     id="admin-sidebar-hide"
                     title="Masquer le menu"
                     aria-label="Masquer le panneau latéral"
+                    aria-expanded="false"
                 >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 6 9 12l6 6"/>
@@ -254,7 +255,6 @@
                         id="admin-sidebar-show"
                         title="Afficher le menu"
                         aria-label="Afficher le panneau latéral"
-                        hidden
                     >
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6"/>
@@ -1424,20 +1424,19 @@
         const adminShell = document.querySelector('.admin-shell');
         const adminSidebarHide = document.getElementById('admin-sidebar-hide');
         const adminSidebarShow = document.getElementById('admin-sidebar-show');
-        const SIDEBAR_KEY = 'mouchap_admin_sidebar_collapsed';
-
         const setAdminSidebarCollapsed = (collapsed) => {
             adminShell?.classList.toggle('is-sidebar-collapsed', collapsed);
             if (adminSidebarShow) adminSidebarShow.hidden = !collapsed;
             if (adminSidebarHide) adminSidebarHide.setAttribute('aria-expanded', String(!collapsed));
-            try { localStorage.setItem(SIDEBAR_KEY, collapsed ? '1' : '0'); } catch {}
         };
 
         adminSidebarHide?.addEventListener('click', () => setAdminSidebarCollapsed(true));
         adminSidebarShow?.addEventListener('click', () => setAdminSidebarCollapsed(false));
-        try {
-            if (localStorage.getItem(SIDEBAR_KEY) === '1') setAdminSidebarCollapsed(true);
-        } catch {}
+        try { localStorage.removeItem('mouchap_admin_sidebar_collapsed'); } catch {}
+        setAdminSidebarCollapsed(true);
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) setAdminSidebarCollapsed(true);
+        });
         let usersCache = [];
         document.getElementById('admin-logout')?.addEventListener('click', async () => {
             try { await api('/api/auth/admin/logout', { method: 'POST' }); } catch {}
